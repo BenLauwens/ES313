@@ -1,2 +1,2 @@
 # ES313.jl
-Support for Course ES313 Mathematical Modelling and Simulation
+Support for Course ES313 Mathematical Modelling and Simulation.
