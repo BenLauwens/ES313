@@ -45,8 +45,6 @@ git clone https://github.com/BenLauwens/ES313.jl
     * Fetch new updates with `git pull` after having navigated to your project's folder.
     * If you modify a notebook, move it to a working directory to avoid it being overwritten.
 
-<img src="./Img/gitbash.png" alt="Jupyter input">  
-<img src="./Img/workdir.png" alt="Jupyter input">  
 
 #### Git on Mac/Linux
 Great news, you most likely have git by default! 
@@ -54,3 +52,5 @@ Great news, you most likely have git by default!
 ## Illustrations
 <img src="./Img/inputWin.png" alt="Jupyter input">  
 <img src="./Img/ready.png" alt="All good">   
+<img src="./Img/gitbash.png" alt="Jupyter input">  
+<img src="./Img/workdir.png" alt="Jupyter input">  
