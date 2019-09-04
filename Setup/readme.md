@@ -31,6 +31,26 @@ It is recommended that you do all this before attending class, because the insta
     jupyterlab()
     ```
 
+#### Git on windows
+*I really like git but I'm a Windows user...*  Sounds familiar? You can get the full unix experience by proceeding as follows:
+* Go to [https://gitforwindows.org](https://gitforwindows.org), download and install the software.
+* Open a terminal (Git Bash)
+* Navigate to your desired folder and clone the course from github
+
+```console
+cd navigate/to/desired/folder
+git clone https://github.com/BenLauwens/ES313.jl
+```
+* Some tips:
+    * Fetch new updates with `git pull` after having navigated to your project's folder.
+    * If you modify a notebook, move it to a working directory to avoid it being overwritten.
+
+<img src="./Img/gitbash.png" alt="Jupyter input">  
+<img src="./Img/workdir.png" alt="Jupyter input">  
+
+#### Git on Mac/Linux
+Great news, you most likely have git by default! 
+
 ## Illustrations
 <img src="./Img/inputWin.png" alt="Jupyter input">  
 <img src="./Img/ready.png" alt="All good">   
