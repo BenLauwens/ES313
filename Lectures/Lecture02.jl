@@ -135,8 +135,8 @@ end
 # ╔═╡ 5c8d97de-ebb6-11ea-1a01-651fceb86eb5
 beehive = Beehive();
 
-# ╔═╡ 590d4ac0-ebb6-11ea-2d7e-1507f2d2da14
-
+# ╔═╡ a515e600-ebc2-11ea-3691-553176d1a9cb
+visualize2dim(applyrule(beehive), 30)
 
 # ╔═╡ b0790d80-ebb6-11ea-3423-1fa5c38fd3a4
 md"""### Toad
@@ -251,7 +251,7 @@ The Game of Life was proved Turing complete in 1982. Since then, several people 
 # ╟─e6284c30-ebb5-11ea-3861-f5253bd5ace2
 # ╠═f465ed72-ebb5-11ea-2178-0928e7650f7e
 # ╠═5c8d97de-ebb6-11ea-1a01-651fceb86eb5
-# ╠═590d4ac0-ebb6-11ea-2d7e-1507f2d2da14
+# ╠═a515e600-ebc2-11ea-3691-553176d1a9cb
 # ╟─b0790d80-ebb6-11ea-3423-1fa5c38fd3a4
 # ╠═8d274e00-ebb6-11ea-1a22-bdb17e0513c7
 # ╠═f7491ac0-ebb6-11ea-17d9-a99a458757d9
