@@ -4,7 +4,10 @@ This is a small guide intended to put you on your way for this course. We will b
 ## CDN computer
 1. Install Julia from the software center. 
 2. Download the [course repository](https://github.com/BenLauwens/ES313.jl) from GitHub and extract the zip file in a folder of your choice (e.g. in 'My Documents')
-3. Navigate to the `Setup` folder in the extracted folder and execute `ES313 - WINDOWS.bat`. This small script should activate Julia, fetch all relevant updates and install the required packages. 
+3. Start Julia. Use the following instruction to fetch all relevant updates and install the required packages (assuming you extracted the files in the my documents folder):
+    ```julia
+    include(joinpath(homedir(),"Documents/ES313.jl-master/Setup/configES313.jl"))
+    ```
     
     *Note:* In order to be able to install or update packages, you will need to connect to a network other than CDN as the corporate proxy blocks the updates.
 4. Enjoy the course
