@@ -14,12 +14,12 @@ This is a small guide intended to put you on your way for this course. We will b
 * For code development you could use Notepad++ (available in the software center). There is a [Julia language extension](https://github.com/JuliaEditorSupport/julia-NotepadPlusPlus) available for Notepad++.
 
 ## Personal computer
-We try to make sure that the installation and configuration runs as smoothly as possible with a minimum of effort on your part. These guidelines work for both Windows and MacOS. Occasionally there is a small difference between the platforms that will be made clear during this walkthrough. This guide has been successfully tested on Windows 10, Windows 8.1, MacOS El Catalina.
+We try to make sure that the installation and configuration runs as smoothly as possible with a minimum of effort on your part. These guidelines work for both Windows and MacOS. Occasionally there is a small difference between the platforms that will be made clear during this walkthrough. This guide has been successfully tested on Windows 10, Windows 8.1, MacOS Catalina.
 
 1. Download Julia 1.2 for your platform from the [website](https://julialang.org/downloads/).
 2. Install Julia 1.2
 3. Download the [course repository](https://github.com/BenLauwens/ES313.jl) from GitHub and extract the zip file in a folder of your choice (e.g. in 'My Documents')
-4. Navigate to the `Setup` folder in the extracted folder. If you are a MAc user, execute `ES313 - MAC.command`. If you are a Windows user, execute `ES313 - WINDOWS.bat`. TThis small script should activate Julia, fetch all relevant updates and install the required packages.
+4. Navigate to the `Setup` folder in the extracted folder. If you are a Mac user, execute `ES313 - MAC.command`. If you are a Windows user, execute `ES313 - WINDOWS.bat`. This small script should activate Julia, fetch all relevant updates and install the required packages.
 5. Enjoy the course
 
 #### Remarks:
