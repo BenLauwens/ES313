@@ -83,6 +83,7 @@ Notebooks:
     ```
 2. Navigate to the server in a browser of your choosing
     ```http://localhost:1234/```
+3. Code
 
 
 #### Git on windows
