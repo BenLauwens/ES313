@@ -1,6 +1,6 @@
 .ipynb_checkpoints
 .DS_store
 *.code-workspace
-
+*.backup*
 exdraft/
 
