@@ -1,8 +1,11 @@
 ### A Pluto.jl notebook ###
-# v0.11.10
+# v0.11.12
 
 using Markdown
 using InteractiveUtils
+
+# ╔═╡ 5312be7e-edd8-11ea-34b0-7581fc4b7126
+using PlutoUI
 
 # ╔═╡ a813912a-edb3-11ea-3b13-23da723cb488
 md"""
@@ -43,6 +46,7 @@ The initial configuration is shown in `./img/Langtonstart.png`. The numerically,
 022222222222220
 ```
 
+$(PlutoUI.LocalResource("./img/Langtonstart.png"))
 
 ## Rules
 A rule e.g. '123456' is interpreted in the following way: 'Current-Top-Right-Bottom-Left-Next' i.e.  a cell currently in state 1 with neighbours 2,3,4 & 5 (and all possible rotations thereof) will become state 6 in the next iteration. The different rules can be found in `Langtonsrules.txt`.
@@ -73,11 +77,14 @@ plt = heatmap(yflip=true,color=mycmap,size=(600,600), title="Langton loop")
 ```
 
 An animated result is available in `./img/Langton.gif`.
+
+$(PlutoUI.LocalResource("./img/Langton.gif"))
 """
 
 # ╔═╡ a92dec02-edba-11ea-250f-4d872a29f74d
 
 
 # ╔═╡ Cell order:
+# ╠═5312be7e-edd8-11ea-34b0-7581fc4b7126
 # ╟─a813912a-edb3-11ea-3b13-23da723cb488
 # ╠═a92dec02-edba-11ea-250f-4d872a29f74d
