@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.11.10
+# v0.11.12
 
 using Markdown
 using InteractiveUtils
@@ -95,7 +95,7 @@ md"Sometimes you might want to change the direction of an axis. The example belo
 When passing a vector of the same length of the data as argument to markersize, you can give each marker a specific size. The same goes for fill and color options."
 
 # ╔═╡ fd72acc2-ec63-11ea-012d-7b9ff452241f
-plot(x,x,xflip=true, label=nothing,
+plot(x,x,xflip=true, label="",
     marker=:circle,
     markersize=x, 
     markeralpha = 3*x ./4  ./ maximum(x),
