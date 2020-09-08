@@ -12,7 +12,7 @@ begin
 	using StatsPlots
 	using Measures
 	using Dates
-	using JLD
+	#using JLD # removed because JLD does not work on CDN
 end
 
 # ╔═╡ 650f5346-ec62-11ea-3007-bded07c572b4
