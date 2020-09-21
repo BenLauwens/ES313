@@ -3,5 +3,6 @@
 *.code-workspace
 *.backup*
 exdraft/
+.gitignore
+#Exercises/PS02 - Cellular Automaton (solved).jl
 
-Exercises/PS02 - Cellular Automaton (solved).jl

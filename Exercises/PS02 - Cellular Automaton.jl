@@ -82,7 +82,7 @@ $(PlutoUI.LocalResource("./img/Langton.gif"))
 """
 
 # ╔═╡ a92dec02-edba-11ea-250f-4d872a29f74d
-
+versioninfo()
 
 # ╔═╡ Cell order:
 # ╠═5312be7e-edd8-11ea-34b0-7581fc4b7126
