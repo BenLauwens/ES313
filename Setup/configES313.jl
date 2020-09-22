@@ -22,7 +22,8 @@ Pkg.add(PackageSpec(url="https://github.com/BenLauwens/NativeSVG.jl"))
 
 # Optimisation
 Pkg.add("JuMP")
-Pkg.add("GLPK")
+#Pkg.add("GLPK")
+Pkg.add("Tulip")
 Pkg.add("Optim")
 Pkg.add(PackageSpec(url="https://github.com/oxfordcontrol/GeneralQP.jl"))
 #Pkg.add("NLopt") # not CDN compatible (CMake fails to build)
