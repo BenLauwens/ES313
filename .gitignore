@@ -4,5 +4,4 @@
 *.backup*
 exdraft/
 .gitignore
-#Exercises/PS02 - Cellular Automaton (solved).jl
-Exercises/PS03 - Phase transitions (solved).jl
+Exercises/*(solved)*.jl
