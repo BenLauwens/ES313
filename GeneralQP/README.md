@@ -1,3 +1,7 @@
+# Disclaimer
+This is a fork of the original package that can be found [here](https://github.com/oxfordcontrol/GeneralQP.jl). The inner workings are unchanged. This only serves to make the package compatible with Julia 1.5. Only this readme has changed with respect to the original package.
+
+
 # GeneralQP.jl
 This package is a Julia implementation of [the following paper](https://link.springer.com/article/10.1007/BF01588976)
 ```
