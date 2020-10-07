@@ -10,7 +10,6 @@ Pkg.add("Statistics")
 Pkg.add("Distributions")
 Pkg.add("HypothesisTests")
 Pkg.add("CSV")
-#Pkg.add("JLD") # not CDN compatible (CMake fails to build)
 Pkg.add("JLD2")
 
 # Plots
@@ -22,10 +21,17 @@ Pkg.add(PackageSpec(url="https://github.com/BenLauwens/NativeSVG.jl"))
 
 # Optimisation
 Pkg.add("JuMP")
-#Pkg.add("GLPK")
+Pkg.add("GLPK")
 Pkg.add("Tulip")
 Pkg.add("Optim")
-Pkg.add(PackageSpec(url="https://github.com/oxfordcontrol/GeneralQP.jl"))
+
+if VERSION < VersionNumber(1,3)
+    # For version 1.2
+    Pkg.add(PackageSpec(url="https://github.com/oxfordcontrol/GeneralQP.jl"))
+else
+    # For latest versions
+    Pkg.add(PackageSpec(url="https://github.com/B4rtDC/GeneralQP.jl"))
+end
 #Pkg.add("NLopt") # not CDN compatible (CMake fails to build)
 Pkg.add("Ipopt")
 
