@@ -4,15 +4,11 @@
 using Markdown
 using InteractiveUtils
 
-# This Pluto notebook uses @bind for interactivity. When running this notebook outside of Pluto, the following 'mock version' of @bind gives bound variables a default value (instead of an error).
-macro bind(def, element)
-    quote
-        local el = $(esc(element))
-        global $(esc(def)) = Core.applicable(Base.get, el) ? Base.get(el) : missing
-        el
-    end
-end
+# ╔═╡ 7ad2ee88-07c9-11eb-3b6b-65a34e4980ef
+using Distributions, LinearAlgebra
 
+# ╔═╡ e0e6af0a-07ce-11eb-3da3-e93277620d89
+using Plots
 
 # ╔═╡ 235e2200-fce9-11ea-0696-d36cddaa843e
 md"""
@@ -55,10 +51,82 @@ We split the problem in a series of subproblems:
 
 """
 
-# ╔═╡ 2113552e-fceb-11ea-2d80-b3fce8ea57cb
+# ╔═╡ 976bb1e0-07c9-11eb-2a4f-fb7aac69f8ec
+begin
+	function gengraph(N::Int, p::Float64)
+		d = Bernoulli(p) # definir la distribution
+		A = rand(d, N, N)
+		# annuler la diagonale
+		A[diagind(A)] = zeros(Int,N)
+		return LinearAlgebra.Symmetric(A)
+	end
+	
+	function avgdegree(A)
+		return mean(sum(A, dims=1))
+	end
+	
+	"""
+		voisins(A, i)
+	
+	Détermine les voisins du noeud i dans le graph représenté par A
+	"""
+	function voisins(A, i)
+		findall(x -> isequal(x, 1), A[i,:])
+	end
+	
+	function composantes(A)
+		N = size(A,1) # taille du graph
+		visited = Dict(i => false for i in 1:N)
+		comps = []
+		for n in 1:N
+			if !visited[n]
+				# faire qqch (i.e. déterminier la composante)
+				push!(comps,creuser(A, n, visited))
+				end
+		end
+		#return comps
+		return maximum(length,comps) / N
+	end
+	
+	function creuser(A, n, visited, comp=[])
+		visited[n] = true
+		push!(comp, n)
+		for voisin in voisins(A, n)
+			if !visited[voisin]
+				creuser(A, voisin, visited, comp)
+			end
+		end
+		return comp
+	end
+	
+	function sim(N::Int, p::Float64)
+		A = gengraph(N,p)
+		return composantes(A), avgdegree(A)
+	end
+end
 
+# ╔═╡ 42f5cca6-07d1-11eb-3169-cd3650c42081
+N = 1000
 
+# ╔═╡ a060dc62-07cb-11eb-2aaa-7190bde5dc36
+let N = N
+	P = range(5e-5, 3e-3, length=10)
+	rat_comp = Array{Float64, 1}()
+	k_moy = Array{Float64, 1}()
+	for p in P
+		for _ in 1:10
+			res = sim(N,p)
+			push!(rat_comp, res[1])
+			push!(k_moy, res[2])
+		end
+	end
+	scatter(k_moy, rat_comp, ylims=(0,1), label="", xlabel="<k>", ylabel="N_largest_comp / N")
+end
 
 # ╔═╡ Cell order:
 # ╟─235e2200-fce9-11ea-0696-d36cddaa843e
-# ╠═2113552e-fceb-11ea-2d80-b3fce8ea57cb
+# ╠═7ad2ee88-07c9-11eb-3b6b-65a34e4980ef
+# ╠═976bb1e0-07c9-11eb-2a4f-fb7aac69f8ec
+# ╠═e0e6af0a-07ce-11eb-3da3-e93277620d89
+# ╠═42f5cca6-07d1-11eb-3169-cd3650c42081
+# ╠═a060dc62-07cb-11eb-2aaa-7190bde5dc36

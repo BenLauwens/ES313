@@ -41,8 +41,13 @@ Try to optimize $x^3 - 6x + x^2 +2$
 * Illustrate the evolution of the estimated optimum.
 """
 
-# ╔═╡ b52f8ea2-058b-11eb-07a5-45db670854e4
-
+# ╔═╡ 77d89aa8-07d2-11eb-1bbd-a5c896e3ecfe
+begin
+	f(x) =  x .^3 - 6 * x + x.^2 + 2
+	res_brent = optimize(f, 0, 10, Brent(), store_trace=true)
+	res_brent = optimize(f, 0, 10, GoldenSection(), store_trace=true)
+	res_brent.trace
+end
 
 # ╔═╡ 7bce2500-0332-11eb-2b63-87dc0d713825
 
@@ -65,7 +70,7 @@ begin
 	# noise distribution
 	e=Normal(0,0.1)
 	# function
-	F(x;a=a,b=b,c=b) = a*sin.(x .- b) .+ c
+	F(x;a=a,b=b,c=c) = a*sin.(x .- b) .+ c
 	# sample length
 	n = 20;
 	# domain
@@ -86,8 +91,23 @@ begin
 	plot!(X,F.(X), label="ground truth"; settings...)
 end
 
-# ╔═╡ bf77ca1c-058b-11eb-0139-15621e64cb89
-
+# ╔═╡ e949078a-07d3-11eb-0146-8115e335b2e9
+begin
+	"""
+		errfun(v, x=x, y=y)
+	
+	où v = [a;b;c ] pour minimiser F(x;a=a,b=b,c=c)
+	"""
+	function errfun(v, x=x, y=y)
+		a,b,c = v
+		return sum((F.(x,a=a;b=b,c=c) .- y ) .^2)
+	end
+	
+	res = optimize(errfun, Float64[1;1;1])
+	a_opt, b_opt, c_opt = res.minimizer
+	plot(X,F.(X), label="ground truth"; settings...)
+	plot!(X, F.(X,a=a_opt, b=b_opt, c=c_opt), label="optimised"; settings...)
+end
 
 # ╔═╡ 71d2bf30-0336-11eb-28ed-95518b9204a7
 
@@ -139,8 +159,16 @@ begin
 	end
 end
 
-# ╔═╡ ca4c4ddc-058b-11eb-18a6-3522f87d804f
-
+# ╔═╡ 6f552aa6-07d5-11eb-18a5-b32ed233c403
+begin
+	println("start")
+	for _ in 1:2
+		@time optimize(g, initial_x)
+		@time optimize(g, dg!, initial_x, Newton())
+		@time optimize(g, dg!, initial_x, BFGS())
+		@time optimize(g, dg!, h!, initial_x)
+	end
+end
 
 # ╔═╡ 966b88dc-03bc-11eb-15a4-b5492ddf4ede
 md"""
@@ -155,8 +183,15 @@ Try to create a method that minimizes the amount of iterations by modifying the 
 
 """
 
-# ╔═╡ cf09c444-058b-11eb-266c-6d8bb9ae1690
-
+# ╔═╡ 68263aea-07d0-11eb-24f8-6383a3a1e09d
+begin
+	function optimme(η)
+		res = optimize(g, dg!, initial_x,ConjugateGradient(eta=η))
+		return res.iterations
+	end
+	
+	optimize(optimme, 0, 20)
+end
 
 # ╔═╡ 5245f2b8-03bd-11eb-2ed9-5f03308828d4
 md"""
@@ -223,32 +258,42 @@ Try to solve the following problem:
 2. Solve the problem with [JuMP](https://github.com/jump-dev/JuMP.jl) (combined with [Ipopt](https://github.com/jump-dev/Ipopt.jl))
 """
 
-# ╔═╡ ea3d1b76-058b-11eb-11ce-4b5193cfc161
-
+# ╔═╡ 053bae8a-087d-11eb-2e8c-73c41fb4e005
+let 
+	model = Model(Ipopt.Optimizer)
+	@variable(model, x[1:2])
+	@objective(model, Min, -x[1] - x[2])
+	@constraint(model, - x[1] ^2 + x[2] >= 0)
+	@constraint(model, 1 - x[1] ^2 - x[2] ^2 >= 0)
+	optimize!(model)
+	termination_status(model)
+	objective_value(model)
+	value.(x)
+end
 
 # ╔═╡ Cell order:
 # ╟─b4764948-0330-11eb-3669-974d75ab1134
 # ╟─1b769f0c-0332-11eb-1efb-178c1985f3df
 # ╠═f1068fca-0331-11eb-20de-a98c65d5c2dc
 # ╟─165f35b0-0332-11eb-12e7-f7939d389e58
-# ╠═b52f8ea2-058b-11eb-07a5-45db670854e4
+# ╠═77d89aa8-07d2-11eb-1bbd-a5c896e3ecfe
 # ╟─7bce2500-0332-11eb-2b63-87dc0d713825
 # ╟─e6294d6a-0334-11eb-3829-51ee2b8cadaf
 # ╠═62c3b162-0335-11eb-2202-ff72b6a8d114
 # ╠═66be5114-0335-11eb-01a9-c594b92937bf
 # ╠═15ef34dc-0336-11eb-0de5-b942e8871db8
-# ╠═bf77ca1c-058b-11eb-0139-15621e64cb89
+# ╠═e949078a-07d3-11eb-0146-8115e335b2e9
 # ╟─71d2bf30-0336-11eb-28ed-95518b9204a7
 # ╟─d0a304f2-0336-11eb-0d20-6de833d964b3
 # ╟─add5faba-03b8-11eb-0cc7-15f19eb1e0e2
 # ╠═9396ccae-03ba-11eb-27a9-1b88ee4fb45f
 # ╠═94abb7a2-03bb-11eb-1ceb-1dff8aa3cce7
-# ╠═ca4c4ddc-058b-11eb-18a6-3522f87d804f
+# ╠═6f552aa6-07d5-11eb-18a5-b32ed233c403
 # ╟─966b88dc-03bc-11eb-15a4-b5492ddf4ede
-# ╠═cf09c444-058b-11eb-266c-6d8bb9ae1690
+# ╠═68263aea-07d0-11eb-24f8-6383a3a1e09d
 # ╟─5245f2b8-03bd-11eb-2ed9-5f03308828d4
 # ╠═3a650c0a-03be-11eb-36c2-c1fed6b7df2d
 # ╠═d5feb956-058b-11eb-1a7d-eb56768f00b1
 # ╟─ec264b44-03c2-11eb-1695-cbf638f8cea9
 # ╠═87935672-03c5-11eb-1b7e-5dbd711f2a76
-# ╠═ea3d1b76-058b-11eb-11ce-4b5193cfc161
+# ╠═053bae8a-087d-11eb-2e8c-73c41fb4e005

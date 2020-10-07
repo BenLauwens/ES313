@@ -87,8 +87,21 @@ begin
 	A
 end
 
-# ╔═╡ a33a4108-058c-11eb-09e1-711cc130986c
+# ╔═╡ 4ba4687e-087f-11eb-1cb0-2581818cbd93
+# A' * Y .> B
+C' * A' * Y
 
+# ╔═╡ 79351ee4-087f-11eb-147d-d389de200857
+let
+	model = Model(GLPK.Optimizer)
+	@variable(model, Y[1:7] >= 0, Int)
+	@constraint(model, A' * Y .>= B)
+	@objective(model, Min, C' * A' * Y)
+	optimize!(model)
+	termination_status(model)
+	objective_value(model)
+	A' * value.(Y) .> B
+end
 
 # ╔═╡ 4bc4c2aa-04b4-11eb-2b6e-452d4ecc258a
 md"""
@@ -105,8 +118,24 @@ begin
 	log.(rand.(B_u))
 end
 
-# ╔═╡ b09c06f6-058c-11eb-1391-014df37c7abe
+# ╔═╡ 9d3ceafe-0880-11eb-36f0-0f8530d6b285
+begin
+	cost = Float64[]
+	for _ in 1:10000
+		let cout=cost
+			model = Model(GLPK.Optimizer)
+			@variable(model, Y[1:7] >= 0, Int)
+			@constraint(model, A' * Y .>= log.(rand.(B_u)))
+			@objective(model, Min, C' * A' * Y)
+			optimize!(model)
+			push!(cout, objective_value(model))
+		end
+	end
+	cost
+end
 
+# ╔═╡ 14a32a20-0881-11eb-1a20-715b99417266
+StatsPlots.histogram(cost, yscale=:log10)
 
 # ╔═╡ 259bbbc6-04b5-11eb-1ad4-c567e45ba4b6
 md"""
@@ -114,8 +143,23 @@ md"""
 Suppose each worker receives extra pay for the amount of calls that have been treated. We can easily include this in our model
 """
 
-# ╔═╡ b86d4fe8-058c-11eb-2982-339b99535541
-
+# ╔═╡ 83130656-0881-11eb-2c87-a3ae5f81f04b
+begin
+	cost_c = Float64[]
+	commission = 20
+	for _ in 1:1000
+		let cout=cost_c
+			model = Model(GLPK.Optimizer)
+			appels = log.(rand.(B_u))
+			@variable(model, Y[1:7] >= 0, Int)
+			@constraint(model, A' * Y .>= appels)
+			@objective(model, Min, C' * A' * Y + sum(appels) * commission)
+			optimize!(model)
+			push!(cout, objective_value(model))
+		end
+	end
+	StatsPlots.histogram(cost_c)
+end
 
 # ╔═╡ e1e41ea6-04b5-11eb-174e-1d43f601a07c
 md"""
@@ -123,8 +167,19 @@ md"""
 The above has given us some information on what the distributions of the payroll cost may be, however in reality, you would want to make sure that the clients calling to center are taken care off. To realise this, one might say that for any given day, you want to make sure that 90% of all calls can be treated by the specific capacity.
 """
 
-# ╔═╡ c3ea74ba-058c-11eb-3cdb-2b7ff44c6cde
+# ╔═╡ 62b516be-0882-11eb-094b-d183f8d00ab8
+log.(quantile.(B_u, 0.90))
 
+# ╔═╡ 6274be66-0882-11eb-11be-05163cda6633
+ let
+	model = Model(GLPK.Optimizer)
+	@variable(model, Y[1:7] >= 0, Int)
+	@constraint(model, A' * Y .>= log.(quantile.(B_u, 0.99)))
+	@objective(model, Min, C' * A' * Y)
+	optimize!(model)
+	termination_status(model)
+	objective_value(model)
+end
 
 # ╔═╡ 1f177098-04b6-11eb-2508-6bd8d7e1e996
 md"""
@@ -138,13 +193,16 @@ md"""
 # ╠═10349518-03ca-11eb-09b2-69c80c4662ac
 # ╟─7910d53e-03ca-11eb-1536-7fc4c236e10a
 # ╠═572d14c4-03cb-11eb-2b68-234b3d7e9e8e
-# ╠═a33a4108-058c-11eb-09e1-711cc130986c
+# ╠═4ba4687e-087f-11eb-1cb0-2581818cbd93
+# ╠═79351ee4-087f-11eb-147d-d389de200857
 # ╟─4bc4c2aa-04b4-11eb-2b6e-452d4ecc258a
 # ╠═6e48e306-04b4-11eb-2561-0151a5e0a908
 # ╠═7a54f9b4-04b4-11eb-3a7c-8d90eb026392
-# ╠═b09c06f6-058c-11eb-1391-014df37c7abe
+# ╠═9d3ceafe-0880-11eb-36f0-0f8530d6b285
+# ╠═14a32a20-0881-11eb-1a20-715b99417266
 # ╟─259bbbc6-04b5-11eb-1ad4-c567e45ba4b6
-# ╠═b86d4fe8-058c-11eb-2982-339b99535541
+# ╠═83130656-0881-11eb-2c87-a3ae5f81f04b
 # ╟─e1e41ea6-04b5-11eb-174e-1d43f601a07c
-# ╠═c3ea74ba-058c-11eb-3cdb-2b7ff44c6cde
+# ╠═62b516be-0882-11eb-094b-d183f8d00ab8
+# ╠═6274be66-0882-11eb-11be-05163cda6633
 # ╟─1f177098-04b6-11eb-2508-6bd8d7e1e996

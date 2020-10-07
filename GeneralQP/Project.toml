@@ -1,0 +1,8 @@
+name = "GeneralQP"
+uuid = "a026bcb6-e915-4c11-a84b-be351e825624"
+authors = ["Bart De Clerck <declerck.bart@pm.me>"]
+version = "0.1.0"
+
+[deps]
+LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
+Polynomials = "f27b6e38-b328-58d1-80ce-0feddd5e7a45"
