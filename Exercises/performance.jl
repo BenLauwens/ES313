@@ -361,7 +361,5 @@ function main(N::Int=8)
     end
 end
 
-#main(8)
-#res = demo7()
 
 main()
