@@ -7,6 +7,9 @@ using InteractiveUtils
 # ╔═╡ 92928394-1462-11eb-04fd-557587660fc2
 using Logging
 
+# ╔═╡ 3cc48592-146d-11eb-1546-cd39a0f8e407
+using SimJulia, ResumableFunctions
+
 # ╔═╡ c395df98-145a-11eb-1716-2de187df1a1a
 md"""
 # Logging
@@ -128,7 +131,164 @@ end
 # ╔═╡ 0368ea70-145b-11eb-0b5c-fb3a33bf2027
 md"""
 # SimJulia
+Before starting a larger project, we will look into some SimJulia tricks
 """
+
+# ╔═╡ dd63ff16-146d-11eb-059c-0586e1f972a5
+md"""
+## Working with resumable functions
+Using a resumable function, try to implement:
+1. the pascal triangle: each iteration should return a line of the Pascal triangle.
+2. a root finding method (e.g. square root of a number)
+
+*Note*: a resumable function returns an iterator you need to call.
+"""
+
+# ╔═╡ ed555bfc-146d-11eb-2b52-bbec67faaf0f
+
+
+# ╔═╡ 118eecdc-146d-11eb-1d4b-71b301d4d5e6
+md"""
+## Process dependencies
+Below you have an illustration of a process waiting for another one to terminate before continuing.
+"""
+
+# ╔═╡ 363592fc-146d-11eb-2dde-d56c18095702
+let
+	@resumable function basic(sim::Simulation)
+    	@info "Basic goes to work on time $(now(sim))"
+    	p = @process bottleneck(sim)
+    	@yield p
+    	@info "Basic continues after bottleneck completion on time $(now(sim))"
+	end
+
+	@resumable function bottleneck(sim::Simulation)
+   		@yield timeout(sim, 10)
+	end
+	
+	@info "\n$("-"^70)\nProcess dependencies\n$("-"^70)\n"
+	sim = Simulation()
+	@process basic(sim)
+	run(sim)
+end
+
+# ╔═╡ 9da38750-146d-11eb-0757-2318eb6520ca
+md"""
+## Working with containers
+Containers represent a level of something (e.g. liquid level, energy ...). If you want to store a specific type of object, you will be better of using a `store`.
+
+Experiment a bit with containers (::Container). Discover their attributes (environment, capacity, level, get\_queue, put\_queue, seid) and find out how to use them. Generate a simple setting with:
+1. a fill process that waits for a random time $t < 10 \in \mathbb{N}$ and then adds 1 unit to a container. This process repeats forever.
+2. an empty process that waits for a random time $t < 10 \in \mathbb{N}$ and then requires a random amount from the container. This process repeats forever.
+3. a monitor proces that periodically prints an info message detailing the current level of the container. This process repeats forever.
+"""
+
+# ╔═╡ 73f24a8e-146f-11eb-2978-cfef033adae1
+let
+	@resumable function fill(sim::Simulation, c::Container)
+		while true 
+			@yield timeout(sim,rand(1:10))
+			@yield put(c,1)
+			@info "item added to the container on time $(now(sim))"
+		end
+	end
+
+	@resumable function empty(sim::Simulation, c::Container)
+		while true
+			@yield timeout(sim,rand(1:10))
+			n = rand(1:3)
+			@info "Filed my request for $(n) items on time $(now(sim))"
+			@yield get(c,n)
+			@info "Got my $(n) items on time $(now(sim))"
+		end
+	end
+
+	@resumable function monitor(sim::Simulation, c::Container)
+		while true
+			@info "$(now(sim)) - current container level: $(c.level)/$(c.capacity)"
+			@yield timeout(sim,1)
+		end
+	end
+	
+	# setup the simulation
+	@info "\n$("-"^70)\nWorking with containers\n$("-"^70)\n"
+	sim = Simulation()
+	c = Container(sim,10)
+	@process fill(sim,c)
+	@process monitor(sim,c)
+	@process empty(sim,c)
+	run(sim,30)
+end
+
+# ╔═╡ 4bf1fce0-1470-11eb-1290-63d06c8246a2
+md"""
+#### Excercise: application with statistics 
+Consider a candy machines that is continuously being monitored by a supervisor.  If the level is below a given treshold, the supervisor fills the machine up. 
+* Client arrival follows an exponential distribution with parameter $\theta = 1$ and each client takes two candies at a time.
+* Look at the mean time between refills. Is this what you would expect?
+* What happens when the amount of candy varies?  Is this still what you would expect? E.g. a clients takes one, two or three candies.
+"""
+
+# ╔═╡ 595d99f0-1470-11eb-20d0-87143910a5e6
+
+
+# ╔═╡ 71911828-1470-11eb-3519-bb52522ed2c9
+md"""
+## Working with `Stores`
+A store can hold objects (struct) that can be used by other processes. Let's reconsider the same small scale application we did with the containers, i.e. generate a simple setting and verify everything works as intended (e.g. a fill, empty and monitor process). 
+"""
+
+# ╔═╡ fbfed3c4-1470-11eb-0f28-231b891d0d9b
+let
+	# our own type of object
+	struct Object
+		id::Int
+	end
+
+	@resumable function fill(sim::Simulation, s::Store)
+		i = 0
+		while true 
+			i += 1
+			item = Object(i)
+			@yield timeout(sim,rand(1:10))
+			@yield put(s,item)
+			@info "item $(item) added to the store on time $(now(sim))"
+		end
+	end
+	
+	@resumable function empty(sim::Simulation, s::Store)
+		while true
+			@yield timeout(sim,rand(1:10))
+			n = rand(1:3)
+			@info "Filed my request for $(n) items on time $(now(sim))"
+			for _ in 1:n
+				@yield get(s)
+			end
+			@info "Got my $(n) items on time $(now(sim))"
+		end
+	end
+	
+	@resumable function monitor(sim::Simulation, s::Store)
+		while true
+			@info "$(now(sim)) - current store level: $(length(s.items))/$(s.capacity)"
+			@yield timeout(sim,1)
+		end
+	end
+	
+	# setup the simulation
+	@info "\n$("-"^70)\nWorking with stores\n$("-"^70)\n"
+	sim = Simulation()
+	s = Store{Object}(sim, capacity=UInt(10))
+	
+	@process fill(sim, s)
+	@process empty(sim, s)
+	@process monitor(sim, s)
+	run(sim,30)
+	
+end
+
+# ╔═╡ 414b4ee2-1473-11eb-3d7b-ef4f49e7efa0
+
 
 # ╔═╡ Cell order:
 # ╟─c395df98-145a-11eb-1716-2de187df1a1a
@@ -140,4 +300,16 @@ md"""
 # ╠═19b12fc6-1464-11eb-2fc1-cbb3f82479c5
 # ╠═e3eae0ce-1462-11eb-2e02-fd2f746569d1
 # ╠═12710aa4-146b-11eb-034a-97b515563abc
-# ╠═0368ea70-145b-11eb-0b5c-fb3a33bf2027
+# ╟─0368ea70-145b-11eb-0b5c-fb3a33bf2027
+# ╠═3cc48592-146d-11eb-1546-cd39a0f8e407
+# ╟─dd63ff16-146d-11eb-059c-0586e1f972a5
+# ╠═ed555bfc-146d-11eb-2b52-bbec67faaf0f
+# ╟─118eecdc-146d-11eb-1d4b-71b301d4d5e6
+# ╠═363592fc-146d-11eb-2dde-d56c18095702
+# ╟─9da38750-146d-11eb-0757-2318eb6520ca
+# ╠═73f24a8e-146f-11eb-2978-cfef033adae1
+# ╟─4bf1fce0-1470-11eb-1290-63d06c8246a2
+# ╠═595d99f0-1470-11eb-20d0-87143910a5e6
+# ╟─71911828-1470-11eb-3519-bb52522ed2c9
+# ╠═fbfed3c4-1470-11eb-0f28-231b891d0d9b
+# ╠═414b4ee2-1473-11eb-3d7b-ef4f49e7efa0
