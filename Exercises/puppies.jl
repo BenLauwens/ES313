@@ -1,6 +1,22 @@
+#=
+We want to simulate the life of a puppy. It's life consists of three activities:
+eating, sleeping and playing. This simple life can be disturbed (i.e. interrupted) 
+when it gets picked up by a human. If a puppy likes you, it might lick your face. 
+After being picked up, a puppy continues its life as before.
+
+We create our own type `Puppy` that has an associated process. 
+We also create a type `Human` that has an associated process to pick up a random 
+puppy from time to time.
+
+This application illustrates how you can interrupt an ongoing process and even do 
+something with the cause of the interruption (in this case keeping track of who 
+got liked by a puppy).
+
+=#
 using SimJulia
 using Logging
 
+# known puppy properties
 const puppyparams = Dict(:eat => 1:5, :sleep => 5:30, :play => 5:10)
 
 mutable struct Puppy
@@ -42,7 +58,7 @@ end
             duration = rand(puppyparams[p.state])
             @debug """$(now(env)) - Puppy '$(p.name)' current state: $(p.state) for $(duration)"""
             @yield timeout(env, duration)
-            # change state (avoiding current one)
+            # change state (avoiding the current one)
             newstate = rand(filter(x -> x ≠ p.state, keys(puppyparams)))
             @debug """$(now(env)) - Puppy '$(p.name)' will go from $(p.state) to $(newstate)"""
             p.state = newstate
