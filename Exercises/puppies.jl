@@ -4,14 +4,13 @@ eating, sleeping and playing. This simple life can be disturbed (i.e. interrupte
 when it gets picked up by a human. If a puppy likes you, it might lick your face. 
 After being picked up, a puppy continues its life as before.
 
-We create our own type `Puppy` that has an associated process. 
+We create our own type `Puppy` that has an associated process that models its life. 
 We also create a type `Human` that has an associated process to pick up a random 
 puppy from time to time.
 
 This application illustrates how you can interrupt an ongoing process and even do 
 something with the cause of the interruption (in this case keeping track of who 
 got liked by a puppy).
-
 =#
 using SimJulia
 using Logging
@@ -104,10 +103,12 @@ function mysim(humannames=["Anaïs", "Pieter", "Bart"],
     @info msg
 end
 
-# logging setting
-Logging.disable_logging(LogLevel(-1000))
+# logging settings
+Logging.disable_logging(LogLevel(-1000)) # de-activate debug messages
 logger = Logging.SimpleLogger(stdout, Logging.Debug)
 global_logger(logger)
+
+# run sim
 mysim()
 
 
