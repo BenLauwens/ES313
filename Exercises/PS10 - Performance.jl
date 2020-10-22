@@ -16,6 +16,29 @@ The actual performance is measured using [BenchmarkTools](https://github.com/Jul
 
 ## Tools
 Below you can find a set of very generic functions that we will be using to evaluate the functions that we will be benchmarking.
+
+### Notes
+At some point we try to make use of multithreading. You can see the number of threads that are currently being used with
+```julia
+Threads.nthreads()
+```
+
+Should this be only 1, you can set the number of threads ro use by setting the environment variable `JULIA_NUM_THREADS` to the required before starting julia.
+
+In a windows terminal:
+```
+$env:JULIA_NUM_THREADS = 4
+julia
+```
+In a Linux/Mac OS terminal:
+```
+export JULIA_NUM_THREADS=4
+julia
+```
+
+both examples above suppose "julia" is known in your terminal. If this is not the case, simply replace it by the path to the julia executable.
+
+*Remark*: starting from julia 1.5 you can use command line arguments to specify the number of threads e.g. `julia --threads 4`
 """
 
 # ╔═╡ a4ed00b8-144f-11eb-0c66-932242a1767c
