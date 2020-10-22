@@ -60,6 +60,33 @@ Our model is complete, we make no assumptions
 ###### Construct a computer program
 """
 
+# ╔═╡ b1bae776-0dfe-11eb-291b-53f9a87c4a41
+# other method of creating a game
+begin
+	mutable struct Game
+		heads::Int
+		tails::Int
+		lenght::Int
+	end
+	
+	function play!(g::Game, limit::Int=3)
+		while abs(g.heads - g.tails) < limit 
+			g.lenght += 1
+			if rand()<=1/2
+				g.heads += 1
+			else
+				g.tails += 1
+			end
+			
+		end
+		
+		return g
+	end
+	
+	g = Game(0,0,0)
+	play!(g)
+end
+
 # ╔═╡ 3a20552e-0c97-11eb-3f0d-2586b1bb46ed
 begin
 	"""
@@ -190,7 +217,7 @@ let
 	end
 	blup = reshape(res,:,length(Δ))
 	p1 = heatmap(Δ, Γ, blup, xlabel="diff", ylabel="guaranteed gain", title="mean gain")
-	p2 = heatmap(Δ, Γ, blup .> 0, xlabel="diff", ylabel="guaranteed gain", title="positive gain")
+	p2 = heatmap(Δ, Γ, blup .>= 0, xlabel="diff", ylabel="guaranteed gain", title="positive gain")
 	plot(p1,p2, size=(600, 300))
 end
 
@@ -366,18 +393,19 @@ With respect to the initial goals, we can conclude the following:
 # ╟─bcbed56c-0c94-11eb-0e8c-2de8d1a20f47
 # ╟─349b8586-0c96-11eb-2e7b-5b3230d1cf27
 # ╠═2f228f34-0c97-11eb-0997-f3dbab0362d1
+# ╠═b1bae776-0dfe-11eb-291b-53f9a87c4a41
 # ╠═3a20552e-0c97-11eb-3f0d-2586b1bb46ed
 # ╟─65c6476c-0c98-11eb-2c7d-3bc3ba8d51e2
 # ╟─5b08b538-0c97-11eb-0319-877b39c4c4ed
 # ╟─607e4392-0c98-11eb-0a9d-ddfab6b42b26
-# ╟─75d35828-0c99-11eb-1888-e9e7be234e89
-# ╟─fae1e448-0c98-11eb-3721-dddb169e403f
-# ╟─a39a3a72-0c99-11eb-00df-e92eb7a6ce07
+# ╠═75d35828-0c99-11eb-1888-e9e7be234e89
+# ╠═fae1e448-0c98-11eb-3721-dddb169e403f
+# ╠═a39a3a72-0c99-11eb-00df-e92eb7a6ce07
 # ╟─ac87cb8a-0c9a-11eb-21d5-9981e408db29
-# ╟─1aa54e8a-0c9b-11eb-3b7c-f3be005991df
-# ╟─3236977a-0c9b-11eb-3875-2304eaec0a8e
+# ╠═1aa54e8a-0c9b-11eb-3b7c-f3be005991df
+# ╠═3236977a-0c9b-11eb-3875-2304eaec0a8e
 # ╟─7fafde70-0c9c-11eb-0403-9bfb6e42045b
-# ╟─c8b107ba-0c9d-11eb-11c7-830d112ca82f
+# ╠═c8b107ba-0c9d-11eb-11c7-830d112ca82f
 # ╟─0bfa3ffe-0c9a-11eb-2c99-3d8e57983c4c
 # ╟─8df49b7e-0c9e-11eb-0048-9368c9d7bee9
 # ╟─7aceebea-0d1d-11eb-05fa-d7374004b881
@@ -387,6 +415,6 @@ With respect to the initial goals, we can conclude the following:
 # ╟─d18a68b2-0d20-11eb-0f39-150f9bc9e0e9
 # ╟─da7801bc-0ca0-11eb-0480-33f07e16c85b
 # ╟─3d5f9648-0d21-11eb-14c4-65704b349ed6
-# ╟─d8b821a0-0d21-11eb-08bc-f7027b1cbea1
-# ╟─d89eb800-0d21-11eb-29d9-c119c9347dbc
+# ╠═d8b821a0-0d21-11eb-08bc-f7027b1cbea1
+# ╠═d89eb800-0d21-11eb-29d9-c119c9347dbc
 # ╟─d148f3ea-0d21-11eb-2d67-f1f4c77248d5

@@ -363,6 +363,48 @@ begin
 	end
 end
 
+# ╔═╡ 39dbaf2a-0df3-11eb-1ea4-1f4c0f5fdde5
+# gedeelte optimalisatie
+
+begin
+	"""
+		psycho(x)
+	
+	x = [α, β] 
+	Returns the pyschological state for the last course after optimisation
+	"""
+	function psycho(x)
+		α, β = x
+		a = 2
+		b = 3
+		θ = 0.05
+		s₀ = 0
+		N = 20
+		model = Model(Ipopt.Optimizer)
+		# vars
+		@variable(model, T[1:N] >= 0)
+		@variable(model, A[1:N] >= 0)
+		# constraints
+		@constraint(model, T + A .== 1) # altijd gevulde les
+		@constraint(model, T[1:b] .== 1) # starten met theorie
+		@constraint(model, A[1:b] .== 0) # geen PW in het begin
+		@constraint(model, sum(A[b+1:N]) <= a*sum(T[b+1:N])) # oplijnen  TH/pw
+		# berekenen satisfaction
+		S = Any[s₀]
+		for i in 2:N
+			push!(S, (1 - θ) * S[i-1] + θ *  (α * T[i] + β * A[i]) )
+		end
+		@objective(model, Max, S[end])
+		optimize!(model)
+		# return final satisfaction
+		return abs(objective_value(model))
+	end
+		
+	optimize(psycho, [α; β])
+		
+
+end
+
 # ╔═╡ Cell order:
 # ╠═a62a0de6-04b8-11eb-342f-bfea16900b85
 # ╠═eb1b597a-04b8-11eb-08ea-7bb72fd33686
@@ -384,3 +426,4 @@ end
 # ╠═fdc3f8e2-0d36-11eb-3de7-5de4d183abb7
 # ╟─cb6898d6-0565-11eb-2a3c-1514a0fa4f50
 # ╠═b76bae36-058d-11eb-216c-dfb8abd85772
+# ╠═39dbaf2a-0df3-11eb-1ea4-1f4c0f5fdde5
