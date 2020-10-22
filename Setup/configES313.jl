@@ -42,3 +42,6 @@ Pkg.add("SimJulia")
 # Notebooks
 Pkg.add("Pluto")
 Pkg.add("PlutoUI")
+
+# Performance
+Pkg.add("BenchmarkTools")
