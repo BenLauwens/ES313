@@ -10,14 +10,17 @@ using Logging
 # ╔═╡ 3cc48592-146d-11eb-1546-cd39a0f8e407
 using SimJulia, ResumableFunctions
 
+# ╔═╡ 951f3fc2-1538-11eb-3430-656e7a5c950a
+using Distributions
+
 # ╔═╡ c395df98-145a-11eb-1716-2de187df1a1a
 md"""
 # Logging
 The [Logging](https://docs.julialang.org/en/v1/stdlib/Logging/index.html) module will be used for efficient debugging and testing during development. 
 
-A logger has its own lower level that it can show. In addition to this there is a global setting that determines the lowest level that will be registered.
+A logger has its own lower bound on the `LogLevel` that it can show. In addition to this, there is a global setting that determines the lowest level that will be registered.
 
-Below you find some practical examples of logging
+Below you find some practical examples of using this module.
 """
 
 # ╔═╡ dafa45ae-1462-11eb-3338-037167917f4d
@@ -27,7 +30,7 @@ disable_logging(LogLevel(-5001))
 """
 	logdemo1()
 
-A small demo where everything is run on a single logger. Keep in mind when using the global logger, that its lowest level is `Debug` (`LogLevel(-1000)`), so you won't see anything below. 
+A small demo where everything is run on a single logger. Keep in mind when using the global logger, that its lowest level is `Info` (`LogLevel(0)`), so you won't see anything below. 
 
 Also keep in mind that you need to modify the global settings before you can see anything below `Debug`. You can do this with `disable_logging(LogLevel(N))`. 
 
@@ -131,7 +134,15 @@ end
 # ╔═╡ 0368ea70-145b-11eb-0b5c-fb3a33bf2027
 md"""
 # SimJulia
-Before starting a larger project, we will look into some SimJulia tricks
+Before starting a larger project, we will look into some SimJulia tricks.
+
+There are some compatibility issues between Pluto and more complex SimJulia constructions, which is why you will find specific examples in a seperate file.
+
+You can execute these file by running them from the REPL by using 
+```julia
+include("path/to/file.jl")
+```
+
 """
 
 # ╔═╡ dd63ff16-146d-11eb-059c-0586e1f972a5
@@ -144,37 +155,51 @@ Using a resumable function, try to implement:
 *Note*: a resumable function returns an iterator you need to call.
 """
 
-# ╔═╡ ed555bfc-146d-11eb-2b52-bbec67faaf0f
-
-
-# ╔═╡ 118eecdc-146d-11eb-1d4b-71b301d4d5e6
-md"""
-## Process dependencies
-Below you have an illustration of a process waiting for another one to terminate before continuing.
-"""
-
-# ╔═╡ 363592fc-146d-11eb-2dde-d56c18095702
-let
-	@resumable function basic(sim::Simulation)
-    	@info "Basic goes to work on time $(now(sim))"
-    	p = @process bottleneck(sim)
-    	@yield p
-    	@info "Basic continues after bottleneck completion on time $(now(sim))"
-	end
-
-	@resumable function bottleneck(sim::Simulation)
-   		@yield timeout(sim, 10)
+# ╔═╡ 010af16a-1474-11eb-10dc-292a149988f1
+begin
+	@resumable function pascal()
+		# two initial values
+		a = [1]
+		@yield a
+		a = [1,1]
+		@yield a
+		# all the following values
+		while true
+			a = vcat([1],a[1:end-1] .+ a[2:end],[1])
+			@yield a
+		end
 	end
 	
-	@info "\n$("-"^70)\nProcess dependencies\n$("-"^70)\n"
-	sim = Simulation()
-	@process basic(sim)
-	run(sim)
+	p = pascal()
+	println("Pascal's triangle:")
+	for i in 1:10
+		println(p())
+	end
+end
+
+# ╔═╡ 363eba24-1474-11eb-26b8-718eed4e5f21
+begin
+	@resumable function findroot(x0::Number)
+		# note: based on Newton's method
+		res = x0
+		@yield res
+		while true
+			res = res - (res^2 - x0) / (2*res)
+			@yield res
+		end  
+	end
+
+	r = findroot(5)
+	println("evolution of absolute error")
+	for i in 0:10
+		println("Iteration $(i): $(abs(sqrt(5) - r()) )")
+	end
 end
 
 # ╔═╡ 9da38750-146d-11eb-0757-2318eb6520ca
 md"""
-## Working with containers
+## Working with `containers`
+
 Containers represent a level of something (e.g. liquid level, energy ...). If you want to store a specific type of object, you will be better of using a `store`.
 
 Experiment a bit with containers (::Container). Discover their attributes (environment, capacity, level, get\_queue, put\_queue, seid) and find out how to use them. Generate a simple setting with:
@@ -219,18 +244,6 @@ let
 	@process empty(sim,c)
 	run(sim,30)
 end
-
-# ╔═╡ 4bf1fce0-1470-11eb-1290-63d06c8246a2
-md"""
-#### Excercise: application with statistics 
-Consider a candy machines that is continuously being monitored by a supervisor.  If the level is below a given treshold, the supervisor fills the machine up. 
-* Client arrival follows an exponential distribution with parameter $\theta = 1$ and each client takes two candies at a time.
-* Look at the mean time between refills. Is this what you would expect?
-* What happens when the amount of candy varies?  Is this still what you would expect? E.g. a clients takes one, two or three candies.
-"""
-
-# ╔═╡ 595d99f0-1470-11eb-20d0-87143910a5e6
-
 
 # ╔═╡ 71911828-1470-11eb-3519-bb52522ed2c9
 md"""
@@ -287,7 +300,195 @@ let
 	
 end
 
+# ╔═╡ 118eecdc-146d-11eb-1d4b-71b301d4d5e6
+md"""
+## Process dependencies
+Below you have an illustration of a process waiting for another one to terminate before continuing.
+"""
+
+# ╔═╡ 363592fc-146d-11eb-2dde-d56c18095702
+let
+	@resumable function basic(sim::Simulation)
+    	@info "Basic goes to work on time $(now(sim))"
+    	p = @process bottleneck(sim)
+    	@yield p
+    	@info "Basic continues after bottleneck completion on time $(now(sim))"
+	end
+
+	@resumable function bottleneck(sim::Simulation)
+   		@yield timeout(sim, 10)
+	end
+	
+	@info "\n$("-"^70)\nProcess dependencies\n$("-"^70)\n"
+	sim = Simulation()
+	@process basic(sim)
+	run(sim)
+end
+
+# ╔═╡ ddd43e36-1473-11eb-2544-8f9e1ac0f59c
+md"""
+## Linking a process to a type
+We want to simulate the life of a puppy. It's life consists of three activities:
+eating, sleeping and playing. This simple life can be disturbed (i.e. interrupted) 
+when it gets picked up by a human. If a puppy likes you, it might lick your face. 
+After being picked up, a puppy continues its life as before.
+
+We create our own type `Puppy` that has an associated process that models its life. 
+We also create a type `Human` that has an associated process to pick up a random 
+puppy from time to time.
+
+This application illustrates how you can interrupt an ongoing process and even do 
+something with the cause of the interruption (in this case keeping track of who 
+got liked by a puppy).
+
+```julia
+include("path/to/puppies.jl")
+```
+
+
+"""
+
+# ╔═╡ 4f9fee58-1536-11eb-1a4d-bd94541cb767
+md"""
+### Waiting on more than one event
+
+We want to simulate a number of machines that each produce a specific product and 
+put it in a warehouse (a `Store`). There is a combination process that needs one
+of each generated products and combines it into another. The simulation ends when
+the fictive container of combined goods is full.
+
+We create our own type `Product` with two fields that allow to identify the kind of
+product and to identify its "creator" by means of a serial number.
+We also create a type `Machine` that has an associated process. This machine has
+an ID an make one type of products. All generated product are put into the same 
+store. 
+
+The combiner process works as follows:
+* generate the events matching the availability of one of each product
+* wait until all of these events are realised. *Note*: if you only have two events, you can simply use `ev1` & `ev2`.
+* generate the event of putting a fictive combined product in a container
+* @yield the event (i.e. time-out until done)
+* verify if the container is full and if so stop the simulation on this event.
+
+This application illustrates how you can wait on multiple other events before 
+continuing the simulation. Keep in mind that this requires ALL events to be 
+processed.
+
+```julia
+include("path/to/machines.jl")
+```
+"""
+
+# ╔═╡ 63db05d2-1546-11eb-169c-7b23fe0009c4
+md"""
+### What if only one event needs to be realised?
+Suppose an agent requests a resource but only has a limited amount of patience before no longer wanting/needing the resource.
+
+For the example, a simulation is made with a `::Resource` with a capacity of $0$. So the agent can never obtain the requested resource. In the `agent` function the following happens:
+1. A request for `r::Resource` is made. The type of `req` is `SimJulia.Put`. This event will be triggered by an `@yield`
+2. the variable `res` is a dictionary with the events as key and the `::StateValue` as value. The first event to have been processed will have its `::StateValue` equal to `SimJulia.processed`
+3. the `if` conditions test whether the `::StateValue` of our request is equal to `SimJulia.processed`. 
+  1. If this is the case, the agent obtains the `::Resource`, uses it for 1 time unit and releases it back for further use.
+  2. If this is NOT the case, the other event will have taken place (in this case the timeout) and we remove the request from the `::Resource` queue with `cancel`.
+4. the simulation terminates since no more processes are active on time 4.0.
+
+"""
+
+# ╔═╡ 9abf31ea-1546-11eb-3ff2-41ad2484a04b
+let
+	@resumable function agent(env::Environment,r::Resource)
+		req = request(r)
+		res = @yield req | timeout(env, 4)
+		if res[req].state == SimJulia.processed
+			@info "$(env.time) - Agent is using the resource..."
+			@yield timeout(env,1)
+			release(r)
+			@info "$(env.time) - Agent released the resource."
+		else
+			@info "$(env.time) - Patience ran out..."
+			cancel(r, req)
+		end
+	end
+	
+	function runsim()
+		@info "\n$("-"^70)\nOne of both events\n$("-"^70)\n"
+		sim = Simulation()
+		r = Resource(sim,0)
+		@process agent(sim, r)
+		run(sim,10)
+	end
+	
+	runsim()
+end
+
+# ╔═╡ a955fd5c-1536-11eb-0405-9bc433188115
+md"""
+### Using the first available resource
+
+We want to simulate a number of warehouses that store the same product. At a regular
+interval, a product is required. But the origin of the product does not matter.
+
+We create our own type `Warehouse` with two field that allow to identify the 
+warehouse and that allow to track its stock by by means of a `Store`.
+
+The production process works adds a random quantity to a random warehouse 
+(the first available) and works as follows:
+* generate a product
+* generate the requests for all resources
+* yield the requests the will occur first. *note*: if two events occur at the same time, they will both happen. We deal with this later.
+* cancel all the other requests that have not occured yet. For those that have occured,
+we decrement the store with the value it was increased by.
+
+The simulation stops when either all warehouses are full (or cannot handle the 
+produced quantity).
+
+A similar approach can be followed when dealing with `get` requests instead of
+`put` requests.
+
+This application illustrates how you can deal with resource concurrency,
+i.e. taking whatever resource(s) come(s) available first without blocking the
+other ones or introducing unwanted artifacts.
+
+```julia
+include("path/to/warehouse.jl")
+```
+
+"""
+
 # ╔═╡ 414b4ee2-1473-11eb-3d7b-ef4f49e7efa0
+md"""
+## Exercises
+
+"""
+
+# ╔═╡ 4bf1fce0-1470-11eb-1290-63d06c8246a2
+md"""
+#### Application 1
+Consider a candy machines that is continuously being monitored by a supervisor.  If the level is below a given treshold, the supervisor fills the machine up. 
+* Client arrival follows an exponential distribution with parameter $\theta = 1$ and each client takes two candies at a time.
+* Look at the mean time between refills. Is this what you would expect?
+* What happens when the amount of candy varies?  Is this still what you would expect? E.g. a clients takes one, two or three candies.
+"""
+
+# ╔═╡ f3c8a4ba-1474-11eb-06b0-7f0e5ba47670
+
+
+# ╔═╡ c7b95ece-150e-11eb-0058-c15fde632ea0
+md"""
+### Application 2
+When modeling physical things such as cables, RF propagation, etc. encapsulation of this process is better in order to keep the propagation mechanism outside of the sending and receiving processes.
+
+Consider the following:
+* a sender sends messages on a regular interval (e.g. every 5 minutes)
+* a receiver is listening on a permanent basis for new messages
+* the transfer between both of them is not instantaneous, but takes some time. To model this, you can store (hint: use a `::Store`) the messages on the cable for later reception.
+
+"""
+
+# ╔═╡ 25a78e3a-1511-11eb-2239-1b938a2129fa
+
+
+# ╔═╡ de71f9fa-150e-11eb-01a5-ab89ea762405
 
 
 # ╔═╡ Cell order:
@@ -303,13 +504,23 @@ end
 # ╟─0368ea70-145b-11eb-0b5c-fb3a33bf2027
 # ╠═3cc48592-146d-11eb-1546-cd39a0f8e407
 # ╟─dd63ff16-146d-11eb-059c-0586e1f972a5
-# ╠═ed555bfc-146d-11eb-2b52-bbec67faaf0f
-# ╟─118eecdc-146d-11eb-1d4b-71b301d4d5e6
-# ╠═363592fc-146d-11eb-2dde-d56c18095702
+# ╠═010af16a-1474-11eb-10dc-292a149988f1
+# ╠═363eba24-1474-11eb-26b8-718eed4e5f21
 # ╟─9da38750-146d-11eb-0757-2318eb6520ca
 # ╠═73f24a8e-146f-11eb-2978-cfef033adae1
-# ╟─4bf1fce0-1470-11eb-1290-63d06c8246a2
-# ╠═595d99f0-1470-11eb-20d0-87143910a5e6
 # ╟─71911828-1470-11eb-3519-bb52522ed2c9
 # ╠═fbfed3c4-1470-11eb-0f28-231b891d0d9b
-# ╠═414b4ee2-1473-11eb-3d7b-ef4f49e7efa0
+# ╟─118eecdc-146d-11eb-1d4b-71b301d4d5e6
+# ╠═363592fc-146d-11eb-2dde-d56c18095702
+# ╟─ddd43e36-1473-11eb-2544-8f9e1ac0f59c
+# ╟─4f9fee58-1536-11eb-1a4d-bd94541cb767
+# ╟─63db05d2-1546-11eb-169c-7b23fe0009c4
+# ╠═9abf31ea-1546-11eb-3ff2-41ad2484a04b
+# ╟─a955fd5c-1536-11eb-0405-9bc433188115
+# ╟─414b4ee2-1473-11eb-3d7b-ef4f49e7efa0
+# ╟─4bf1fce0-1470-11eb-1290-63d06c8246a2
+# ╠═951f3fc2-1538-11eb-3430-656e7a5c950a
+# ╠═f3c8a4ba-1474-11eb-06b0-7f0e5ba47670
+# ╟─c7b95ece-150e-11eb-0058-c15fde632ea0
+# ╠═25a78e3a-1511-11eb-2239-1b938a2129fa
+# ╠═de71f9fa-150e-11eb-01a5-ab89ea762405
