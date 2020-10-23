@@ -69,7 +69,7 @@ end
                              products::Array{Symbol, 1}, result_container::Container)
     while true
         # obtain a request for each product kind
-        requests = map(x -> get(prod_store, p -> p.kind == x), products)
+        requests = map(x::Symbol -> get(prod_store, p::Product -> p.kind == x), products)
         @debug "$(env.time) - Combiner requests: $(requests)"
         # all requests must be matched
         @yield Operator(SimJulia.eval_and, requests...)
