@@ -9,7 +9,7 @@ The production process works adds a random quantity to a random warehouse
 (the first available) and works as follows:
 * generate a product
 * generate the requests for all resources
-# yield the requests the will occur first. *note*: if two events occur at the same time,
+* yield the requests the will occur first. *note*: if two events occur at the same time,
 they will both happen. We deal with this later.
 * cancel all the other requests that have not occured yet. For those that have occured,
 we decrement the store with the value it was increased by.

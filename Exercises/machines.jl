@@ -4,8 +4,8 @@ put it in a warehouse (a `Store`). There is a combination process that needs one
 of each generated products and combines it into another. The simulation ends when
 the fictive container of combined goods is full.
 
-We create our own type `Product` with two field that allow to identify the kind of
-product and that allow to identify its "creator" by means of a serial number.
+We create our own type `Product` with two fields that allow to identify the kind of
+product and to identify its "creator" by means of a serial number.
 We also create a type `Machine` that has an associated process. This machine has
 an ID an make one type of products. All generated product are put into the same 
 store. 
