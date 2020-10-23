@@ -104,12 +104,14 @@ function mysim(humannames=["Anaïs", "Pieter", "Bart"],
 end
 
 # logging settings
-Logging.disable_logging(LogLevel(-1000)) # de-activate debug messages
-logger = Logging.SimpleLogger(stdout, Logging.Debug)
-global_logger(logger)
+Logging.disable_logging(LogLevel(-1000)) # (de-)activate debug messages
+logger = Logging.ConsoleLogger(stdout, Logging.Debug)
 
-# run sim
-mysim()
+# run simulation
+with_logger(logger) do
+    mysim()
+end
+
 
 
 
