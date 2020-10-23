@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.11.14
+# v0.12.4
 
 using Markdown
 using InteractiveUtils
@@ -211,7 +211,7 @@ md"""## Simulation"""
 # ╔═╡ f0fb88a0-0fac-11eb-21d7-294b7f646c3c
 bomb = let
 	sim = Simulation()
-	bomb = Bomb(8.0)
+	bomb = Bomb(5)
 	@callback spontaneousfission(timeout(sim, 0.0), bomb)
 	run(sim)
 	bomb
@@ -228,8 +228,7 @@ let
 	i = findlast(x->x==0, cumsum(bomb.neutrons))
 	i = i === nothing ? 1 : i
 	plot(bomb.times[i+1:end], cumsum(bomb.neutrons)[i+1:end], seriestype=:scatter, ylabel="N", xlabel="time [s]")
-	#plot(bomb.times, cumsum(bomb.neutrons), seriestype=:scatter, ylabel="N", xlabel="time [s]")
-end;
+end
 
 # ╔═╡ 310da9f0-0fad-11eb-0418-4519c618e55d
 md"""## Monte Carlo"""

@@ -364,6 +364,51 @@ begin
 	end
 end
 
+# ╔═╡ 0c8a0d42-0dfc-11eb-1260-1724f1b15a92
+begin
+	"""
+		pschyo(x)
+	
+	x = [α, β]
+	return abs value of psychological state at the end of the semester
+	"""
+	function psycho(x)
+		α, β = x
+		Θ = 0.05
+		a = 2
+		b = 3
+		s₀ = 0
+		N = 20
+		model = Model(Ipopt.Optimizer)
+		# variables
+		@variable(model, T[1:N] >= 0)
+		@variable(model, A[1:N] >= 0)
+
+		@constraint(model, T + A .== 1)
+		for i = 1:N
+			if i <= 3
+				@constraint(model, T[i] == 1)
+				@constraint(model, A[i] == 0)
+			else
+				@constraint(model, sum(A[1:i]) <= a*(sum(T[1:i]) - b))
+			end
+		end
+		S = Any[s₀]
+		for i = 2:N
+			push!(S, (1-Θ) * S[i-1] + Θ * ( α * T[i] + β * A[i]))
+		end
+		@objective(model, Max, S[end])
+		optimize!(model)
+		return abs(objective_value(model))
+	end
+	
+	optres = optimize(psycho, [α, β])
+	α_opt, β_opt = optres.minimizer
+end
+
+# ╔═╡ 3258ed1c-0dfd-11eb-3edc-03f184f1253e
+α_opt
+
 # ╔═╡ b76bae36-058d-11eb-216c-dfb8abd85772
 
 
@@ -399,4 +444,6 @@ end
 # ╟─fdc3f8e2-0d36-11eb-3de7-5de4d183abb7
 # ╟─cb6898d6-0565-11eb-2a3c-1514a0fa4f50
 # ╠═85edae78-0d55-11eb-3475-f3e435626206
+# ╠═0c8a0d42-0dfc-11eb-1260-1724f1b15a92
+# ╠═3258ed1c-0dfd-11eb-3edc-03f184f1253e
 # ╟─b76bae36-058d-11eb-216c-dfb8abd85772

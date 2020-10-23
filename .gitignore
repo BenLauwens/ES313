@@ -5,3 +5,4 @@
 exdraft/
 .gitignore
 Exercises/*(solved)*.jl
+.vscode/settings.json

@@ -43,22 +43,24 @@ md"""## Schedule
 - 20/10: Introduction to Discrete Event Simulation
 - 21/10: Process Driven DES: SimJulia I
 - 27/10: Process Driven DES II + Applications I
-- 28/10: Applications with SimJulia II
+- 04/11: Applications with SimJulia II
 
 ### Practice
 
 - 08/09: Visualisation
-- 09/09: Cellular Automaton
-- 16/09: Game of Life
-- 06/10: Physical Modelling + Self-Organization
-- 07/10: Optimisation Techniques I
-- 13/10: Optimisation Techniques II + Linear Programming I
-- 14/10: Linear Programming II
-- 27/10: Linear Programming III + Introduction to Discrete Event Simulation I
-- 03/11: Introduction to Discrete Event Simulation II + Process Driven DES: SimJulia I
-- 04/11: Process Driven DES II + Applications with SimJulia I
+- 09/09: Cellular Automaton (Langton loops)
+- 16/09: Physical Modelling + Self-Organization (phase transitions)
+- 06/10: Optimisation Techniques I
+- 07/10: Optimisation Techniques II + Linear Programming I
+- 13/10: Linear Programming II
+- 14/10: Introduction to Discrete Event Simulation I
+- 28/10: Process Driven DES: SimJulia I + Projects Introduction
 - 10/11: Applications with SimJulia II
-- 11/11: Performance
+
+Remarks: 
+- 03/11 => -2 Hr (SimJulia II)
+- 11/11 => -1 Hr (Performance)
+
 
 ### Project
 

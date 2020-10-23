@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.11.14
+# v0.12.4
 
 using Markdown
 using InteractiveUtils
@@ -92,12 +92,12 @@ md"""### Attenuation of Neutron Beam
 From conservation of neutrons in beam: number scattered, absorbed, reacted removed from beam: $\mathrm d N = - \mathrm d I$
 
 Since
-\begin{equation}
+```math
 \frac{N}{I} = n\Delta x\sigma \leftarrow \begin{cases}
 N= In\sigma \Delta x \\
 - \mathrm d I = In\sigma \mathrm d x
 \end{cases}
-\end{equation}
+```
 
 Integrated, this yields attenuation formula in terms of total reaction cross section and foil density:
 \begin{equation}
