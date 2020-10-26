@@ -1,99 +1,5 @@
-### A Pluto.jl notebook ###
-# v0.12.4
+@info "$("-"^70)\nStarting sandwich shop demo\n$("-"^70)"
 
-using Markdown
-using InteractiveUtils
-
-# ╔═╡ a1373212-153d-11eb-0716-d98194a1fbe4
-using PlutoUI
-
-# ╔═╡ ac736b76-153d-11eb-2dd8-f79d303626fa
-md"""
-# Sandwich shop
-## Setting
-You manage a sandwich shop. You want to investigate if adding an extra crew member during rush hour is worth our trouble.
-
-## Some background information
-* The arrival time between clients $\left(T\right)$ is a stochastic variable following an exponential distribution with parameter $\lambda(t)$, where $\lambda$ depends on the time of day $t$. From historical data we know the following about the mean time between client arrivals:
-    * 00:00-08:00: shop is closed
-    * 08:00-11:00: 25 minutes
-    * 11:00-14:00: 1 minutes
-    * 14:00-17:00: 10 minutes
-    * 17:00-19:00: 2 minutes
-    * 19:00-20:00: 5 minutes
-    * 20:00-24:00: shop is closed
-    
-
-    **Remark**: in reality you would execute a measurements campaign and verify if the experimental distribution actually follows an exponential distribution (by means of a Kolmogorov–Smirnov test).
-        
-* If an employee is available, the client places an order (we could also incorporate a decision time). This implies that we need the shop to have a limited `::Resource` i.e. the employees. 
-* If no one is available, the client waits for his turn, but has a limited amount of patience. When this runs out, the client leaves the shop (and should thus cancel his request for the employee `::Resource`). Patience for the different clients is defined as a random variable $\sim\mathcal{U}(5,10)$. 
-* Once the order is placed, the preparation time is also a random variable.
-
-## Methodology
-Remember the different steps in the simulation process:
-###### Formulate the problem and plan the study
-The problem is known from the setting. Based on historical data, we will simulate our shop and analyse the impact of increasing the staff size on the client satisfaction (reduced waiting times) and the increased costs.
-
-###### Collect the data and formulate the simulation model
-* For this application this historical data is provided (cf. below)
-* Make a schematical representation of what is going on and who needs to "communicate" with whom.
-* Think about how you will implement all of this (types, field, storage of useful information, opening times etc.)
-
-###### Check the accuracy of the simulation model (assumptions, limitations etc.)
-* We assume that the selected distributions match with the reality (exponential for arrival rates, uniform for preparation times, categorical for the menu).
-
-###### Construct a computer program
-Cf. below.
-
-###### Test the validity of the simulation model
-We will run some simple tests to ensure the simulation works as intended.
-
-###### Plan the simulations to be performed
-We will need to keep track of the following information:
-* Queue build-up $\rightarrow$ logging of queue required
-* Client waiting times $\rightarrow$ logging of waiting times required
-
-Once we have this information we can determine the amount of simulations required for each configuration and start experimenting with different configurations.
-
-###### Conduct the simulation runs and analyze the results
-cf. below.
-
-###### Present the conclusions
-We need to some data from the activities in our shop:
-1. Queue build-up
-2. Client waiting times 
-
-## Some tips
-* You can round a `::DateTime` e.g.
-```Julia
-    round(Dates.now(),Minute)
-```
-* You can use a `::DateTime` within a simulation e.g.
-```Julia
-	# start on current day, rounded downwards (Q: why?)
-    tstart = floor(now(),Day) 
-	# setup simulation starting on tstart
-    sim = Simulation(tstart)  
-	# run the simulation for three days
-    run(sim, tstart + Day(3)) 
-```
-* The current time of the simulation (as a DateTime) can be obtained with `nowDatetime(sim)`.
-* You could use a specific logger for a particular function in order to facilitate debugging.
-
-## Possible extensions
-* Consider clients with a memory i.e. if they do not get served within their patience range, they go away and spread they word (which in its turn influences future arrival rates).
-* Include orders that are place by phone before a specific time. How do you include this in the process of the staff?
-* Consider the reverse problem: how many clients do you need for it to be worth it to add an extra person? You could one of the optimisation methods we saw in earlier sessions for this.
-
-
-"""
-
-# ╔═╡ b0e1d068-160e-11eb-1362-01c43074510b
-md"""
-## Implementation
-We start with by loading up the dependencies and by defining some shared constants and useful functions.
-```julia
 using Dates              # for actual time & date
 using Distributions      # for distributions and random behaviour
 using HypothesisTests    # for more statistical analysis
@@ -111,6 +17,10 @@ logger = Logging.ConsoleLogger(stdout,LogLevel(-3000))
 Logging.global_logger(logger)
 Logging.disable_logging(LogLevel(-1000))
 @info "$("-"^70)\nLoaded dependencies\n$("-"^70)"
+
+# ------------------------------------------------ #
+#               Simulation core code               # 
+# ------------------------------------------------ #
 
 # Available items in the shop
 const menulist = ["sandwich, cold","sandwich, hot","pasta","soup"]
@@ -196,10 +106,7 @@ end
 function show(io::IO,c::Client)
     print(io,"Client N° $(c.id) with $(round(c.patience.value / 60,digits=2)) minutes of patience")
 end
-```
-Once this is know, we can proceed to the definition of the processes that will be used in the simulation.
 
-```julia
 # Generating function for clients.
 @resumable function clientgenerator(env::Environment, shop::Shop, topen::Int=8, tclose::Int=20)
     while true
@@ -253,31 +160,20 @@ end
         push!(s.renegtimes, nowDatetime(env))  # store renegtimes
     end 
 end
-```
 
-### Test simulation
-We can verify the proper functioning of the simulation by running a simulation where there is no personnel available. 
-```julia
-function test()
-    @info "$("-"^70)\nStarting a store without staff\n$("-"^70)"
-    # Start a simulation on today 00Hr00
-    sim = Simulation(floor(Dates.now(),Day))
-    s = Shop(sim, 0)
-    @process clientgenerator(sim, s)
-    # Run the sim for one day
-    run(sim, floor(Dates.now(),Day) + Day(1))
-end
 
-test()
-```
-From the above demo we can see that the simulation works as intended, however there are some problems we can see as well:
-* a client can arrive after closing time due to the way the generator works
-* when a client arrives after closing time, he still waits until he runs out of patience.
+@info "$("-"^70)\nLoaded functions\n$("-"^70)"
 
-We will accept these small limitations and continue. We can generate an illustration that shows the queue length and the amount of clients leaving the queue.
 
-```julia
+# ------------------------------------------------ #
+#               helper functions                   # 
+# ------------------------------------------------ #
 
+"""
+    plotqueue(s::Shop)
+
+Store an illustration of the queuelength over time from a `::Store`
+"""
 function plotqueue(s::Shop)
     # some makeup
     tstart = floor(s.queuelength[1][1], Day) + Hour(8)
@@ -302,20 +198,89 @@ function plotqueue(s::Shop)
     p = plot(p1,p2, layout=(2,1), size=(1000,800))
     savefig(p, "queuelength.png")
 end
-```
-
 
 """
+    overviewplot(Nreneg::Array{Int64,1}, MWT::Array{Float64,1}, 
+MQL::Array{Float64,1}, fname::String)
 
-# ╔═╡ 8d8a51fc-1777-11eb-0690-8575e369cdc9
-LocalResource("queuelength.png")
+function to make an overview plot that includes a histogram of
+the amount of renegs, the mean waiting time and the mean queue
+length.
 
-# ╔═╡ 86eab698-1777-11eb-209f-cb2b5eb01c3b
-md"""
-### Multiple simulations
-We are now capable of running multiple simulations and look at the distribution of several metrics such as the mean queue length, the mean waiting time and the amount of clients that run out of patience.
+"""
+function overviewplot(Nreneg::Array{Int64,1}, MWT::Array{Float64,1}, 
+                      MQL::Array{Float64,1}, fname::String)
+    @info "making overviewplot $(fname)"
+    p1 = StatsPlots.histogram(Nreneg,bins=0:2:80,normalize=:probability, 
+                              title="Reneg distribution", label="",
+                              xlabel="Amount of renegs",
+                              ylabel="Experimental probability")
+    p2 = StatsPlots.histogram(MWT,bins=20,normalize=:probability, 
+                              title="MWT distribution", label="",
+                              xlabel="MWT [s]",
+                              ylabel="Experimental probability")
+    p3 = StatsPlots.histogram(MQL,bins=20,normalize=:probability, 
+                              title="MWT distribution", label="",
+                              xlabel="MQL",
+                              ylabel="Experimental probability")
+    p = plot(p1, p2, p3, layout=(1,3), size=(1200, 500))
+    savefig(p, fname)
+    return
+end
 
-```julia
+# ------------------------------------------------ #
+#            Simulation configuration              # 
+# ------------------------------------------------ #
+
+"""
+    test()
+
+Run a simple simulation for one day without staff. Conclusions:
+    - a client can arrive after closing time
+    - when a client arrives after closing time, he still waits until he runs out of patience
+"""
+function test()
+    @info "$("-"^70)\nStarting a store without staff\n$("-"^70)"
+    # Start a simulation on today 00Hr00
+    sim = Simulation(floor(Dates.now(),Day))
+    s = Shop(sim, 0)
+    @process clientgenerator(sim, s)
+    # Run the sim for one day
+    run(sim, floor(Dates.now(),Day) + Day(1))
+end
+
+test()
+
+"""
+    runsim()
+
+From our first simulation and the generated figure we can clearly see that there is a problem
+serving the clients fast enough during the midday peak hours.
+
+"""
+function runsim()
+    @info "$("-"^70)\nStarting a complete simulation\n$("-"^70)"
+    # Start a simulation on today 00Hr00
+    sim = Simulation(floor(Dates.now(),Day))
+    s = Shop(sim, 1)
+    @process clientgenerator(sim, s)
+    # Run the sim for one day
+    run(sim, floor(Dates.now(),Day) + Day(1))
+    # Make an illustration of the queue length
+    @info "Making queue length figure"
+    plotqueue(s)
+end
+
+runsim()
+
+"""
+    multisim(;n::Int=100, staff::Int=1,tstart=floor(now(),Day), duration::Period=Day(1))
+
+Run `n` simulations with shop staffed with `staff` persons. By default start on current day and
+runs for one day.
+
+Returns a vector of the number of renegs, the Mean Waiting Times (MWT) and Mean Queue Length (MQL)
+"""
 function multisim(;n::Int=100, staff::Int=1,
                   tstart::DateTime=floor(now(),Day), 
                   duration::Period=Day(1), plt::Bool=false)
@@ -337,7 +302,7 @@ function multisim(;n::Int=100, staff::Int=1,
     # generate a nice illustration
     if plt
         #@info Nreneg, MWT, MQL
-        fname = "multisim - $(n) iterations - $(staff) staff.pdf"
+        fname = "multisim - $(n) iterations - $(staff) staff.png"
         overviewplot(Nreneg, MWT, MQL, fname)
     end
 
@@ -347,31 +312,18 @@ end
 # run a single multisim in different configurations
 multisim(plt=true)
 multisim(staff=2,plt=true)
-```
 
-*Using 1 staff member:*
+# Determine when you have enough sample data
 """
+    determinesamplesize()
 
-# ╔═╡ 1bbd3af4-1776-11eb-0226-91212c01c89b
-LocalResource("multisim - 100 iterations - 1 staff.png")
+Make a boxplot of Nreneg, MWT, MQL for different sample sizes.
 
-# ╔═╡ 9833c350-1776-11eb-108f-e197d9e465df
-md"""
-*Using 2 staff members:*
-
+When looking at the boxplot, you see the boxes stay fixed starting from
+a sample length of around 1000. Of course the amount of outlier will increase
+for an increasing sample length.
 """
-
-# ╔═╡ 77b5ac42-1776-11eb-23b0-936d3918e053
-LocalResource("multisim - 100 iterations - 2 staff.png")
-
-# ╔═╡ abb70132-1776-11eb-298c-bf23946166b2
-md"""
-### Required sample size
-We still need to find out the minimal required sample size that can be considered as representative (i.e. "stable"). In order to have an idea, we generate a boxplot of the three metrics of interest for different sample lengths. For this application a sample size of 1000 should be sufficient.
-
-```julia
-
-function determinesamplesize(;maxpow::Int=3, fname::String="determinesamplesize.pdf")
+function determinesamplesize(;maxpow::Int=3, fname::String="determinesamplesize.png")
     @info "<determinesamplesize>: Running determinesamplesize $(fname)"
     r_reneg = []
     r_MWT = []
@@ -389,8 +341,8 @@ function determinesamplesize(;maxpow::Int=3, fname::String="determinesamplesize.
     @info "\t<determinesamplesize>: rendering plot"
     p = plot(
         boxplot(r_reneg, label="", title="Renegs"),
-        boxplot(r_MWT, label=["$(n)" for n in labels], title="MWT"),
-        boxplot(r_MQL, label=["$(n)" for n in labels], title="MQL"),
+        boxplot(r_MWT, label="", title="MWT"),
+        boxplot(r_MQL, label="", title="MQL"),
         layout=(1,3), size=(1200, 500)
     )
     xticks!(collect(1:maxpow), ["$(n)" for n in labels])
@@ -398,17 +350,10 @@ function determinesamplesize(;maxpow::Int=3, fname::String="determinesamplesize.
     savefig(p, fname)
     
 end
-```
-"""
 
-# ╔═╡ 4ef4c1c0-1777-11eb-2cc8-f1c40fa6154e
-LocalResource("determinesamplesize.png")
+#determinesamplesize(maxpow=4)
 
-# ╔═╡ 1a2ac91e-1778-11eb-0d8d-653f6a55f915
-md"""
-If we can show that one of the metrics follows a normal distribution, we can use the desired confidence interval width to determine the required sample length. You can use  the Kolmogorov-Smirnof test for this.
-
-```julia
+# Evaluate normality and required sample lengths
 function evalnorm(;α::Float64=0.05)
     @info "running normality test"
     # use MWT for this example
@@ -430,18 +375,10 @@ function evalnorm(;α::Float64=0.05)
     end
     return res
 end
-```
 
-"""
+evalnorm()
 
-# ╔═╡ 0323d94a-177a-11eb-2efe-7fe0cb9c922a
-LocalResource("samplesize.png")
-
-# ╔═╡ 1b2e8bb0-177b-11eb-119b-4f1bef23fed2
-md"""
-We have shown that adding a single person to the staff can drastically reduce the waiting times. You can and should also show this by using statistics. For comparing two cases, we can use a two sample t-test. When comparing multiple populations you can use ANOVA.
-
-```julia
+# verify statistical difference between two staffings
 function comparestaffing(;α::Float64=0.05)
     @info "comparing two populations"
     _, MWT_1, _ = multisim()
@@ -455,24 +392,8 @@ function comparestaffing(;α::Float64=0.05)
         @info "  assuming unequal variance"
         r = UnequalVarianceTTest(MWT_1, MWT_2)
     end
-    @info \"\"\"  Conclusion: $(ifelse(pvalue(r) > α, "Equal population mean",
-                            "Unequal population mean"))\"\"\" 
+    @info """  Conclusion: $(ifelse(pvalue(r) > α, "Equal population mean",
+                            "Unequal population mean"))""" 
 end
 
-```
-"""
-
-# ╔═╡ Cell order:
-# ╠═a1373212-153d-11eb-0716-d98194a1fbe4
-# ╟─ac736b76-153d-11eb-2dd8-f79d303626fa
-# ╟─b0e1d068-160e-11eb-1362-01c43074510b
-# ╟─8d8a51fc-1777-11eb-0690-8575e369cdc9
-# ╟─86eab698-1777-11eb-209f-cb2b5eb01c3b
-# ╟─1bbd3af4-1776-11eb-0226-91212c01c89b
-# ╟─9833c350-1776-11eb-108f-e197d9e465df
-# ╟─77b5ac42-1776-11eb-23b0-936d3918e053
-# ╟─abb70132-1776-11eb-298c-bf23946166b2
-# ╟─4ef4c1c0-1777-11eb-2cc8-f1c40fa6154e
-# ╟─1a2ac91e-1778-11eb-0d8d-653f6a55f915
-# ╟─0323d94a-177a-11eb-2efe-7fe0cb9c922a
-# ╟─1b2e8bb0-177b-11eb-119b-4f1bef23fed2
+comparestaffing()
