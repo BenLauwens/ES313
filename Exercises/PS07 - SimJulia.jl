@@ -10,6 +10,100 @@ using Logging
 # ╔═╡ 3cc48592-146d-11eb-1546-cd39a0f8e407
 using SimJulia, ResumableFunctions
 
+# ╔═╡ 73f24a8e-146f-11eb-2978-cfef033adae1
+let
+	@resumable function fill(sim::Simulation, c::Container)
+		while true 
+			@yield timeout(sim,rand(1:10))
+			@yield put(c,1)
+			@info "item added to the container on time $(now(sim))"
+		end
+	end
+
+	@resumable function empty(sim::Simulation, c::Container)
+		while true
+			@yield timeout(sim,rand(1:10))
+			n = rand(1:3)
+			@info "Filed my request for $(n) items on time $(now(sim))"
+			@yield get(c,n)
+			@info "Got my $(n) items on time $(now(sim))"
+		end
+	end
+
+	@resumable function monitor(sim::Simulation, c::Container)
+		while true
+			@info "$(now(sim)) - current container level: $(c.level)/$(c.capacity)"
+			@yield timeout(sim,1)
+		end
+	end
+	
+	# setup the simulation
+	# fix random seed for reproduction
+	using Random
+	Random.seed!(173)
+	
+	@info "\n$("-"^70)\nWorking with containers\n$("-"^70)\n"
+	sim = Simulation()
+	c = Container(sim,10)
+	@process fill(sim,c)
+	@process monitor(sim,c)
+	@process empty(sim,c)
+	run(sim,30)
+end
+
+# ╔═╡ fbfed3c4-1470-11eb-0f28-231b891d0d9b
+let
+	# our own type of object
+	struct Object
+		id::Int
+	end
+
+	@resumable function fill(sim::Simulation, s::Store)
+		i = 0
+		while true 
+			i += 1
+			item = Object(i)
+			@yield timeout(sim,rand(1:10))
+			@yield put(s,item)
+			@info "item $(item) added to the store on time $(now(sim))"
+		end
+	end
+	
+	@resumable function empty(sim::Simulation, s::Store)
+		while true
+			@yield timeout(sim,rand(1:10))
+			n = rand(1:3)
+			@info "Filed my request for $(n) items on time $(now(sim))"
+			for _ in 1:n
+				@yield get(s)
+			end
+			@info "Got my $(n) items on time $(now(sim))"
+		end
+	end
+	
+	@resumable function monitor(sim::Simulation, s::Store)
+		while true
+			@info "$(now(sim)) - current store level: $(length(s.items))/$(s.capacity)"
+			@yield timeout(sim,1)
+		end
+	end
+	
+	# fix random seed for reproduction
+	using Random
+	Random.seed!(173)
+	
+	# setup the simulation
+	@info "\n$("-"^70)\nWorking with stores\n$("-"^70)\n"
+	sim = Simulation()
+	s = Store{Object}(sim, capacity=UInt(10))
+	
+	@process fill(sim, s)
+	@process empty(sim, s)
+	@process monitor(sim, s)
+	run(sim,30)
+	
+end
+
 # ╔═╡ 951f3fc2-1538-11eb-3430-656e7a5c950a
 using Distributions
 
@@ -208,97 +302,11 @@ Experiment a bit with containers (::Container). Discover their attributes (envir
 3. a monitor proces that periodically prints an info message detailing the current level of the container. This process repeats forever.
 """
 
-# ╔═╡ 73f24a8e-146f-11eb-2978-cfef033adae1
-let
-	@resumable function fill(sim::Simulation, c::Container)
-		while true 
-			@yield timeout(sim,rand(1:10))
-			@yield put(c,1)
-			@info "item added to the container on time $(now(sim))"
-		end
-	end
-
-	@resumable function empty(sim::Simulation, c::Container)
-		while true
-			@yield timeout(sim,rand(1:10))
-			n = rand(1:3)
-			@info "Filed my request for $(n) items on time $(now(sim))"
-			@yield get(c,n)
-			@info "Got my $(n) items on time $(now(sim))"
-		end
-	end
-
-	@resumable function monitor(sim::Simulation, c::Container)
-		while true
-			@info "$(now(sim)) - current container level: $(c.level)/$(c.capacity)"
-			@yield timeout(sim,1)
-		end
-	end
-	
-	# setup the simulation
-	@info "\n$("-"^70)\nWorking with containers\n$("-"^70)\n"
-	sim = Simulation()
-	c = Container(sim,10)
-	@process fill(sim,c)
-	@process monitor(sim,c)
-	@process empty(sim,c)
-	run(sim,30)
-end
-
 # ╔═╡ 71911828-1470-11eb-3519-bb52522ed2c9
 md"""
 ## Working with `Stores`
 A store can hold objects (struct) that can be used by other processes. Let's reconsider the same small scale application we did with the containers, i.e. generate a simple setting and verify everything works as intended (e.g. a fill, empty and monitor process). 
 """
-
-# ╔═╡ fbfed3c4-1470-11eb-0f28-231b891d0d9b
-let
-	# our own type of object
-	struct Object
-		id::Int
-	end
-
-	@resumable function fill(sim::Simulation, s::Store)
-		i = 0
-		while true 
-			i += 1
-			item = Object(i)
-			@yield timeout(sim,rand(1:10))
-			@yield put(s,item)
-			@info "item $(item) added to the store on time $(now(sim))"
-		end
-	end
-	
-	@resumable function empty(sim::Simulation, s::Store)
-		while true
-			@yield timeout(sim,rand(1:10))
-			n = rand(1:3)
-			@info "Filed my request for $(n) items on time $(now(sim))"
-			for _ in 1:n
-				@yield get(s)
-			end
-			@info "Got my $(n) items on time $(now(sim))"
-		end
-	end
-	
-	@resumable function monitor(sim::Simulation, s::Store)
-		while true
-			@info "$(now(sim)) - current store level: $(length(s.items))/$(s.capacity)"
-			@yield timeout(sim,1)
-		end
-	end
-	
-	# setup the simulation
-	@info "\n$("-"^70)\nWorking with stores\n$("-"^70)\n"
-	sim = Simulation()
-	s = Store{Object}(sim, capacity=UInt(10))
-	
-	@process fill(sim, s)
-	@process empty(sim, s)
-	@process monitor(sim, s)
-	run(sim,30)
-	
-end
 
 # ╔═╡ 118eecdc-146d-11eb-1d4b-71b301d4d5e6
 md"""
