@@ -118,7 +118,7 @@ _ ...
 
 *Possible sourcess for inspiration*:
 * physics course
-* website Ben
+* http://interactive.quantumnano.at
 
 ## Disaster management
 The medical and emergency response following a mass casualty incident should be as good as possible. Consider a specific scenario and compare different strategies and policies in order to maximize the survivability of the victims.
@@ -199,4 +199,4 @@ You can always come to use with your own project proposition.
 """
 
 # ╔═╡ Cell order:
-# ╠═1e897cf4-18f5-11eb-2953-d1d83d41a044
+# ╟─1e897cf4-18f5-11eb-2953-d1d83d41a044
