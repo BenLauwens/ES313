@@ -6,3 +6,8 @@ exdraft/
 .gitignore
 Exercises/*(solved)*.jl
 .vscode/settings.json
+Exercises/demo2.log
+Exercises/determinesamplesize.pdf
+Exercises/multisim - 100 iterations - 1 staff.pdf
+Exercises/multisim - 100 iterations - 2 staff.pdf
+Exercises/queuelength.pdf
