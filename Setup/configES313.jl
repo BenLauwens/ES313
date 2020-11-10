@@ -17,7 +17,7 @@ Pkg.add("Plots")
 Pkg.add("StatsPlots")
 Pkg.add("LaTeXStrings")
 Pkg.add("Measures")
-Pkg.add(PackageSpec(url="https://github.com/BenLauwens/NativeSVG.jl"))
+Pkg.add(PackageSpec(url="https://github.com/BenLauwens/NativeSVG.jl.git"))
 
 # Optimisation
 Pkg.add("JuMP")
