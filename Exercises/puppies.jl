@@ -15,7 +15,6 @@ got liked by a puppy).
 using SimJulia
 using Logging
 
-# change! 
 # known puppy properties
 const puppyparams = Dict(:eat => 1:5, :sleep => 5:30, :play => 5:10)
 
