@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.11.10
+# v0.14.7
 
 using Markdown
 using InteractiveUtils
@@ -10,7 +10,7 @@ md"# Introduction"
 # ╔═╡ e6959750-eb91-11ea-3aea-519bdec8f9f6
 md"""## Who are we?
 
-Lecturer: MAJ IMM Ben Lauwens / D30.20 / [ben.lauwens@mil.be]()
+Lecturer: LCL IMM Ben Lauwens / D30.20 / [ben.lauwens@mil.be]()
 
 Assistant: CPN Bart De Clerck / D30.20 / [bart.declerck@mil.be]()"""
 
@@ -33,39 +33,39 @@ md"""## Schedule
 
 ### Theory
 
-- 01/09: Cellular Automaton + Game of Life
-- 02/09: Year Coord
-- 15/09: Physical Modelling + Self-Organization
-- 22/09: Optimisation Techniques
-- 23/09: Linear Programming I
-- 29/09: Linear Programming II + Applications I
-- 30/09: Applications of Linear Programming II
-- 20/10: Introduction to Discrete Event Simulation
-- 21/10: Process Driven DES: SimJulia I
-- 27/10: Process Driven DES II + Applications I
-- 28/10: Applications with SimJulia II
+- 31/08: Cellular Automaton + Game of Life
+- 01/09: Year Coord
+- 14/09: Physical Modelling + Self-Organization
+- 21/09: Optimisation Techniques
+- 22/09: Linear Programming I
+- 28/09: Linear Programming II + Applications I
+- 29/09: Applications of Linear Programming II
+- 19/10: Introduction to Discrete Event Simulation
+- 20/10: Process Driven DES: SimJulia I
+- 26/10: Process Driven DES II + Applications I
+- 27/10: Applications with SimJulia II
 
 ### Practice
 
-- 08/09: Visualisation
-- 09/09: Cellular Automaton
-- 16/09: Game of Life
-- 06/10: Physical Modelling + Self-Organization
-- 07/10: Optimisation Techniques I
-- 13/10: Optimisation Techniques II + Linear Programming I
-- 14/10: Linear Programming II
-- 27/10: Linear Programming III + Introduction to Discrete Event Simulation I
-- 03/11: Introduction to Discrete Event Simulation II + Process Driven DES: SimJulia I
-- 04/11: Process Driven DES II + Applications with SimJulia I
-- 10/11: Applications with SimJulia II
-- 11/11: Performance
+- 07/09: Visualisation
+- 08/09: Cellular Automaton
+- 15/09: Game of Life
+- 05/10: Physical Modelling + Self-Organization
+- 06/10: Optimisation Techniques I
+- 12/10: Optimisation Techniques II + Linear Programming I
+- 13/10: Linear Programming II
+- 09/11: Introduction to Discrete Event Simulation
+- 10/11: Process Driven DES: SimJulia I
+- 16/11: Process Driven DES II + Applications with SimJulia I
+- 17/11: Applications with SimJulia II
+- 24/11: Performance
 
 ### Project
 
-- 11/11: List of projects available
+- 09/11: List of projects available
 - we are available during contact hours
-- 17/11: obligatory meeting: understanding of the problem
-- 01/12: obligatory meeting: progress"""
+- 23/11: obligatory meeting: understanding of the problem
+- 07/12: obligatory meeting: progress"""
 
 # ╔═╡ 0b3e8cf2-eb93-11ea-140d-35c9f1074ea9
 md"""## Evaluation
@@ -90,16 +90,16 @@ md"""## Julia
 ```julia
 using Pkg
 pkg"add Pluto"
+pkg"add PlutoUI"
 ```
 
 - Start Pluto:
 
 ```julia
 using Pluto
-Pluto.run(8888)
+Pluto.run()
 ```
-
-- Open [https://localhost:8888]()"""
+"""
 
 # ╔═╡ Cell order:
 # ╟─bef0f870-eb91-11ea-02b6-dd0f1a40947c

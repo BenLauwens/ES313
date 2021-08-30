@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.11.10
+# v0.14.7
 
 using Markdown
 using InteractiveUtils
@@ -260,7 +260,7 @@ The Game of Life was proved Turing complete in 1982. Since then, several people 
 # ╠═584f18f0-ebb8-11ea-235c-8918cb8023bc
 # ╠═83e4ef32-ebb8-11ea-3a43-7556b2cf10c7
 # ╠═ac886070-ebb8-11ea-1742-c9449ca01d7e
-# ╟─87ad41d0-ebb8-11ea-3e4d-5f76f10c6888
+# ╠═87ad41d0-ebb8-11ea-3e4d-5f76f10c6888
 # ╠═9dd17080-ebb8-11ea-11df-cfe66b93af90
 # ╟─307f6080-ebba-11ea-210c-0182eece50c2
 # ╠═90bba610-ebbb-11ea-369a-936b36d2e26f

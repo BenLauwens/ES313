@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.11.14
+# v0.14.7
 
 using Markdown
 using InteractiveUtils
@@ -7,19 +7,22 @@ using InteractiveUtils
 # ╔═╡ c2f30dd0-eb93-11ea-26ee-4d3ee9156428
 using Pkg # Only first time
 
+# ╔═╡ 7689e592-eb93-11ea-07cd-ff5392a4165a
+pkg"add https://github.com/BenLauwens/NativeSVG.jl.git"   # Only first time
+
 # ╔═╡ af647e20-eb93-11ea-3834-c7241fad8a1d
 using NativeSVG
 
 # ╔═╡ bbf4ab90-eb95-11ea-174e-c3624a0d92cd
 using Random
 
+# ╔═╡ 43627847-ce0d-4969-b6e1-2d59a54d1fd2
+using PlutoUI
+
 # ╔═╡ 56f41ca0-eb93-11ea-1ea6-11b0e8bb9a7d
 md"""# Cellular Automaton
 
 Port of [Think Complexity chapter 5](http://greenteapress.com/complexity2/html/index.html) by Allen Downey."""
-
-# ╔═╡ 7689e592-eb93-11ea-07cd-ff5392a4165a
-pkg"add https://github.com/BenLauwens/NativeSVG.jl.git"   # Only first time
 
 # ╔═╡ dab709d0-eb93-11ea-050e-3bfa6a5e1836
 md"Cellular Automaton = discrete space (cells) as input for a calculation in discrete time"
@@ -120,8 +123,8 @@ md"initialisation:"
 res = let
 	x₀ = falses(21)
 	x₀[11] = true
-	step1dim(x₀, inttorule1dim(UInt8(50)), 9);
-end
+	step1dim(x₀, inttorule1dim(UInt8(50)), 9)
+end;
 
 # ╔═╡ 5d2a01f0-eb95-11ea-3dcd-b794e1b0d566
 md"visualisation:"
@@ -306,19 +309,17 @@ begin
 	turing
 end
 
-# ╔═╡ bbab5ba0-eb97-11ea-3782-fd32a984531d
-let
-	io = IOBuffer()
+# ╔═╡ 74832baf-5779-47f6-907e-5288420bb1b9
+with_terminal() do
 	turing = Turing(zeros(Int64, 11), 6, 'A')
-	println(io, "- ", turing)
+	println("- ", turing)
 	try
 		while true
 			stepturing!(turing, applyrulebusybeaver)
-			println(io, "- ", turing)
+			println("- ", turing)
 		end
 	catch
 	end
-	Markdown.parse(String(take!(io)))
 end
 
 # ╔═╡ Cell order:
@@ -365,4 +366,5 @@ end
 # ╟─a3263280-eb97-11ea-2e91-532bfa433f6c
 # ╠═be984390-ebb1-11ea-0729-39795172949b
 # ╠═ccda0380-ebb1-11ea-1677-11d9d171897c
-# ╠═bbab5ba0-eb97-11ea-3782-fd32a984531d
+# ╠═43627847-ce0d-4969-b6e1-2d59a54d1fd2
+# ╠═74832baf-5779-47f6-907e-5288420bb1b9
