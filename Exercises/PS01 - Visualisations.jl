@@ -16,7 +16,43 @@ begin
 end
 
 # ╔═╡ 9f0fff31-d180-499b-b8a4-27d09f9311c2
+# Make cells wider
+html"""<style>
+/*              screen size more than:                     and  less than:                     */
+@media screen and (max-width: 699px) { /* Tablet */ 
+  /* Nest everything into here */
+    main { /* Same as before */
+        max-width: 1000px !important; /* Same as before */
+        margin-right: 200px !important; /* Same as before */
+    } /* Same as before*/
 
+}
+
+@media screen and (min-width: 700px) and (max-width: 1199px) { /* Laptop*/ 
+  /* Nest everything into here */
+    main { /* Same as before */
+        max-width: 1000px !important; /* Same as before */
+        margin-right: 200px !important; /* Same as before */
+    } /* Same as before*/
+}
+
+@media screen and (min-width:1200px) and (max-width: 1920px) { /* Desktop */ 
+  /* Nest everything into here */
+    main { /* Same as before */
+        max-width: 1000px !important; /* Same as before */
+        margin-right: 200px !important; /* Same as before */
+    } /* Same as before*/
+}
+
+@media screen and (min-width:1921px) { /* Stadium */ 
+  /* Nest everything into here */
+    main { /* Same as before */
+        max-width: 1000px !important; /* Same as before */
+        margin-right: 200px !important; /* Same as before */
+    } /* Same as before*/
+}
+</style>
+"""
 
 # ╔═╡ 650f5346-ec62-11ea-3007-bded07c572b4
 md"
@@ -1591,7 +1627,7 @@ version = "0.9.1+5"
 """
 
 # ╔═╡ Cell order:
-# ╠═9f0fff31-d180-499b-b8a4-27d09f9311c2
+# ╟─9f0fff31-d180-499b-b8a4-27d09f9311c2
 # ╟─650f5346-ec62-11ea-3007-bded07c572b4
 # ╠═8e3917d6-ec62-11ea-0c16-7d2749432dd1
 # ╟─02c1eefc-ec63-11ea-35cc-83d7cffdc592
