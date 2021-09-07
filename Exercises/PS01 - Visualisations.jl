@@ -22,8 +22,8 @@ html"""<style>
 @media screen and (max-width: 699px) { /* Tablet */ 
   /* Nest everything into here */
     main { /* Same as before */
-        max-width: 1000px !important; /* Same as before */
-        margin-right: 200px !important; /* Same as before */
+        max-width: 1200px !important; /* Same as before */
+        margin-right: 100px !important; /* Same as before */
     } /* Same as before*/
 
 }
@@ -31,24 +31,24 @@ html"""<style>
 @media screen and (min-width: 700px) and (max-width: 1199px) { /* Laptop*/ 
   /* Nest everything into here */
     main { /* Same as before */
-        max-width: 1000px !important; /* Same as before */
-        margin-right: 200px !important; /* Same as before */
+        max-width: 1200px !important; /* Same as before */
+        margin-right: 100px !important; /* Same as before */
     } /* Same as before*/
 }
 
 @media screen and (min-width:1200px) and (max-width: 1920px) { /* Desktop */ 
   /* Nest everything into here */
     main { /* Same as before */
-        max-width: 1000px !important; /* Same as before */
-        margin-right: 200px !important; /* Same as before */
+        max-width: 1200px !important; /* Same as before */
+        margin-right: 100px !important; /* Same as before */
     } /* Same as before*/
 }
 
 @media screen and (min-width:1921px) { /* Stadium */ 
   /* Nest everything into here */
     main { /* Same as before */
-        max-width: 1000px !important; /* Same as before */
-        margin-right: 200px !important; /* Same as before */
+        max-width: 1200px !important; /* Same as before */
+        margin-right: 100px !important; /* Same as before */
     } /* Same as before*/
 }
 </style>
@@ -252,7 +252,8 @@ end
 # ╔═╡ ac923b84-ec64-11ea-31cd-278bce8566f7
 md"""
 ### Example
-Suppose we have a measurement that should follow a multinomial normal distribution: $ X \sim N(\bar{\mu},\Sigma)$, i.e. a measurement in a two-dimensional space. We want to represent this graphically. Severel options could be considered: a 3D-plot, a heatmap, a contour plot.
+Suppose we have a measurement that should follow a multinomial normal distribution: 
+``X \sim N(\bar{\mu},\Sigma)``, i.e. a measurement in a two-dimensional space. We want to represent this graphically. Severel options could be considered: a 3D-plot, a heatmap, a contour plot.
 """
 
 # ╔═╡ ac7a0e38-ec64-11ea-3b16-e50c3ea51b7e
@@ -262,81 +263,47 @@ begin
 	Σ = [1.0 0;0 3];                # covariance matrix (i.e. no correlation between the variables)
 	d = Distributions.MvNormal(μ,Σ) # multivariate normal distribution
 
-	# make a grid
+	# make a grid (control)
 	ns = 3
 	nx = 21
 	ny = 31
-	X = range(μ₁ - ns*Σ[1,1], stop=μ₁ + ns*Σ[1,1],length=nx);
-	Y = range(μ₂ - ns*Σ[2,2], stop=μ₂ + ns*Σ[2,2],length=ny);
-	
-	Z = permutedims(collect(Iterators.product(X,Y)))
-	Z = map(x->pdf(d,collect(x)), Z)
+	X = range(μ₁ - ns*Σ[1,1], stop=μ₁ + ns*Σ[1,1], length=nx);
+	Y = range(μ₂ - ns*Σ[2,2], stop=μ₂ + ns*Σ[2,2], length=ny);
+	grid = (collect(Iterators.product(X,Y)))
+	Zval = map(x->pdf(d,collect(x)), grid)
 	
 	# common plot setting
 	plotsettings =  Dict(:xlims=>(0,20), :ylims=>(10,30), 
 					 :xlabel=>"x", :ylabel=>"y")
-end
-
-# ╔═╡ 6467bb3c-ed30-11ea-2c5e-791126b95b26
-begin
-	XX = permutedims(repeat(X,outer=(1,ny)))
-	YY = repeat(Y,outer=(1,nx))
-	scatter3d(XX,YY,Z, color=:blue, label="", alpha=0.5; plotsettings...)
-	title!("3D point cloud (nx: $(nx), ny: $(ny))")
+	
+	# vectors to plot
+	XX = [v[1] for v in vec(grid)]
+	YY = [v[2] for v in vec(grid)]
+	ZZ = vec(Zval)
 end
 
 # ╔═╡ ac629280-ec64-11ea-2f69-45e26a6cde89
 md"""Below you can see a 3D point cloud. Note that you need to provide elements of the same size (in this case an $(typeof(XX)) with dimensions $(size(XX))) """
 
-# ╔═╡ a7b950f0-ed33-11ea-0e3b-6f8cea0e8969
-md"""
-Other options could include a surface plot, a contour plot or a heatmap. However, for some reason these do not work inside of Pluto under Julia v1.2 (they do starting from v1.4 and higher). 
-
-You can circumvent this problem by generating the figures in a seperate julia script that you run directly from the REPL. Suppose your file is named `myplotfile.jl`. You can run
-
-```Julia
-include("path/to/my/file/myplotfile.jl")
-```
-in order to obtain the figure as a pdf. The code for `myplotfile.jl` is shown below and is also provided so that you can this this on your own. For completeness, the figure you will obtain is also available in the "./img" folder."""
-
-# ╔═╡ abeb790c-ec64-11ea-1928-815a538a9779
-md"""
-```Julia
-# myplotfile.jl
-using Plots, Distributions
-	
-μ₁ = 10; μ₂ = 20; μ = [μ₁, μ₂]  # mean matrix
-Σ = [1.0 0;0 3];                # covariance matrix (i.e. no correlation between the variables)
-d = Distributions.MvNormal(μ,Σ) # multivariate normal distribution
-
-# make a grid
-ns = 3
-nx = 21
-ny = 31
-X = range(μ₁ - ns*Σ[1,1], stop=μ₁ + ns*Σ[1,1],length=nx);
-Y = range(μ₂ - ns*Σ[2,2], stop=μ₂ + ns*Σ[2,2],length=ny);
-
-Z = permutedims(collect(Iterators.product(X,Y)))
-Z = map(x->pdf(d,collect(x)), Z)
-
-# common plot setting
-plotsettings =  Dict(:xlims=>(0,20), :ylims=>(10,30), 
-                 :xlabel=>"x", :ylabel=>"y")
-
-p = plot(surface(X,Y,Z, color=:blues, title="surface plot"),
-         surface(X,Y,Z, color=:blues_r, title="surface plot\n(reversed colors)"),
-         contourf(X,Y,Z, title="contour plot"),
-         heatmap(X,Y,Z, title="heatmap"), 
-         layout=(2,2), size=(1200,1200); plotsettings...)
-
-for extension in ["png","pdf"]
-    savefig(p, "./img/myplot.$(extension)")
+# ╔═╡ 2409b193-bf0f-421f-bad0-815bfcf399cc
+begin
+	scatter3d(XX,YY,ZZ, label="$(d)"; plotsettings...)
 end
-```
 
-Nice to know: adding `_r` to an existing colorscale will flip its direction.
-"""
-
+# ╔═╡ 0139c2d8-63fa-474e-8e9f-cf6093a266a4
+begin
+	# generate figure itself
+	p = plot(surface(XX,YY,ZZ, color=:blues, title="surface plot"),
+         surface(XX,YY,ZZ, color=cgrad(:blues,rev=true), title="surface plot\n(reversed colors)"),
+         contourf(X,Y,ZZ, title="contour plot"),
+   		 heatmap(X,Y,Zval', title="heatmap"),
+         layout=(2,2), size=(1000,1000); plotsettings...)
+	# save externally
+	for extension in ["png","pdf"]
+		savefig(p,joinpath(pwd(),"img/newblup.$(extension)"))
+	end
+	p
+end
 
 # ╔═╡ d7c20e82-ec65-11ea-1412-d39f97aae166
 md"""
@@ -345,7 +312,7 @@ In the context of numerical simulations, it will be required to do some statisti
 
 ### Example
 
-We have a sample ($ X \sim \chi ^{2}_{k=3}$) that we want to visualize as a boxplot. The following keywords are available:
+We have a sample (`` X \sim \chi ^{2}_{k=3}``) that we want to visualize as a boxplot. The following keywords are available:
 * `notch=false`: if a notch should be included in the box.
 * `range=1.5`: multiple of the inter-quartile range that is used to determine outliers
 * `whisker_width=:match`: width of the whiskers
@@ -530,6 +497,10 @@ Should you plot more than 17 data series, the list starts again at the beginning
 
 """
 
+# ╔═╡ 0bfad805-2483-40d9-bd94-c76b2dcb238a
+# custom color palette:
+my_palette = palette([:green, :blue, :white, :red, :yellow],30)
+
 # ╔═╡ 7a269742-ec66-11ea-1b40-9d8cce31f885
 let
 	μ = range(1,step=2,length=5)
@@ -539,10 +510,10 @@ let
 	title!("Default colors")
 	p2 = plot(x,color=[1 3 5 10 15],legend=false)
 	title!("Forced colors")
-
-	p = get_color_palette(:auto, plot_color(:white),20)
-	p3 = plot(x,color=[p[1] p[4]],legend=false)
-	plot(p1,p2,p3,layout=(1,3),size=(900,300),title=(["default colors" "forced colors"  "cylcing between only two colors"]),titlefontsize=10)
+	# using only two colors of the custom palette
+	p3 = plot(x,color=[my_palette[1] my_palette[4]],legend=false)
+ 	P = plot(p1,p2,p3,layout=(1,3),size=(900,300),title=(["default colors" "forced colors"  "cylcing between only two colors"]),titlefontsize=10)
+	P
 end
 
 # ╔═╡ 7a111b6a-ec66-11ea-3a5a-cd6de910dd00
@@ -1653,9 +1624,8 @@ version = "0.9.1+5"
 # ╟─ac923b84-ec64-11ea-31cd-278bce8566f7
 # ╠═ac7a0e38-ec64-11ea-3b16-e50c3ea51b7e
 # ╟─ac629280-ec64-11ea-2f69-45e26a6cde89
-# ╠═6467bb3c-ed30-11ea-2c5e-791126b95b26
-# ╟─a7b950f0-ed33-11ea-0e3b-6f8cea0e8969
-# ╟─abeb790c-ec64-11ea-1928-815a538a9779
+# ╠═2409b193-bf0f-421f-bad0-815bfcf399cc
+# ╠═0139c2d8-63fa-474e-8e9f-cf6093a266a4
 # ╟─d7c20e82-ec65-11ea-1412-d39f97aae166
 # ╠═fa03f666-ec65-11ea-11ba-65868aaf856d
 # ╟─f9efb41e-ec65-11ea-128a-77f4376ed9e4
@@ -1667,6 +1637,7 @@ version = "0.9.1+5"
 # ╟─d7abc762-ec65-11ea-29fc-7188ba315fca
 # ╠═7a55c97c-ec66-11ea-3d85-51615e70f1c1
 # ╟─7a3fbc40-ec66-11ea-34f3-b3804f016b55
+# ╠═0bfad805-2483-40d9-bd94-c76b2dcb238a
 # ╠═7a269742-ec66-11ea-1b40-9d8cce31f885
 # ╟─7a111b6a-ec66-11ea-3a5a-cd6de910dd00
 # ╠═79faeac0-ec66-11ea-1d6d-318ab749e232
