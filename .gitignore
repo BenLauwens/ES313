@@ -5,6 +5,7 @@
 exdraft/
 .gitignore
 Exercises/*(solved)*.jl
+Exercises/PS02 - Cellular Automaton (solved)
 .vscode/settings.json
 Exercises/demo2.log
 Exercises/determinesamplesize.pdf
