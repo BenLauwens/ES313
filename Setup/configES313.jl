@@ -37,7 +37,9 @@ end
 # Install & download required packages into environment
 cd(joinpath(downloadfolder,"ES313"))
 Pkg.activate(".")
+@info "Downloading required packages"
 Pkg.instantiate()
+@info "Checking for package updates"
 Pkg.update()
 
 
