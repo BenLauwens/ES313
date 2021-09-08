@@ -1,17 +1,17 @@
 ### A Pluto.jl notebook ###
-# v0.14.7
+# v0.15.1
 
 using Markdown
 using InteractiveUtils
 
-# ╔═╡ c2f30dd0-eb93-11ea-26ee-4d3ee9156428
-using Pkg # Only first time
-
-# ╔═╡ 7689e592-eb93-11ea-07cd-ff5392a4165a
-pkg"add https://github.com/BenLauwens/NativeSVG.jl.git"   # Only first time
-
-# ╔═╡ af647e20-eb93-11ea-3834-c7241fad8a1d
-using NativeSVG
+# ╔═╡ 310ce685-2661-4f32-bf14-91a4f4e569ce
+# Explicit use of own environment instead of a local one for each notebook
+begin
+	using Pkg
+	cd(joinpath(dirname(@__FILE__),".."))
+    Pkg.activate(pwd())
+    using NativeSVG
+end
 
 # ╔═╡ bbf4ab90-eb95-11ea-174e-c3624a0d92cd
 using Random
@@ -324,9 +324,7 @@ end
 
 # ╔═╡ Cell order:
 # ╟─56f41ca0-eb93-11ea-1ea6-11b0e8bb9a7d
-# ╠═c2f30dd0-eb93-11ea-26ee-4d3ee9156428
-# ╠═7689e592-eb93-11ea-07cd-ff5392a4165a
-# ╠═af647e20-eb93-11ea-3834-c7241fad8a1d
+# ╠═310ce685-2661-4f32-bf14-91a4f4e569ce
 # ╟─dab709d0-eb93-11ea-050e-3bfa6a5e1836
 # ╟─f4b601b0-eb93-11ea-0969-7967a1e85c8b
 # ╠═14a02c30-eb94-11ea-2114-5102409c8ae5
