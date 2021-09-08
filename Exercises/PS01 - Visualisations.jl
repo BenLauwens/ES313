@@ -85,15 +85,60 @@ z = load("mydatadump.jld", "var1")
 ```
 """
 
+# ╔═╡ 76d56f00-5217-4906-9361-7188ee65968b
+md"""
+Small refresher on function definition, methods & multiple dispatch:
+"""
+
+# ╔═╡ 5b3db6f3-38be-4be2-9b66-b4ddd6c049bb
+begin
+	"""
+		foo(x,y; kw1)
+	
+	small demo function
+	"""
+	function foo(x::T,y::T; kw1=oneunit(T)) where {T<:Number}
+		return (x + y) * kw1
+	end
+	
+	function foo(x::String, y::String)
+		return x*y
+	end
+	
+	function foo(x::String, y::Integer)
+		x^y
+	end
+	
+	function foo(v::Vector{T}, y::T) where {T<:Number}
+		return
+	end
+end
+
+# ╔═╡ 7f8e306c-fd69-43b7-8142-b7d6feb6c0ea
+typeof(foo(Float16(2.),Float16(2.)))
+
+# ╔═╡ e3ea183c-4fb4-4b59-aaa6-de60e9ab8e2d
+foo("PO",2)
+
+# ╔═╡ 23a8e574-1da5-48c9-afbf-888a8b1d8b2b
+methods(foo)
+
+# ╔═╡ b813bcb4-b055-4b9f-b9d7-82464a67b934
+md"""### Basic plotting
+"""
+
 # ╔═╡ 7aab6b96-ec63-11ea-3bfb-3352ff34b218
 x = range(0,stop=10)
+
+# ╔═╡ 7efb1dd5-0c53-4896-b91a-1e7d85941f66
+collect(x)
 
 # ╔═╡ 80435a32-ec63-11ea-18b3-61d3d41b396d
 plot(x,x,size=(300,300),label="y = x")
 
 # ╔═╡ a16e752a-ec63-11ea-1844-7fb87dcdbc97
 let
-	plot(x,-(x .- 6).^2 .+ 6,size=(500,300), label=L"y=x",legend=:topleft, marker=:square)
+	plot(x,-(x .- 6).^2 .+ 6,size=(500,300), label=L"y=-(x - 6)^2 + 6",legend=:topleft, marker=:square)
 	plot!([0, 6, 6],[6, 6, 0],label="",linestyle=:dash,linecolor=:black)   # add another series to same figure (not shown in legend)
 	title!("Parabola with LaTeX-style legend\n and markers",titlefontsize=10)
 	xlabel!(L"x")
@@ -115,7 +160,7 @@ scatter(x,x,label="datapoints",legend=:topleft,size=(300,300))
 md"Other types of plots are possibly suited as well"
 
 # ╔═╡ bc47c360-ec63-11ea-3c83-6517823915e7
-begin		Plots.bar(x,x.^2,orientation=:v,label="data",legend=:topleft,bar_width=0.25,grid=false)
+begin		Plots.bar(x,x.^2,orientation=:v,label="data",legend=:topleft,bar_width=0.1,grid=false)
 	xticks!(range(0,maximum(x),step=2))
 	xlabel!(L"x")
 	ylabel!(L"f(x)=x^2")
@@ -241,13 +286,16 @@ let
 
 	# specifying the tick format (cf. documentation)
 	datexticks = [Dates.value(mom) for mom in x[1:n:end]]
-	datexticklabels = Dates.format.(x,"u d")
+	datexticklabels = Dates.format.(x,"YYYY u dd HH:MM")
 	xticks!(datexticks,datexticklabels,tickfonthalign=:center)
 
 	# final plot
-	plot(p1,p2,size=(800,300),bottom_margin=7mm)
+	plot(p1,p2,size=(800,300),bottom_margin=23mm)
 
 end
+
+# ╔═╡ 4f21ca29-9419-4854-9d83-1bf4974c6fbe
+[1;2] .+ [3 4]
 
 # ╔═╡ ac923b84-ec64-11ea-31cd-278bce8566f7
 md"""
@@ -282,6 +330,9 @@ begin
 	ZZ = vec(Zval)
 end
 
+# ╔═╡ df947306-c97d-4cb9-a55b-90df78e48362
+grid
+
 # ╔═╡ ac629280-ec64-11ea-2f69-45e26a6cde89
 md"""Below you can see a 3D point cloud. Note that you need to provide elements of the same size (in this case an $(typeof(XX)) with dimensions $(size(XX))) """
 
@@ -300,10 +351,13 @@ begin
          layout=(2,2), size=(1000,1000); plotsettings...)
 	# save externally
 	for extension in ["png","pdf"]
-		savefig(p,joinpath(pwd(),"img/newblup.$(extension)"))
+		#savefig(p,joinpath(pwd(),"img/newblup.$(extension)"))
 	end
 	p
 end
+
+# ╔═╡ 11e03115-3076-4480-a4fb-5165a1d880f6
+
 
 # ╔═╡ d7c20e82-ec65-11ea-1412-d39f97aae166
 md"""
@@ -353,6 +407,8 @@ We want to:
 
 # ╔═╡ f9d800da-ec65-11ea-279b-4558590a769b
 let
+	#∂f∂x1(x) = x
+	#🐢
 	μ = 10; σ = 2
 	μᵣ = 16
 	d₀ = Normal(μ,σ)
@@ -1602,7 +1658,14 @@ version = "0.9.1+5"
 # ╟─650f5346-ec62-11ea-3007-bded07c572b4
 # ╠═8e3917d6-ec62-11ea-0c16-7d2749432dd1
 # ╟─02c1eefc-ec63-11ea-35cc-83d7cffdc592
+# ╟─76d56f00-5217-4906-9361-7188ee65968b
+# ╠═5b3db6f3-38be-4be2-9b66-b4ddd6c049bb
+# ╠═7f8e306c-fd69-43b7-8142-b7d6feb6c0ea
+# ╠═e3ea183c-4fb4-4b59-aaa6-de60e9ab8e2d
+# ╠═23a8e574-1da5-48c9-afbf-888a8b1d8b2b
+# ╟─b813bcb4-b055-4b9f-b9d7-82464a67b934
 # ╠═7aab6b96-ec63-11ea-3bfb-3352ff34b218
+# ╠═7efb1dd5-0c53-4896-b91a-1e7d85941f66
 # ╠═80435a32-ec63-11ea-18b3-61d3d41b396d
 # ╠═a16e752a-ec63-11ea-1844-7fb87dcdbc97
 # ╟─baff4686-ec63-11ea-1338-75dca08c7de2
@@ -1621,11 +1684,14 @@ version = "0.9.1+5"
 # ╠═fcdd0e44-ec63-11ea-2959-f12a7d18409e
 # ╟─acbe3270-ec64-11ea-1afd-2fdb2663cf4c
 # ╠═aca85718-ec64-11ea-2d1a-21eb8d33c7ee
+# ╠═4f21ca29-9419-4854-9d83-1bf4974c6fbe
 # ╟─ac923b84-ec64-11ea-31cd-278bce8566f7
+# ╠═df947306-c97d-4cb9-a55b-90df78e48362
 # ╠═ac7a0e38-ec64-11ea-3b16-e50c3ea51b7e
 # ╟─ac629280-ec64-11ea-2f69-45e26a6cde89
 # ╠═2409b193-bf0f-421f-bad0-815bfcf399cc
 # ╠═0139c2d8-63fa-474e-8e9f-cf6093a266a4
+# ╠═11e03115-3076-4480-a4fb-5165a1d880f6
 # ╟─d7c20e82-ec65-11ea-1412-d39f97aae166
 # ╠═fa03f666-ec65-11ea-11ba-65868aaf856d
 # ╟─f9efb41e-ec65-11ea-128a-77f4376ed9e4
