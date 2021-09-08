@@ -1,0 +1,7 @@
+[user]
+    name = \"My Name\"
+    email = \"my.name@domain.extension\"
+[http]
+    proxy = http://CDNUSER:CDNPSW@dmzproxy005.idcn.mil.intra:8080
+
+ 
