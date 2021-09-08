@@ -17,7 +17,7 @@ We try to make sure that the installation and configuration runs as smoothly as 
 3. Download the .gitignore from from [here]() and store it as a .gitignore file (e.g. with Notepad++) on the following locations:
     * `C:\\Users\\YourAccount\\`
     * `U:\\`
-2. Run the script `configscript.jl` from the Julia REPL. This will install the `GitCommand` package and subsequently proceed to fetch the git repository for the course in the required folder.
+2. Run the script `configES313.jl` from the Julia REPL. This will install the `GitCommand` package and subsequently proceed to fetch the git repository for the course in the required folder.
     ```Julia
     include("path/to/configES313.jl")
     ```
