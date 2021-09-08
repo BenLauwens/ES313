@@ -236,7 +236,7 @@ get_neigh(w,20,24)
 heatmap(w,yflip=true,size=(400,400), title="Langton loop")
 
 # ╔═╡ 36173fee-8f76-4182-920d-55c05ae0353d
-
+println("new addition")
 
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
