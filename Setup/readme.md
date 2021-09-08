@@ -10,28 +10,34 @@ We try to make sure that the installation and configuration runs as smoothly as 
 ### Getting started (do this once)
 1. Install Julia from the software center. 
 2. Copy the configuration script from [here](https://raw.githubusercontent.com/BenLauwens/ES313/master/Setup/configES313.jl) and store it as a .jl file (e.g. with Notepad++). Things to modify by yourself:
-    * The location where you want the course documentation to be downloaded as required.
-    * The proxy settings (CDN proxy is used by default)
+    * The location where you want the course documentation to be downloaded. This defaults to `C:\\Users\\YourAccount\\ES313` on Windows and `/Users/YouAccount/ES313` on Mac.
+    * The proxy settings (CDN proxy is used by default). If you are not behind a proxy, disable this line by changing it into a comment.
 
         **Note: during the tests, no explicit CDN account info was passed along and it worked, so only include your own credentials if there appears to be a problem.**
 3. Download the .gitconfig  from [here](https://raw.githubusercontent.com/BenLauwens/ES313/master/Setup/.gitconfig) and store it as a .gitignore file (e.g. with Notepad++) on the following locations:
     * `C:\\Users\\YourAccount\\`
-    * `U:\\`
+    * `U:\\` (CDN only)
+    
+        **Note: This is only required for the CDN machine when behind a proxy.**
 2. Run the script `configES313.jl` from the Julia REPL. This will install the `GitCommand` package and subsequently proceed to fetch the git repository for the course in the required folder.
     ```Julia
-    include("path/to/configES313.jl")
+    include("C:\\path\\to\\folder name with a space\\configES313.jl") # on Windows
+    include("path/to/configES313.jl") # on Mac
     ```
 ### Staying up-to-date (run when needed)
-1. Run the update script from the Setup folder. This will fetch updates from GitHub and sync them with your local files. Please note that the `git pull` is used in combination with `rebase=false`, so you will lose any local changes.
+1. Run the update script from the Setup folder. This will fetch updates from GitHub and sync them with your local files. Local changes in a file are stashed before the update is pulled. Please note that you will no longer see any local changes after the update, they are however not gone, but stashed.
     ```Julia
-    include("path/to/ES313/setup/update.jl")
+    include("C:\\path\\to\\folder name with a space\\ES313\\setup\\update.jl") # on Windows
+    include("path/to/ES313/setup/update.jl") # on Mac
     ```
+    For your own sanity, the most straightforward way that will allow you to stay synced and at the same time  have your own file to work in, is to rename the notebook from within Pluto as soon as you open it for the first time. Any updates from our side will get to you when syncing, and you can still work in a separate document if you wish.
 ### Doing some work (run when you want to work)
 1. Run the script to start the Pluto notebook. This will automatically start the notebook server using its default settings, which should open a new tab in your browser. If no window opens, you can always copy the explicit link from the REPL.
     ```Julia
-    include("path/to/ES313/setup/start.jl")
+    include("C:\\path\\to\\folder name with a space\\ES313\\setup\\start.jl") # on Windows
+    include("path/to/ES313/setup/start.jl") # on Mac
     ```
-2. By default the present working directory is changed to the one for this course, this means that you can open every single notebook simply by using a relative path e.g. `./Exercises/PS01 - Visualisation.jl` or `./Lectures/Lecture00.jl`
+2. By default the present working directory is changed to the one for this course, this means that you can open every single notebook simply by using a relative path e.g. `./Exercises/PS01 - Visualisation.jl` or `./Lectures/Lecture00.jl`. After typing `./`, you can even use the tab key for autocomplete.
 
 ### Troubleshooting
 * Should you experience troubles with the installation, you can always delete the files in `C:\\Users\\YourAccount\\.julia\\` and then repeat the getting started sequence.
@@ -39,9 +45,8 @@ We try to make sure that the installation and configuration runs as smoothly as 
 
 
 
-
 ## Personal computer
-On Windows, the procedure is similar to the CDN procedure. The only difference is the absence of the proxy server. You can deactivate the use of a proxy server by commenting the appropriate line in the `configES313.jl` file and not using the `.gitignore` file.
+On both Windows and Mac, the procedure is highly similar to the CDN procedure. The only difference is the absence of the proxy server. You can deactivate the use of a proxy server by commenting the appropriate line in the `configES313.jl` file and not using the `.gitignore` file. for both operating systems you start from the Julia REPL by including the appropriate file.
 
 
 
