@@ -1,44 +1,48 @@
 # ES313 - Quickstart guide
-This is a small guide intended to put you on your way for this course. We will be working with Julia v1.2 for all applications. This is also the version you have on your CDN computer. It is recommended that you do all this before attending class, because the installation might take a while. A speedy and stable internet connection is an added value.
+This is a small guide intended to put you on your way for this course. We will be working with Julia v1.5.3 for all applications. This is also the version you have on your CDN computer. It is recommended that you do all this before attending class, because the installation might take a while. A speedy and stable internet connection is an added value.
 
-## CDN computer
-1. Install Julia from the software center. 
-2. Download the [course repository](https://github.com/BenLauwens/ES313.jl) from GitHub and extract the zip file in a folder of your choice (e.g. in 'My Documents')
-3. Start Julia. Use the following instruction to fetch all relevant updates and install the required packages (assuming you extracted the files in the my documents folder):
-    ```julia
-    include(joinpath(homedir(),"Documents/ES313.jl-master/Setup/configES313.jl"))
-    ```
-    
-    *Note:* In order to be able to install or update packages, you will need to connect to a network other than CDN as the corporate proxy blocks the updates.
-4. Enjoy the course
+We try to make sure that the installation and configuration runs as smoothly as possible with a minimum of effort on your part. These guidelines work for both Windows, MacOS & Linux. Occasionally there is a small difference between the platforms that will be made clear during this walkthrough. This guide has been successfully tested on Windows 10 (CDN) & MacOS Big Sur.
 
-### Tools
+## Tools
 * You will be using the Julia REPL in combination with a Pluto notebook.
 * For code development you could use Notepad++ (available in the software center). There is a [Julia language extension](https://github.com/JuliaEditorSupport/julia-NotepadPlusPlus) available for Notepad++.
+## CDN computer (behind proxy)
+### Getting started (do this once)
+1. Install Julia from the software center. 
+2. Copy the configuration script from [here](https://raw.githubusercontent.com/BenLauwens/ES313/master/Setup/configES313.jl) and store it as a .jl file (e.g. with Notepad++). Things to modify by yourself:
+    * The location where you want the course documentation to be downloaded as required.
+    * The proxy settings (CDN proxy is used by default)
+
+        **Note: during the tests, no explicit CDN account info was passed along and it worked, so only include your own credentials if there appears to be a problem.**
+3. Download the .gitignore from from [here]() and store it as a .gitignore file (e.g. with Notepad++) on the following locations:
+    * `C:\\Users\\YourAccount\\`
+    * `U:\\`
+2. Run the script `configscript.jl` from the Julia REPL. This will install the `GitCommand` package and subsequently proceed to fetch the git repository for the course in the required folder.
+    ```Julia
+    include("path/to/configES313.jl")
+    ```
+### Staying up-to-date (run when needed)
+1. Run the update script from the Setup folder. This will fetch updates from GitHub and sync them with your local files. Please note that the `git pull` is used in combination with `rebase=false`, so you will lose any local changes.
+    ```Julia
+    include("path/to/ES313/setup/update.jl")
+    ```
+### Doing some work (run when you want to work)
+1. Run the script to start the Pluto notebook. This will automatically start the notebook server using its default settings, which should open a new tab in your browser. If no window opens, you can always copy the explicit link from the REPL.
+    ```Julia
+    include("path/to/ES313/setup/start.jl")
+    ```
+
+### Troubleshooting
+* Should you experience troubles with the installation, you can always delete the files in `C:\\Users\\YourAccount\\.julia\\` and then repeat the getting started sequence.
+* When you are not behind the proxy, most things should work without much trouble. Should you encounter a problem, you can always comment that line the sets the environment variable with respect to the proxy.
+
+
+
 
 ## Personal computer
-We try to make sure that the installation and configuration runs as smoothly as possible with a minimum of effort on your part. These guidelines work for both Windows and MacOS. Occasionally there is a small difference between the platforms that will be made clear during this walkthrough. This guide has been successfully tested on Windows 10, Windows 8.1, MacOS Catalina.
+On Windows, the procedure is similar to the CDN procedure. The only difference is the absence of the proxy server. You can deactivate the use of a proxy server by commenting the appropriate lines in the `configES313.jl` file and the `.gitignore` file.
 
-1. Download Julia 1.5.3 for your platform from the [website](https://julialang.org/downloads/).
-2. Install Julia 1.5.3
-3. Download the [course repository](https://github.com/BenLauwens/ES313.jl) from GitHub and extract the zip file in a folder of your choice (e.g. in 'My Documents')
-4. Navigate to the `Setup` folder in the extracted folder. If you are a Mac user, execute `ES313 - MAC.command`. If you are a Windows user, execute `ES313 - WINDOWS.bat`. This small script should activate Julia, fetch all relevant updates and install the required packages.
-5. Enjoy the course
 
-#### Remarks:
-- On windows, you might get a warning that Windows Defender has blocked the execution of the script. Disable Windows Defender temporarily or modify the permissions for this file only.
-- In the rare case that that the script should not work, you can do the following in the Julia REPL:
-
-    ```Julia
-    include("path/to/the/file/configES313.jl)
-    ```
-    
-    
-    Where obviously you replace "path/to/the/file/" with the actual location of your file.
-
-### Tools
-* You will be using the Julia REPL in combination with a Pluto notebook.
-* For code development you could use Visual Studio Code or another IDE of your choosing. Most IDE's have a Julia extension available  
 
 ##  Overview of packages
 List of different packages that will be used for this course:
@@ -74,35 +78,4 @@ Discrete event simulation:
 
 Notebooks:
 * [Pluto](https://github.com/fonsp/Pluto.jl)
-
-## How to get work done
-1. Start the notebook server
-    ```Julia
-    import Pluto
-    Pluto.run(8888) # you can use any available port
-    ```
-2. Navigate to the server in a browser of your choosing
-    ```http://localhost:1234/```
-3. Code
-
-
-#### Git on windows
-*I really like git but I'm a Windows user...*  Sounds familiar? You can get the full unix experience by proceeding as follows:
-* Go to [https://gitforwindows.org](https://gitforwindows.org), download and install the software.
-* Open a terminal (Git Bash)
-* Navigate to your desired folder and clone the course from github
-
-```console
-cd navigate/to/desired/folder
-git clone https://github.com/BenLauwens/ES313.jl
-```
-* Some tips:
-    * Fetch new updates with `git pull` after having navigated to your project's folder.
-    * If you modify a notebook, move it to a working directory to avoid it being overwritten.
-
-
-#### Git on Mac/Linux
-Great news, you most likely have git by default! 
-
-## Illustrations 
-<img src="./Img/gitbash.png" alt="Jupyter input">  
+* [PlutoUI](https://github.com/fonsp/PlutoUI.jl)
