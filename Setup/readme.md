@@ -46,7 +46,7 @@ We try to make sure that the installation and configuration runs as smoothly as 
 
 
 ## Personal computer
-On both Windows and Mac, the procedure is highly similar to the CDN procedure. The only difference is the absence of the proxy server. You can deactivate the use of a proxy server by commenting the appropriate line in the `configES313.jl` file and not using the `.gitignore` file. for both operating systems you start from the Julia REPL by including the appropriate file.
+On both Windows and Mac, the procedure is highly similar to the CDN procedure. The only difference is the absence of the proxy server. You can deactivate the use of a proxy server by commenting the appropriate line in the `configES313.jl` file and not using the `.gitignore` file. For both operating systems you start from the Julia REPL by including the appropriate file.
 
 
 
