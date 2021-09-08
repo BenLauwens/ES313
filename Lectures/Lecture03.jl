@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.11.14
+# v0.15.1
 
 using Markdown
 using InteractiveUtils
@@ -14,13 +14,14 @@ macro bind(def, element)
 end
 
 # ╔═╡ 1d6260d4-f663-11ea-03da-efe9ed63f9bd
-using NativeSVG
-
-# ╔═╡ 22d23c18-f66f-11ea-2056-71e534b3bf1d
-using Pkg # one time
-
-# ╔═╡ 4e03615a-f66f-11ea-244f-85f4c21a111b
-using Plots
+# Explicit use of own environment instead of a local one for each notebook
+begin
+	using Pkg
+	cd(joinpath(dirname(@__FILE__),".."))
+    Pkg.activate(pwd())
+    using NativeSVG
+	using Plots
+end
 
 # ╔═╡ e6ff0e98-f662-11ea-03a7-e3d09e6272a6
 md"""# Physical Modelling
@@ -410,9 +411,6 @@ function countcells(rule, n=501)
     cells
 end
 
-# ╔═╡ 3c3f1c66-f66f-11ea-30f6-a3c90bd8eee3
-pkg"add Plots" # one time
-
 # ╔═╡ 73fd7b5e-f66f-11ea-12cd-dd36181cf956
 begin
 	n = 501;
@@ -525,9 +523,6 @@ When `q` is substantially smaller than the critical value, the number of wet cel
 # ╠═ea25224a-f66e-11ea-1c90-b30dba111177
 # ╟─070b57aa-f66f-11ea-1a12-bd1529268d4f
 # ╠═041baf7c-f66f-11ea-270b-2179bd949a67
-# ╠═22d23c18-f66f-11ea-2056-71e534b3bf1d
-# ╠═3c3f1c66-f66f-11ea-30f6-a3c90bd8eee3
-# ╠═4e03615a-f66f-11ea-244f-85f4c21a111b
 # ╠═73fd7b5e-f66f-11ea-12cd-dd36181cf956
 # ╟─81657f1a-f66f-11ea-183b-0ba3f1c3a38e
 # ╟─feefb6e4-f66f-11ea-2998-a30311bee9f4

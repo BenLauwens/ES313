@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.11.14
+# v0.15.1
 
 using Markdown
 using InteractiveUtils
@@ -14,10 +14,14 @@ macro bind(def, element)
 end
 
 # ╔═╡ fe5b0068-f67d-11ea-11e2-5925e8699ff0
-using NativeSVG
-
-# ╔═╡ 087b8996-f67e-11ea-003d-f5cd20704954
-using Plots
+# Explicit use of own environment instead of a local one for each notebook
+begin
+	using Pkg
+	cd(joinpath(dirname(@__FILE__),".."))
+    Pkg.activate(pwd())
+    using NativeSVG
+	using Plots
+end
 
 # ╔═╡ f260f2c2-f67d-11ea-0132-4523bff8cea4
 md"""# Self-Organized Criticality
@@ -378,7 +382,6 @@ md"""The estimated fractal dimensions are:
 # ╔═╡ Cell order:
 # ╟─f260f2c2-f67d-11ea-0132-4523bff8cea4
 # ╠═fe5b0068-f67d-11ea-11e2-5925e8699ff0
-# ╠═087b8996-f67e-11ea-003d-f5cd20704954
 # ╟─1839ed8c-f67e-11ea-2c86-8954fe2d6dd5
 # ╟─2210e0ae-f67e-11ea-3052-87bff5a116fa
 # ╟─2a6c14b2-f67e-11ea-0ad1-db86beb0602a
@@ -402,7 +405,7 @@ md"""The estimated fractal dimensions are:
 # ╠═4f12ad3c-f681-11ea-31e4-1ddc4d78694e
 # ╟─b7a0ce92-f681-11ea-02f4-a1c18dc06c73
 # ╠═c38c4bb4-f681-11ea-2569-85142c07e21e
-# ╠═00597288-f682-11ea-31d4-278441aaca2c
+# ╟─00597288-f682-11ea-31d4-278441aaca2c
 # ╠═19c9c10a-f682-11ea-235a-1b78e0af52b4
 # ╟─5e3575ee-f682-11ea-3df7-5f4b9439c646
 # ╠═71e25a5a-f682-11ea-006f-abcdefc354c2

@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.14.7
+# v0.15.1
 
 using Markdown
 using InteractiveUtils
@@ -14,7 +14,13 @@ macro bind(def, element)
 end
 
 # ╔═╡ 295178e0-ebb3-11ea-1213-b531a8ef5828
-using NativeSVG
+# Explicit use of own environment instead of a local one for each notebook
+begin
+	using Pkg
+	cd(joinpath(dirname(@__FILE__),".."))
+    Pkg.activate(pwd())
+    using NativeSVG
+end
 
 # ╔═╡ 880bced0-ebb3-11ea-0cdf-f3f1c399de51
 using Random
