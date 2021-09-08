@@ -14,7 +14,7 @@ We try to make sure that the installation and configuration runs as smoothly as 
     * The proxy settings (CDN proxy is used by default)
 
         **Note: during the tests, no explicit CDN account info was passed along and it worked, so only include your own credentials if there appears to be a problem.**
-3. Download the .gitignore from from [here]() and store it as a .gitignore file (e.g. with Notepad++) on the following locations:
+3. Download the .gitconfig  from [here](https://raw.githubusercontent.com/BenLauwens/ES313/master/Setup/.gitconfig) and store it as a .gitignore file (e.g. with Notepad++) on the following locations:
     * `C:\\Users\\YourAccount\\`
     * `U:\\`
 2. Run the script `configES313.jl` from the Julia REPL. This will install the `GitCommand` package and subsequently proceed to fetch the git repository for the course in the required folder.
@@ -31,6 +31,7 @@ We try to make sure that the installation and configuration runs as smoothly as 
     ```Julia
     include("path/to/ES313/setup/start.jl")
     ```
+2. By default the present working directory is changed to the one for this course, this means that you can open every single notebook simply by using a relative path e.g. `./Exercises/PS01 - Visualisation.jl` or `./Lectures/Lecture00.jl`
 
 ### Troubleshooting
 * Should you experience troubles with the installation, you can always delete the files in `C:\\Users\\YourAccount\\.julia\\` and then repeat the getting started sequence.
@@ -40,7 +41,7 @@ We try to make sure that the installation and configuration runs as smoothly as 
 
 
 ## Personal computer
-On Windows, the procedure is similar to the CDN procedure. The only difference is the absence of the proxy server. You can deactivate the use of a proxy server by commenting the appropriate lines in the `configES313.jl` file and the `.gitignore` file.
+On Windows, the procedure is similar to the CDN procedure. The only difference is the absence of the proxy server. You can deactivate the use of a proxy server by commenting the appropriate line in the `configES313.jl` file and not using the `.gitignore` file.
 
 
 
