@@ -16,7 +16,7 @@ We try to make sure that the installation and configuration runs as smoothly as 
         **Note: during the tests, no explicit CDN account info was passed along and it worked, so only include your own credentials if there appears to be a problem.**
 3. Download the .gitconfig  from [here](https://raw.githubusercontent.com/BenLauwens/ES313/master/Setup/.gitconfig) and store it as a .gitignore file (e.g. with Notepad++) on the following locations:
     * `C:\\Users\\YourAccount\\`
-    * `U:\\` (CDN only)
+    * `U:\\`
     
         **Note: This is only required for the CDN machine when behind a proxy.**
 2. Run the script `configES313.jl` from the Julia REPL. This will install the `GitCommand` package and subsequently proceed to fetch the git repository for the course in the required folder.
@@ -38,20 +38,12 @@ We try to make sure that the installation and configuration runs as smoothly as 
     include("path/to/ES313/setup/start.jl") # on Mac
     ```
 2. By default the present working directory is changed to the one for this course, this means that you can open every single notebook simply by using a relative path e.g. `./Exercises/PS01 - Visualisation.jl` or `./Lectures/Lecture00.jl`. After typing `./`, you can even use the tab key for autocomplete.
-
 ### Troubleshooting
 * Should you experience troubles with the installation, you can always delete the files in `C:\\Users\\YourAccount\\.julia\\` and then repeat the getting started sequence.
 * When you are not behind the proxy, most things should work without much trouble. Should you encounter a problem, you can always comment that line the sets the environment variable with respect to the proxy.
-
-
-
 ## Personal computer
 On both Windows and Mac, the procedure is highly similar to the CDN procedure. The only difference is the absence of the proxy server. You can deactivate the use of a proxy server by commenting the appropriate line in the `configES313.jl` file and not using the `.gitignore` file. For both operating systems you start from the Julia REPL by including the appropriate file.
-
-
-
-##  Overview of packages
-List of different packages that will be used for this course:
+##  Overview of packages used
 
 General:
 * [Logging](https://docs.julialang.org/en/v1.2/stdlib/Logging/#)
