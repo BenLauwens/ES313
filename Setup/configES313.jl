@@ -1,8 +1,48 @@
-#!/usr/bin/env julia
+# ------------------------------------------------- #
+#         CHANGE ONLY THIS (IF NEEDED)              #
+# ------------------------------------------------- #
 
+# set the proxy server setting if required (on CDN)
+ENV["HTTP_PROXY"] = "http://CDNUSER:CDNPSW@dmzproxy005.idcn.mil.intra:8080"
+# set the path
+downloadfolder = joinpath(homedir(),"ES313")
+
+
+# ------------------------------------------------- #
+#            DO NOT CHANGE THIS                     #
+# ------------------------------------------------- #
+
+# add GitCommand
 using Pkg
+using Logging
+
+@info "Installing GitCommand..."
+Pkg.add("GitCommand")
+
+# download course git folder
+using GitCommand
+git() do git
+    !ispath(downloadfolder) ? mkdir(downloadfolder) : nothing
+    cd(downloadfolder)
+    @info "Downloading course material into $(downloadfolder)"
+    try
+        run(`$git clone https://github.com/BenLauwens/ES313.git`)
+        @info "Download complete"
+    catch err
+        @warn "Something went wrong, check one of the following:\n  - .gitignore file location\n  - destination folder already a git repository"
+        @info err
+    end
+end
+
+# Install & download required packages into environment
+cd(joinpath(downloadfolder,"ES313"))
+Pkg.activate(".")
+Pkg.instantiate()
 Pkg.update()
 
+
+# overview of install instruction per package (covered in Project.toml)
+#=
 # General
 Pkg.add("Logging")
 Pkg.add("Dates")
@@ -24,14 +64,7 @@ Pkg.add("JuMP")
 Pkg.add("GLPK")
 Pkg.add("Tulip")
 Pkg.add("Optim")
-
-if VERSION < VersionNumber(1,3)
-    # For version 1.2
-    Pkg.add(PackageSpec(url="https://github.com/oxfordcontrol/GeneralQP.jl"))
-else
-    # For latest versions
-    Pkg.add(PackageSpec(url="https://github.com/B4rtDC/GeneralQP.jl"))
-end
+Pkg.add(PackageSpec(url="https://github.com/B4rtDC/GeneralQP.jl"))
 #Pkg.add("NLopt") # not CDN compatible (CMake fails to build)
 Pkg.add("Ipopt")
 
@@ -45,3 +78,4 @@ Pkg.add("PlutoUI")
 
 # Performance
 Pkg.add("BenchmarkTools")
+=#
