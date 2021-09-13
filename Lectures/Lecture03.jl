@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.15.1
+# v0.16.0
 
 using Markdown
 using InteractiveUtils
@@ -73,9 +73,6 @@ function visualizearray(array::Array{Float64, 2}, dim)
 	end
 end
 
-# ╔═╡ 7f66f30e-f667-11ea-34e8-d315ed180b75
-
-
 # ╔═╡ 358ac3e2-f666-11ea-2058-11eedeabff5f
 mutable struct Diffusion
 	array :: Array{Float64, 2}
@@ -102,11 +99,12 @@ if togglediffusion === "Next"
 end
 
 # ╔═╡ 95dc78e8-f667-11ea-1c07-8f5cc11b011b
-begin
+let
+	diffusion2 = Diffusion();
 	for _ in 1:1000
-    	diffusion.array = applydiffusion(diffusion.array)
+    	diffusion2.array = applydiffusion(diffusion2.array)
 	end
-	visualizearray(diffusion.array, 30)
+	visualizearray(diffusion2.array, 30)
 end
 
 # ╔═╡ c03905f2-f667-11ea-3484-b111f7c14f60
@@ -476,12 +474,11 @@ When `q` is substantially smaller than the critical value, the number of wet cel
 
 # ╔═╡ Cell order:
 # ╟─e6ff0e98-f662-11ea-03a7-e3d09e6272a6
-# ╠═1d6260d4-f663-11ea-03da-efe9ed63f9bd
+# ╟─1d6260d4-f663-11ea-03da-efe9ed63f9bd
 # ╟─2abf49e0-f663-11ea-25f3-2f9229de732e
 # ╠═40373f12-f663-11ea-256c-abd1458a8e85
-# ╠═52f4e280-f663-11ea-38a4-c52a7b06b564
+# ╟─52f4e280-f663-11ea-38a4-c52a7b06b564
 # ╠═61437b46-f663-11ea-12c6-2ff992812dca
-# ╠═7f66f30e-f667-11ea-34e8-d315ed180b75
 # ╠═358ac3e2-f666-11ea-2058-11eedeabff5f
 # ╠═863a3fa4-f664-11ea-2597-8f18f2a862ac
 # ╠═966fc752-f666-11ea-1794-195433f4cce5

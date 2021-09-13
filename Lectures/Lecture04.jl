@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.15.1
+# v0.16.0
 
 using Markdown
 using InteractiveUtils
@@ -254,7 +254,7 @@ let
 		end
 	end
 	plot!(x, y, xaxis=:log, yaxis=:log, label="Avalanches")
-	x = collect(1:10000)
+	x = collect(1:5000)
 	plot!(x, 1 ./ x, label="slope -1")
 end
 
@@ -381,7 +381,7 @@ md"""The estimated fractal dimensions are:
 
 # ╔═╡ Cell order:
 # ╟─f260f2c2-f67d-11ea-0132-4523bff8cea4
-# ╠═fe5b0068-f67d-11ea-11e2-5925e8699ff0
+# ╟─fe5b0068-f67d-11ea-11e2-5925e8699ff0
 # ╟─1839ed8c-f67e-11ea-2c86-8954fe2d6dd5
 # ╟─2210e0ae-f67e-11ea-3052-87bff5a116fa
 # ╟─2a6c14b2-f67e-11ea-0ad1-db86beb0602a
