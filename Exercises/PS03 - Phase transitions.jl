@@ -1,14 +1,16 @@
 ### A Pluto.jl notebook ###
-# v0.11.14
+# v0.15.1
 
 using Markdown
 using InteractiveUtils
 
-# ╔═╡ 7ad2ee88-07c9-11eb-3b6b-65a34e4980ef
-using Distributions, LinearAlgebra
-
-# ╔═╡ e0e6af0a-07ce-11eb-3da3-e93277620d89
-using Plots
+# ╔═╡ cc106912-0b14-4981-a67b-580dda8a56ed
+begin
+	using Pkg
+	cd(joinpath(dirname(@__FILE__),".."))
+    Pkg.activate(pwd())
+    using Distributions, LinearAlgebra, Plots, InteractiveUtils
+end
 
 # ╔═╡ 235e2200-fce9-11ea-0696-d36cddaa843e
 md"""
@@ -54,9 +56,9 @@ We split the problem in a series of subproblems:
 # ╔═╡ 976bb1e0-07c9-11eb-2a4f-fb7aac69f8ec
 begin
 	function gengraph(N::Int, p::Float64)
-		d = Bernoulli(p) # definir la distribution
+		d = Bernoulli(p) # define the distribution
 		A = rand(d, N, N)
-		# annuler la diagonale
+		# set main diagonal to 0
 		A[diagind(A)] = zeros(Int,N)
 		return LinearAlgebra.Symmetric(A)
 	end
@@ -66,34 +68,33 @@ begin
 	end
 	
 	"""
-		voisins(A, i)
+		neighbors(A, i)
 	
 	Détermine les voisins du noeud i dans le graph représenté par A
 	"""
-	function voisins(A, i)
-		findall(x -> isequal(x, 1), A[i,:])
+	function neighbors(A, i)
+		findall(x -> isequal(x, 1), @view A[i,:])
 	end
 	
-	function composantes(A)
-		N = size(A,1) # taille du graph
+	function components(A)
+		N = size(A,1) # network size
 		visited = Dict(i => false for i in 1:N)
 		comps = []
 		for n in 1:N
 			if !visited[n]
-				# faire qqch (i.e. déterminier la composante)
-				push!(comps,creuser(A, n, visited))
+				push!(comps,dig(A, n, visited))
 				end
 		end
-		#return comps
+
 		return maximum(length,comps) / N
 	end
 	
-	function creuser(A, n, visited, comp=[])
+	function dig(A, n, visited, comp=[])
 		visited[n] = true
 		push!(comp, n)
-		for voisin in voisins(A, n)
-			if !visited[voisin]
-				creuser(A, voisin, visited, comp)
+		for neigbor in neighbors(A, n)
+			if !visited[neigbor]
+				dig(A, neigbor, visited, comp)
 			end
 		end
 		return comp
@@ -101,7 +102,7 @@ begin
 	
 	function sim(N::Int, p::Float64)
 		A = gengraph(N,p)
-		return composantes(A), avgdegree(A)
+		return components(A), avgdegree(A)
 	end
 end
 
@@ -109,8 +110,9 @@ end
 N = 1000
 
 # ╔═╡ a060dc62-07cb-11eb-2aaa-7190bde5dc36
+# simulation part (range of probabilities, 10 simulations for each probability)
 let N = N
-	P = range(5e-5, 3e-3, length=10)
+	P = range(5e-5, 3e-3, length=20)
 	rat_comp = Array{Float64, 1}()
 	k_moy = Array{Float64, 1}()
 	for p in P
@@ -123,10 +125,18 @@ let N = N
 	scatter(k_moy, rat_comp, ylims=(0,1), label="", xlabel="<k>", ylabel="N_largest_comp / N")
 end
 
+# ╔═╡ 1f0d3e38-402b-4d82-a041-c623c5d531b3
+md"""
+# Test from previous years
+* ants foraging (cf. "./Exercises/data/test2019.pdf")
+* housing evolution (cf. "./Exercises/data/test2020.pdf")
+
+"""
+
 # ╔═╡ Cell order:
+# ╠═cc106912-0b14-4981-a67b-580dda8a56ed
 # ╟─235e2200-fce9-11ea-0696-d36cddaa843e
-# ╠═7ad2ee88-07c9-11eb-3b6b-65a34e4980ef
 # ╠═976bb1e0-07c9-11eb-2a4f-fb7aac69f8ec
-# ╠═e0e6af0a-07ce-11eb-3da3-e93277620d89
 # ╠═42f5cca6-07d1-11eb-3169-cd3650c42081
 # ╠═a060dc62-07cb-11eb-2aaa-7190bde5dc36
+# ╠═1f0d3e38-402b-4d82-a041-c623c5d531b3
