@@ -1,18 +1,22 @@
 ### A Pluto.jl notebook ###
-# v0.11.14
+# v0.16.0
 
 using Markdown
 using InteractiveUtils
 
 # ╔═╡ a62a0de6-04b8-11eb-342f-bfea16900b85
-using PlutoUI
+begin
+	using Pkg
+	cd(joinpath(dirname(@__FILE__),".."))
+    Pkg.activate(pwd())
+	using PlutoUI
+	using JuMP, GLPK, Tulip, Optim
+	# Non-linear problem
+	using Ipopt, Plots
+	#using JuMP, Tulip, GLPK, LinearAlgebra
+	#using Distributions, Plots, StatsPlots, LaTeXStrings, Measures
+end
 
-# ╔═╡ eb1b597a-04b8-11eb-08ea-7bb72fd33686
-using JuMP, GLPK, Tulip, Optim
-
-# ╔═╡ 56a7c778-04c1-11eb-03c0-fd5d27d989b1
-# Non-linear problem
-using Ipopt, Plots
 
 # ╔═╡ 86702ce8-04b7-11eb-22d1-b7f1437cf740
 md"""
@@ -48,13 +52,13 @@ We want to maximize the flow in the network, i.e.
 #### Setting:
 Consider the following network:
 
-$(PlutoUI.LocalResource("./img/network.png"))
+$(PlutoUI.LocalResource("./Exercises/img/network.png"))
 
 We want to:
 1. Determine the maximal flow in the network
 2. Be able to get a troughput of 35 from the source node to the sink node, whilst keeping the costs limited. Each link has a possible increase, with an associated cost (cf. table)
 
-$(PlutoUI.LocalResource("./img/networkcost.png"))
+$(PlutoUI.LocalResource("./Exercises/img/networkcost.png"))
 """
 
 # ╔═╡ caf5c6d8-04b8-11eb-1c04-0966207fbf28
@@ -118,6 +122,9 @@ You are given the covariance matrix and expected returns and you want study seve
     * the final portfolio value in function of the expected return
 """
 
+# ╔═╡ 56a7c778-04c1-11eb-03c0-fd5d27d989b1
+
+
 # ╔═╡ c4eca510-04c0-11eb-0e29-a5dcc1386bd5
 # data for problem
 begin
@@ -166,7 +173,6 @@ Questions:
 
 # ╔═╡ Cell order:
 # ╠═a62a0de6-04b8-11eb-342f-bfea16900b85
-# ╠═eb1b597a-04b8-11eb-08ea-7bb72fd33686
 # ╟─86702ce8-04b7-11eb-22d1-b7f1437cf740
 # ╠═caf5c6d8-04b8-11eb-1c04-0966207fbf28
 # ╠═d3dcd770-058d-11eb-2829-fbb18e85f401

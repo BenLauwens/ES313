@@ -1,21 +1,21 @@
 ### A Pluto.jl notebook ###
-# v0.11.14
+# v0.16.0
 
 using Markdown
 using InteractiveUtils
 
 # ╔═╡ f1068fca-0331-11eb-20de-a98c65d5c2dc
-using Optim, Plots
+begin
+	using Pkg
+	cd(joinpath(dirname(@__FILE__),".."))
+    Pkg.activate(pwd())
+	using Optim, Plots
+    using Distributions
+	using GeneralQP
+	using JuMP, Ipopt
+end
 
-# ╔═╡ 62c3b162-0335-11eb-2202-ff72b6a8d114
-using Distributions
 
-# ╔═╡ 3a650c0a-03be-11eb-36c2-c1fed6b7df2d
-using GeneralQP
-
-# ╔═╡ 87935672-03c5-11eb-1b7e-5dbd711f2a76
-# Solve the problem with JuMP
-using JuMP, Ipopt
 
 # ╔═╡ b4764948-0330-11eb-3669-974d75ab1134
 md"""
@@ -44,9 +44,22 @@ Try to optimize $x^3 - 6x + x^2 +2$
 # ╔═╡ 77d89aa8-07d2-11eb-1bbd-a5c896e3ecfe
 begin
 	f(x) =  x .^3 - 6 * x + x.^2 + 2
-	res_brent = optimize(f, 0, 10, Brent(), store_trace=true)
-	res_brent = optimize(f, 0, 10, GoldenSection(), store_trace=true)
+	res_brent = optimize(f, 0, 10, Optim.Brent(), store_trace=true)
+	res_golden = optimize(f, 0, 10, Optim.GoldenSection(), store_trace=true)
 	res_brent.trace
+end
+
+# ╔═╡ f27797e5-b83f-4375-ab17-480c09fd7b7f
+let
+	# generating the illustration
+	p1 = plot([v.iteration for v in res_brent.trace], [v.value for v in res_brent.trace], label="brent method", marker=:circle)
+	plot!([v.iteration for v in res_golden.trace], [v.value for v in res_golden.trace], label="golden section method", marker=:circle, markeralpha=0.5)
+	title!("function value")
+	p2 = plot([v.iteration for v in res_brent.trace], [v.metadata["minimizer"] for v in res_brent.trace], label="brent method", marker=:circle)
+	plot!([v.iteration for v in res_golden.trace], [v.metadata["minimizer"] for v in res_golden.trace], label="golden section method", marker=:circle, markeralpha=0.5)
+	title!("minimizer")
+	
+	plot(p1,p2)
 end
 
 # ╔═╡ 7bce2500-0332-11eb-2b63-87dc0d713825
@@ -79,7 +92,7 @@ begin
 	# random data points (independent variable)
 	x = sort(rand(d, n))
 	# dependent variable with noise
-	y = F.(x) .+ rand(e,n)
+	y = F.(x) .+ rand(e,n);
 end
 
 # ╔═╡ 15ef34dc-0336-11eb-0de5-b942e8871db8
@@ -131,10 +144,9 @@ You can evaluate the performance using the `@time` macro. For a more detailed an
 """
 
 # ╔═╡ 9396ccae-03ba-11eb-27a9-1b88ee4fb45f
-# leave
 begin 
-g(x) = x[1]^2 + 2.5*sin(x[2]) - x[1]^2*x[2]^2*x[3]^2
-initial_x = [-0.6;-1.2; 0.135];
+	g(x) = x[1]^2 + 2.5*sin(x[2]) - x[1]^2*x[2]^2*x[3]^2
+	initial_x = [-0.6;-1.2; 0.135];
 end
 
 # ╔═╡ 94abb7a2-03bb-11eb-1ceb-1dff8aa3cce7
@@ -161,13 +173,14 @@ end
 
 # ╔═╡ 6f552aa6-07d5-11eb-18a5-b32ed233c403
 begin
-	println("start")
+	println("start method comparison")
 	for _ in 1:2
 		@time optimize(g, initial_x)
 		@time optimize(g, dg!, initial_x, Newton())
 		@time optimize(g, dg!, initial_x, BFGS())
 		@time optimize(g, dg!, h!, initial_x)
 	end
+	println("finished method comparison")
 end
 
 # ╔═╡ 966b88dc-03bc-11eb-15a4-b5492ddf4ede
@@ -177,7 +190,7 @@ You could study the influence of the optimization methods and try to optimize th
 
 Try to create a method that minimizes the amount of iterations by modifying the parameter $\eta$ from the `BFGS` method.
 
-**note** 
+**Note:** 
 * Look at the documentation for possible values of $\eta$.
 * This is merely as a proof of concept and will not come up with a significant improvement for this case.
 
@@ -192,33 +205,6 @@ begin
 	
 	optimize(optimme, 0, 20)
 end
-
-# ╔═╡ 5245f2b8-03bd-11eb-2ed9-5f03308828d4
-md"""
-## Quadratic Programming - Active set methods
-
-Consider the following problem:
-
-```math
-\min f(x) = -8x_1 - 16x_2 + x_1^2 + 4x_2^2
-```
-
-```math
-\text{ST:} \begin{cases}x_1 + x_2 \le 5 \\ x_1 \le 3 \\ x_1 \ge 0 \\ x_2 \ge 0 \end{cases}
-```
-
-Solve this problem as a quadratic programming problem:
-* write it as the standard form
-* solve the problem
-* illustrate the solution
-
-**Reminder**
-
-general formulation & [documentation](https://github.com/oxfordcontrol/GeneralQP.jl):
-
-$$\min_{\vec{x}}f\left( \vec{x} \right)\overset{\vartriangle}{=} \frac{1}{2}\vec{x}^\mathsf{T} Q \vec{x} - \vec{c}^ \mathsf{T} \vec{x} $$
-$$\text{ST:} \begin{cases}x_1 + x_2 \le 5 \\ x_1 \le 3 \\ x_1 \ge 0 \\ x_2 \ge 0 \end{cases}$$ 
-"""
 
 # ╔═╡ d5feb956-058b-11eb-1a7d-eb56768f00b1
 
@@ -277,9 +263,9 @@ end
 # ╠═f1068fca-0331-11eb-20de-a98c65d5c2dc
 # ╟─165f35b0-0332-11eb-12e7-f7939d389e58
 # ╠═77d89aa8-07d2-11eb-1bbd-a5c896e3ecfe
+# ╠═f27797e5-b83f-4375-ab17-480c09fd7b7f
 # ╟─7bce2500-0332-11eb-2b63-87dc0d713825
 # ╟─e6294d6a-0334-11eb-3829-51ee2b8cadaf
-# ╠═62c3b162-0335-11eb-2202-ff72b6a8d114
 # ╠═66be5114-0335-11eb-01a9-c594b92937bf
 # ╠═15ef34dc-0336-11eb-0de5-b942e8871db8
 # ╠═e949078a-07d3-11eb-0146-8115e335b2e9
@@ -291,9 +277,6 @@ end
 # ╠═6f552aa6-07d5-11eb-18a5-b32ed233c403
 # ╟─966b88dc-03bc-11eb-15a4-b5492ddf4ede
 # ╠═68263aea-07d0-11eb-24f8-6383a3a1e09d
-# ╟─5245f2b8-03bd-11eb-2ed9-5f03308828d4
-# ╠═3a650c0a-03be-11eb-36c2-c1fed6b7df2d
 # ╠═d5feb956-058b-11eb-1a7d-eb56768f00b1
 # ╟─ec264b44-03c2-11eb-1695-cbf638f8cea9
-# ╠═87935672-03c5-11eb-1b7e-5dbd711f2a76
 # ╠═053bae8a-087d-11eb-2e8c-73c41fb4e005
