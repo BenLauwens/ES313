@@ -1,14 +1,19 @@
 ### A Pluto.jl notebook ###
-# v0.11.14
+# v0.16.1
 
 using Markdown
 using InteractiveUtils
 
-# ╔═╡ 71de0200-0192-11eb-2262-4f4777e8f058
-using Ipopt
-
-# ╔═╡ 759abbe0-0192-11eb-1102-15733a22fcff
-using JuMP
+# ╔═╡ 82ecf9c7-bc7c-4827-a025-920609acfb80
+begin
+	using Pkg
+	cd(joinpath(dirname(@__FILE__),".."))
+    Pkg.activate(pwd())
+    using NativeSVG
+	using Plots
+	using Ipopt
+	using JuMP
+end
 
 # ╔═╡ 444a0740-0191-11eb-382f-dd522542f7c4
 md"# Interior Point Methods"
@@ -43,10 +48,10 @@ A_{\textrm{in}}\vec{x}\leq\vec{b}_{\textrm{in}}\,,
 \end{cases}
 \end{aligned}
 ```
-where $Q$ is a symmetric and positive semidefinite $n\times n$ matrix,
-$\vec{c}\in\mathbb{R}^{n}$, $A_{\textrm{eq}}$ is a $m\times n$ matrix,
-$\vec{b}_{\textrm{eq}}\in\mathbb{R}^{m}$, $A_{\textrm{in}}$ is a $p\times n$
-matrix and $\vec{b}_{\textrm{in}}\in\mathbb{R}^{p}$. Rewriting the KKT
+where ``Q`` is a symmetric and positive semidefinite ``n\times n`` matrix,
+``\vec{c}\in\mathbb{R}^{n}``, ``A_{\textrm{eq}}`` is a ``m\times n`` matrix,
+``\vec{b}_{\textrm{eq}}\in\mathbb{R}^{m}``, ``A_{\textrm{in}}`` is a ``p\times n``
+matrix and ``\vec{b}_{\textrm{in}}\in\mathbb{R}^{p}``. Rewriting the KKT
 conditions in this notation, we obtain
 ```math
 \begin{aligned}
@@ -57,7 +62,7 @@ A_{\textrm{eq}}\vec{x} & =\vec{b}_{\textrm{eq}}\,,\\
 A_{\textrm{in}}\vec{x} & \leq\vec{b}_{\textrm{in}}\,.
 \end{aligned}
 ```
-By introducing the slack vector $\vec{y}\geq\vec{0}$, we can rewrite
+By introducing the slack vector ``\vec{y}\geq\vec{0}``, we can rewrite
 these conditions as
 ```math
 \begin{aligned}
@@ -68,24 +73,24 @@ A_{\textrm{eq}}\vec{x}-\vec{b}_{\textrm{eq}} & =\vec{0}\,,\\
 A_{\textrm{in}}\vec{x}-\vec{b}_{\textrm{in}}+\vec{y} & =\vec{0}\,.
 \end{aligned}
 ```
-Since we assume that $Q$ is positive semidefinite, these KKT conditions
+Since we assume that ``Q`` is positive semidefinite, these KKT conditions
 are not only necessary but also sufficient, so we can solve the convex
 quadratic program by finding solutions of this system.
 
-Primal-dual methods generate iterates that satisfy the bounds strictly; that is, $\vec{y}>0$
-and $\vec{\mu}>0$. This property is the origin of the term interior-point.
+Primal-dual methods generate iterates that satisfy the bounds strictly; that is, ``\vec{y}>0``
+and ``\vec{\mu}>0``. This property is the origin of the term interior-point.
 By respecting these bounds, the methods avoid spurious solutions,
 points that satisfy the system but not the bounds. Spurious solutions
 abound, and do not provide useful information about real solutions,
 so it makes sense to exclude them altogether. Given a current iterate
-$\left(\vec{x}^{\left(k\right)},\vec{y}^{\left(k\right)},\vec{\lambda}^{\left(k\right)},\vec{\mu}^{\left(k\right)}\right)$
-that satisfies $\left(\vec{\mu}^{\left(k\right)},\vec{y}^{\left(k\right)}\right)>0$,
+``\left(\vec{x}^{\left(k\right)},\vec{y}^{\left(k\right)},\vec{\lambda}^{\left(k\right)},\vec{\mu}^{\left(k\right)}\right)``
+that satisfies ``\left(\vec{\mu}^{\left(k\right)},\vec{y}^{\left(k\right)}\right)>0``,
 we can define a _complementary measure_
 ```math
 \nu_{k}=\frac{ \left(\vec{y}^{\left(k\right)}\right)^\mathsf{T}\vec{\mu}^{\left(k\right)}}{p}\,.
 ```
 This measure gives an indication of the desirability of the couple
-$\left(\vec{\mu}^{\left(k\right)},\vec{y}^{\left(k\right)}\right)$.
+``\left(\vec{\mu}^{\left(k\right)},\vec{y}^{\left(k\right)}\right)``.
 
 We derive a path-following, primal-dual method by considering the
 perturbed KKT conditions by
@@ -108,14 +113,14 @@ Y_{k+1}=\begin{pmatrix}y_{1}^{\left(k+1\right)} & 0 & \cdots & 0\\
 0 & 0 & 0 & \mu_{p}^{\left(k+1\right)}
 \end{pmatrix}\,,
 ```
-and $\sigma\in\left[0,1\right]$ is the reduction factor that we wish
-to achieve in the complementary measure on one step. We call $\sigma$
-the \emph{centering parameter}. The solution of this system for all
-positive values of $\sigma$ and $\nu$ define the \emph{central path},
+and ``\sigma\in\left[0,1\right]`` is the reduction factor that we wish
+to achieve in the complementary measure on one step. We call ``\sigma``
+the _centering parameter_. The solution of this system for all
+positive values of ``\sigma`` and ``\nu`` define the _central path_,
 which is a trajectory that leads to the solution of the quadratic
-program as $\sigma\nu$ tends to zero.
+program as ``\sigma\nu`` tends to zero.
 
-By fixing $\sigma_{k}$ and applying Newton's method to the system,
+By fixing ``\sigma_{k}`` and applying Newton's method to the system,
 we obtain the linear system
 ```math
 \begin{pmatrix}Q & 0 &  A_{\textrm{eq}}^\mathsf{T} &  A_{\textrm{in}}^\mathsf{T}\\
@@ -148,37 +153,37 @@ We obtain the next iterate by setting
 \vec{d}_{\vec{\mu}}^{\left(k\right)}
 \end{pmatrix}\,,
 ```
-where $\alpha_{k}$ is chosen to retain the bounds $\left(\vec{\mu}^{\left(k+1\right)},\vec{y}^{\left(k+1\right)}\right)>0$
+where ``\alpha_{k}`` is chosen to retain the bounds ``\left(\vec{\mu}^{\left(k+1\right)},\vec{y}^{\left(k+1\right)}\right)>0``
 and possibly to satisfy various other conditions.
 
-The choices of centering parameter $\sigma_{k}$ and step-length $\alpha_{k}$
+The choices of centering parameter ``\sigma_{k}`` and step-length ``\alpha_{k}``
 are crucial for the performance of the method. Techniques for controlling
 these parameters, directly and indirectly, give rise to a wide variety
 of methods with diverse properties. One option is to use equal step
-length for the primal and dual updates, and to set $\alpha_{k}=\min\left\{ \alpha_{k}^{\textrm{pri}},\alpha_{k}^{\textrm{dual}}\right\} $,
+length for the primal and dual updates, and to set ``\alpha_{k}=\min\left\{ \alpha_{k}^{\textrm{pri}},\alpha_{k}^{\textrm{dual}}\right\} ``,
 where
 ```math
 \begin{aligned}
-\alpha_{k}^{\textrm{pri}} & =\max\left\{ \alpha\in\left\{ 0,1\right\} :\vec{y}^{\left(k\right)}+\alpha\vec{d}_{\vec{y}}^{\left(k\right)}\geq\left(1-\tau\right)\vec{y}^{\left(k\right)}\right\} \,,\label{eq:alpha_pri_max}\\
-\alpha_{k}^{\textrm{dual}} & =\max\left\{ \alpha\in\left\{ 0,1\right\} :\vec{\mu}^{\left(k\right)}+\alpha\vec{d}_{\vec{\mu}}^{\left(k\right)}\geq\left(1-\tau\right)\vec{\mu}^{\left(k\right)}\right\} \,,\label{eq:alpha_dual_max}
+\alpha_{k}^{\textrm{pri}} & =\max\left\{ \alpha\in\left\{ 0,1\right\} :\vec{y}^{\left(k\right)}+\alpha\vec{d}_{\vec{y}}^{\left(k\right)}\geq\left(1-\tau\right)\vec{y}^{\left(k\right)}\right\} \,,\\
+\alpha_{k}^{\textrm{dual}} & =\max\left\{ \alpha\in\left\{ 0,1\right\} :\vec{\mu}^{\left(k\right)}+\alpha\vec{d}_{\vec{\mu}}^{\left(k\right)}\geq\left(1-\tau\right)\vec{\mu}^{\left(k\right)}\right\} \,,
 \end{aligned}
 ```
-the parameter $\tau\in\left]0,1\right[$ controls how far we back
-off from the maximum step for which the conditions $\vec{y}^{\left(k\right)}+\alpha\vec{d}_{\vec{y}}^{\left(k\right)}\geq\vec{0}$
-and $\vec{\mu}^{\left(k\right)}+\alpha\vec{d}_{\vec{\mu}}^{\left(k\right)}\geq\vec{0}$
-are satisfied. A typical value of $\tau=0.995$ and we can choose
-$\tau_{k}$ to approach $1$ as the iterates approach the solution,
+the parameter ``\tau\in\left]0,1\right[`` controls how far we back
+off from the maximum step for which the conditions ``\vec{y}^{\left(k\right)}+\alpha\vec{d}_{\vec{y}}^{\left(k\right)}\geq\vec{0}``
+and ``\vec{\mu}^{\left(k\right)}+\alpha\vec{d}_{\vec{\mu}}^{\left(k\right)}\geq\vec{0}``
+are satisfied. A typical value of ``\tau=0.995`` and we can choose
+``\tau_{k}`` to approach ``1`` as the iterates approach the solution,
 to accelerate the convergence.
 
 The most popular interior-point method for convex QP is based on Mehrotra's
-predictor-corrector. First we compute an affine scaling step $\left(\vec{d}_{\vec{x},\textrm{aff}},\vec{d}_{\vec{y},\textrm{aff}},\vec{d}_{\vec{\lambda},\textrm{aff}},\vec{d}_{\vec{\mu},\textrm{aff}}\right)$
-by setting $\sigma_{k}=0$. We improve upon this step by computing
-a corrector step. Next, we compute the centering parameter $\sigma_{k}$
+predictor-corrector. First we compute an affine scaling step ``\left(\vec{d}_{\vec{x},\textrm{aff}},\vec{d}_{\vec{y},\textrm{aff}},\vec{d}_{\vec{\lambda},\textrm{aff}},\vec{d}_{\vec{\mu},\textrm{aff}}\right)``
+by setting ``\sigma_{k}=0``. We improve upon this step by computing
+a corrector step. Next, we compute the centering parameter ``\sigma_{k}``
 using following heuristic
 ```math
 \sigma_{k}=\left(\frac{\nu_{\textrm{aff}}}{\nu_{k}}\right)^{3}\,,
 ```
-where $\nu_{\textrm{aff}}=\frac{ \left(\vec{y}_{\textrm{aff}}\right)^\mathsf{T}\left(\vec{\mu}_{\textrm{aff}}\right)}{p}$.
+where ``\nu_{\textrm{aff}}=\frac{ \left(\vec{y}_{\textrm{aff}}\right)^\mathsf{T}\left(\vec{\mu}_{\textrm{aff}}\right)}{p}``.
 The total step is obtained by solving the following system
 ```math
 \begin{pmatrix}Q & 0 &  A_{\textrm{eq}}^\mathsf{T} &  A_{\textrm{in}}^\mathsf{T}\\
@@ -287,9 +292,6 @@ providing sufficient decrease.
 The centering parameter $\sigma_{k}$ can be calculated by a predictor-corrector
 strategy as in the quadratic programming case. """
 
-# ╔═╡ 9a17bf80-0193-11eb-1a85-d79e20b63a4a
-
-
 # ╔═╡ 96b90420-0193-11eb-3f8f-b1fdc9e66341
 let
 	m = Model(with_optimizer(Ipopt.Optimizer))
@@ -311,13 +313,11 @@ let
 end
 
 # ╔═╡ Cell order:
+# ╟─82ecf9c7-bc7c-4827-a025-920609acfb80
 # ╟─444a0740-0191-11eb-382f-dd522542f7c4
 # ╟─db7adcc0-0191-11eb-07b4-5b3fbfc45f72
 # ╟─e2fe62a0-0191-11eb-0a1d-51d009d5ab5c
 # ╟─578662d0-0192-11eb-027a-7d04d8c5524d
-# ╠═71de0200-0192-11eb-2262-4f4777e8f058
-# ╠═759abbe0-0192-11eb-1102-15733a22fcff
 # ╠═705fed7e-0192-11eb-3f1f-9d13ebbb4fb9
 # ╟─947daf90-0192-11eb-38f5-d921e71228e3
-# ╠═9a17bf80-0193-11eb-1a85-d79e20b63a4a
 # ╠═96b90420-0193-11eb-3f8f-b1fdc9e66341
