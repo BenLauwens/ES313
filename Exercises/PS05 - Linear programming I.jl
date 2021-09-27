@@ -1,14 +1,17 @@
 ### A Pluto.jl notebook ###
-# v0.11.14
+# v0.16.0
 
 using Markdown
 using InteractiveUtils
 
 # ╔═╡ 10349518-03ca-11eb-09b2-69c80c4662ac
-using JuMP, Tulip, GLPK, LinearAlgebra
-
-# ╔═╡ 6e48e306-04b4-11eb-2561-0151a5e0a908
-using Distributions, Plots, StatsPlots, LaTeXStrings, Measures
+begin
+	using Pkg
+	cd(joinpath(dirname(@__FILE__),".."))
+    Pkg.activate(pwd())
+	using JuMP, Tulip, GLPK, LinearAlgebra
+	using Distributions, Plots, StatsPlots, LaTeXStrings, Measures
+end
 
 # ╔═╡ f7f3a256-03c6-11eb-2c1e-83cc62bf55e6
 md"""
@@ -108,6 +111,9 @@ md"""
 ### Adding uncertainty
 Up to now, we have had constant numbers the minimum number of employees needed per day. In reality these quantities are uncertain. The actual number of calls will fluctuate each day. For simplicity's sake will we use a [lognormal distribution](https://en.wikipedia.org/wiki/Log-normal_distribution#Occurrence_and_applications) for the amount of calls (using their initial value as mean and a standard deviation of two). Working this way, we avoid having negative calls.
 """
+
+# ╔═╡ 6e48e306-04b4-11eb-2561-0151a5e0a908
+
 
 # ╔═╡ 7a54f9b4-04b4-11eb-3a7c-8d90eb026392
 begin

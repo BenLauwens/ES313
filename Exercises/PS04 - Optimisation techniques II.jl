@@ -5,7 +5,12 @@ using Markdown
 using InteractiveUtils
 
 # ╔═╡ 1c7e914c-03c9-11eb-11cf-0d9346305a53
-using NLopt
+begin
+	using Pkg
+	cd(joinpath(dirname(@__FILE__),".."))
+    Pkg.activate(pwd())
+	using NLopt
+end
 
 # ╔═╡ 1866ec44-03c9-11eb-0a21-416587e4e0e0
 # Solve the problem with NLopt
