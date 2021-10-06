@@ -1,17 +1,19 @@
 ### A Pluto.jl notebook ###
-# v0.11.14
+# v0.16.1
 
 using Markdown
 using InteractiveUtils
 
-# ╔═╡ 28fea1c0-015b-11eb-1089-95ca759d37b7
-using NativeSVG
-
-# ╔═╡ c9310310-0186-11eb-3825-9712b7e5012d
-using Optim
-
-# ╔═╡ e6f392a0-0186-11eb-2485-696096e9d293
-using Plots
+# ╔═╡ 05653593-4365-46a2-8e1b-79c3c8e11575
+begin
+	using Pkg
+	cd(joinpath(dirname(@__FILE__),".."))
+    Pkg.activate(pwd())
+	Pkg.instantiate()
+    using NativeSVG
+	using Plots
+	using Optim
+end
 
 # ╔═╡ 282c0f80-015b-11eb-19d8-d9235a2a77d4
 md"# Global Search Algorithms"
@@ -109,15 +111,15 @@ Drawing(width = "12cm", height = "6cm", viewBox = "0 0 600 300", preserveAspectR
         points="50, 150 250, 150 250, 50 50, 150 250, 250 250, 150 450 150", 
         fill="none", stroke="black", stroke_width="2.5"
     )
-    text(x = "40", y = "170", width = "60", height = "60", font_size = "16pt") do
+    NativeSVG.text(x = "40", y = "170", width = "60", height = "60", font_size = "16pt") do
 		str("pl") end
-    text(x = "260", y = "40", width = "60", height = "60", font_size = "16pt") do
+    NativeSVG.text(x = "260", y = "40", width = "60", height = "60", font_size = "16pt") do
 		str("pn") end
-    text(x = "260", y = "240", width = "60", height = "60", font_size = "16pt") do
+    NativeSVG.text(x = "260", y = "240", width = "60", height = "60", font_size = "16pt") do
 		str("ps") end
-    text(x = "210", y = "170", width = "60", height = "60", font_size = "16pt") do
+    NativeSVG.text(x = "210", y = "170", width = "60", height = "60", font_size = "16pt") do
 		str("pg") end
-    text(x = "440", y = "170", width = "60", height = "60", font_size = "16pt") do
+    NativeSVG.text(x = "440", y = "170", width = "60", height = "60", font_size = "16pt") do
 		str("pr") end
 end
 
@@ -151,17 +153,17 @@ Drawing(width = "16cm", height = "6cm", viewBox = "0 0 800 300", preserveAspectR
         points="50, 150 250, 150 250, 50 50, 150 250, 250 250, 150 650 150", 
         fill="none", stroke="black", stroke_width="2.5"
     )
-    text(x = "40", y = "170", width = "60", height = "60", font_size = "16pt") do
+    NativeSVG.text(x = "40", y = "170", width = "60", height = "60", font_size = "16pt") do
 		str("pl") end
-    text(x = "260", y = "40", width = "60", height = "60", font_size = "16pt") do
+    NativeSVG.text(x = "260", y = "40", width = "60", height = "60", font_size = "16pt") do
 		str("pn") end
-    text(x = "260", y = "240", width = "60", height = "60", font_size = "16pt") do
+    NativeSVG.text(x = "260", y = "240", width = "60", height = "60", font_size = "16pt") do
 		str("ps") end
-    text(x = "210", y = "170", width = "60", height = "60", font_size = "16pt") do
+    NativeSVG.text(x = "210", y = "170", width = "60", height = "60", font_size = "16pt") do
 		str("pg") end
-    text(x = "440", y = "170", width = "60", height = "60", font_size = "16pt") do
+    NativeSVG.text(x = "440", y = "170", width = "60", height = "60", font_size = "16pt") do
 		str("pr") end
-    text(x = "640", y = "170", width = "60", height = "60", font_size = "16pt") do
+    NativeSVG.text(x = "640", y = "170", width = "60", height = "60", font_size = "16pt") do
 		str("pe") end
 end
 
@@ -193,17 +195,17 @@ Drawing(width = "16cm", height = "6cm", viewBox = "0 0 800 300", preserveAspectR
         points="50, 150 250, 150 250, 50 50, 150 250, 250 250, 150 450 150", 
         fill="none", stroke="black", stroke_width="2.5"
     )
-    text(x = "40", y = "170", width = "60", height = "60", font_size = "16pt") do
+    NativeSVG.text(x = "40", y = "170", width = "60", height = "60", font_size = "16pt") do
 		str("pl") end
-    text(x = "260", y = "40", width = "60", height = "60", font_size = "16pt") do
+    NativeSVG.text(x = "260", y = "40", width = "60", height = "60", font_size = "16pt") do
 		str("pn") end
-    text(x = "260", y = "240", width = "60", height = "60", font_size = "16pt") do
+    NativeSVG.text(x = "260", y = "240", width = "60", height = "60", font_size = "16pt") do
 		str("ps") end
-    text(x = "210", y = "170", width = "60", height = "60", font_size = "16pt") do
+    NativeSVG.text(x = "210", y = "170", width = "60", height = "60", font_size = "16pt") do
 		str("pg") end
-    text(x = "440", y = "170", width = "60", height = "60", font_size = "16pt") do
+    NativeSVG.text(x = "440", y = "170", width = "60", height = "60", font_size = "16pt") do
 		str("pr") end
-    text(x = "340", y = "170", width = "60", height = "60", font_size = "16pt") do
+    NativeSVG.text(x = "340", y = "170", width = "60", height = "60", font_size = "16pt") do
 		str("pc") end
 end
 
@@ -214,11 +216,11 @@ md"""```math
 
 We refer to this operation as the _outside contraction_. If,
 on the other hand, $f\left(\vec{p}_{r}\right)\geq f\left(\vec{p}_{n}\right)$,
-then $\vec{p}_{n}$ replaces $\vec{p}_{r}$ in the contraction operation
+then $\vec{p}_{l}$ replaces $\vec{p}_{r}$ in the contraction operation
 and we get
 
 ```math
-\vec{p}_{c}=\vec{p}_{g}+\gamma\left(\vec{p}_{n}-\vec{p}_{g}\right)\,.
+\vec{p}_{c}=\vec{p}_{g}+\gamma\left(\vec{p}_{l}-\vec{p}_{g}\right)\,.
 ```
 
 This operation is referred to as the _inside contraction_. """
@@ -234,15 +236,15 @@ Drawing(width = "16cm", height = "6cm", viewBox = "0 0 800 300", preserveAspectR
         points="50, 150 250, 150 250, 50 50, 150 250, 250 250, 150", 
         fill="none", stroke="black", stroke_width="2.5"
     )
-    text(x = "40", y = "170", width = "60", height = "60", font_size = "16pt") do
+    NativeSVG.text(x = "40", y = "170", width = "60", height = "60", font_size = "16pt") do
 		str("pl") end
-    text(x = "260", y = "40", width = "60", height = "60", font_size = "16pt") do
+    NativeSVG.text(x = "260", y = "40", width = "60", height = "60", font_size = "16pt") do
 		str("pn") end
-    text(x = "260", y = "240", width = "60", height = "60", font_size = "16pt") do
+    NativeSVG.text(x = "260", y = "240", width = "60", height = "60", font_size = "16pt") do
 		str("ps") end
-    text(x = "210", y = "170", width = "60", height = "60", font_size = "16pt") do
+    NativeSVG.text(x = "210", y = "170", width = "60", height = "60", font_size = "16pt") do
 		str("pg") end
-    text(x = "140", y = "170", width = "60", height = "60", font_size = "16pt") do
+    NativeSVG.text(x = "140", y = "170", width = "60", height = "60", font_size = "16pt") do
 		str("pc") end
 end
 
@@ -272,11 +274,11 @@ Drawing(width = "16cm", height = "6cm", viewBox = "0 0 800 300", preserveAspectR
         points="250, 150 250, 50 50, 150 250, 250 250, 150 150, 200", 
         fill="none", stroke="black", stroke_width="2.5"
     )
-	text(x = "40", y = "170", width = "60", height = "60", font_size = "16pt") do
+	NativeSVG.text(x = "40", y = "170", width = "60", height = "60", font_size = "16pt") do
 		str("pl") end
-    text(x = "260", y = "40", width = "60", height = "60", font_size = "16pt") do
+    NativeSVG.text(x = "260", y = "40", width = "60", height = "60", font_size = "16pt") do
 		str("pn") end
-    text(x = "260", y = "240", width = "60", height = "60", font_size = "16pt") do
+    NativeSVG.text(x = "260", y = "240", width = "60", height = "60", font_size = "16pt") do
 		str("ps") end
 end
 
@@ -427,7 +429,7 @@ Special methods for bounded univariate optimization:
 
 # ╔═╡ Cell order:
 # ╟─282c0f80-015b-11eb-19d8-d9235a2a77d4
-# ╠═28fea1c0-015b-11eb-1089-95ca759d37b7
+# ╟─05653593-4365-46a2-8e1b-79c3c8e11575
 # ╟─4d9273a0-015a-11eb-2caa-130d0245a946
 # ╟─bfe6caf0-015a-11eb-23a0-919e0520bd8d
 # ╟─0aa85db0-015b-11eb-01ae-694c21b1f7a4
@@ -441,8 +443,6 @@ Special methods for bounded univariate optimization:
 # ╟─392084d2-0186-11eb-11e5-2b5128129e19
 # ╟─6e95360e-0186-11eb-1ed3-770285bc0e74
 # ╟─86bb011e-0186-11eb-2b14-8ddd7f9ca6c2
-# ╠═c9310310-0186-11eb-3825-9712b7e5012d
-# ╠═e6f392a0-0186-11eb-2485-696096e9d293
 # ╠═202572f0-0187-11eb-0172-9bea075d89a9
 # ╠═d332f672-0186-11eb-205a-97aeef39b75d
 # ╠═316b4b20-0187-11eb-33a2-dda15c1b3ca9

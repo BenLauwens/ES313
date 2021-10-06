@@ -1,20 +1,20 @@
 ### A Pluto.jl notebook ###
-# v0.11.14
+# v0.16.1
 
 using Markdown
 using InteractiveUtils
 
-# ╔═╡ 81308f4e-018a-11eb-378a-1973a3b954e8
-using Plots
-
-# ╔═╡ 83b0d190-018a-11eb-0f35-59c81c2dd7ff
-using LaTeXStrings
-
-# ╔═╡ fc1cc2b0-018a-11eb-0521-59853dc877b2
-using GeneralQP
-
-# ╔═╡ a66a39ee-0190-11eb-024b-8bae30e1c602
-using NLopt
+# ╔═╡ ffed97e2-dc07-48bb-870a-737a115e69dc
+begin
+	using Pkg
+	cd(joinpath(dirname(@__FILE__),".."))
+    Pkg.activate(pwd())
+    using NativeSVG
+	using Plots
+	using LaTeXStrings
+	using GeneralQP
+	using NLopt
+end
 
 # ╔═╡ 9f5f8730-0188-11eb-209f-e771579d35ce
 md"# Sequential Quadratic Programming"
@@ -578,6 +578,7 @@ let
 end
 
 # ╔═╡ Cell order:
+# ╟─ffed97e2-dc07-48bb-870a-737a115e69dc
 # ╟─9f5f8730-0188-11eb-209f-e771579d35ce
 # ╟─c30dbe90-0188-11eb-0c2b-ed5e93a86b0b
 # ╟─e0be4cbe-0188-11eb-1991-5b001cf2434a
@@ -585,8 +586,6 @@ end
 # ╟─80edfd80-0189-11eb-1687-01a14b31ad39
 # ╟─8f340330-0189-11eb-27c8-7ba7c0954ac7
 # ╟─db088c90-0189-11eb-338d-81af9469d556
-# ╠═81308f4e-018a-11eb-378a-1973a3b954e8
-# ╠═83b0d190-018a-11eb-0f35-59c81c2dd7ff
 # ╠═6bdfb630-018a-11eb-1010-b3c332121581
 # ╟─88c16630-018b-11eb-3ea1-a555d69b2e26
 # ╠═4a460a20-018e-11eb-3da1-4d37893ead18
@@ -614,10 +613,8 @@ end
 # ╟─1254d540-0190-11eb-3066-b5a853eef0c0
 # ╠═02787820-0190-11eb-24ed-c5296c91df6b
 # ╟─aa606210-018a-11eb-29bd-5d4f9ae0966e
-# ╠═fc1cc2b0-018a-11eb-0521-59853dc877b2
 # ╠═f3007460-018a-11eb-3fa2-8753aceaf89a
 # ╟─24c67580-018b-11eb-3eb7-47a2e2ae5251
-# ╠═a66a39ee-0190-11eb-024b-8bae30e1c602
 # ╠═a98c8890-0190-11eb-25a4-bfd18c42b749
 # ╠═acfea4e0-0190-11eb-07a9-a3f38d97ff80
 # ╠═a4824010-0190-11eb-0d97-a55353709552
