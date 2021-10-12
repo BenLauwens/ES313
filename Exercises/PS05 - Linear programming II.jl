@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.16.0
+# v0.16.1
 
 using Markdown
 using InteractiveUtils
@@ -93,8 +93,44 @@ begin
 	];
 end
 
-# ╔═╡ d3dcd770-058d-11eb-2829-fbb18e85f401
+# ╔═╡ 5d0d7415-38fe-4c31-9c3d-59b2cbb54a8e
+let
+	model = Model(Ipopt.Optimizer)
+	@variable(model, F[1:7,1:7])
+	@constraint(model, F .<= C) # limite capacité
+	for i = 2:6
+		@constraint(model, sum(F[i,:]) == sum(F[:,i]))
+	end
+	@constraint(model, F .>= 0)
+	@objective(model, Max, sum(F[1,:]))
+	optimize!(model)
+	abs.(round.(value.(F),digits=6))
+end
 
+# ╔═╡ d3dcd770-058d-11eb-2829-fbb18e85f401
+begin
+	model = Model(Ipopt.Optimizer)
+	@variable(model, F[1:size(C,1),1:size(C,2)] >=0)
+	# gekende waarde op nul zetten
+	for ind in findall(iszero, C)
+		JuMP.setvalue(F[ind],0)
+	end
+	@objective(model, Max, sum(F[1,:]))
+	# capacity constraint
+	@constraint(model, F .<= C)
+	# maintain flow
+	for i = 2:6
+		@constraint(model, sum(F[:,i]) == sum(F[i,:]))
+	end
+	
+	optimize!(model)
+end
+
+# ╔═╡ 42371ec0-55fa-459b-bcb2-a6ea4363d876
+value.(F)
+
+# ╔═╡ 0a95f12e-c5eb-490a-bc7c-0cd7a70edddb
+sum(value.(F)[1,:])
 
 # ╔═╡ a510792e-04c0-11eb-0f6e-a7e40dfe602c
 md"""
@@ -173,9 +209,12 @@ Questions:
 
 # ╔═╡ Cell order:
 # ╠═a62a0de6-04b8-11eb-342f-bfea16900b85
+# ╠═5d0d7415-38fe-4c31-9c3d-59b2cbb54a8e
 # ╟─86702ce8-04b7-11eb-22d1-b7f1437cf740
 # ╠═caf5c6d8-04b8-11eb-1c04-0966207fbf28
 # ╠═d3dcd770-058d-11eb-2829-fbb18e85f401
+# ╠═42371ec0-55fa-459b-bcb2-a6ea4363d876
+# ╠═0a95f12e-c5eb-490a-bc7c-0cd7a70edddb
 # ╟─a510792e-04c0-11eb-0f6e-a7e40dfe602c
 # ╠═56a7c778-04c1-11eb-03c0-fd5d27d989b1
 # ╠═c4eca510-04c0-11eb-0e29-a5dcc1386bd5

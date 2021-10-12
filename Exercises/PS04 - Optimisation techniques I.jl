@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.16.0
+# v0.16.1
 
 using Markdown
 using InteractiveUtils
@@ -60,6 +60,7 @@ let
 	title!("minimizer")
 	
 	plot(p1,p2)
+	xlabel!("Iterations")
 end
 
 # ╔═╡ 7bce2500-0332-11eb-2b63-87dc0d713825
@@ -85,7 +86,7 @@ begin
 	# function
 	F(x;a=a,b=b,c=c) = a*sin.(x .- b) .+ c
 	# sample length
-	n = 20;
+	n = 10;
 	# domain
 	xmin = 0; xmax = 20
 	d=Uniform(xmin, xmax)
@@ -121,6 +122,9 @@ begin
 	plot(X,F.(X), label="ground truth"; settings...)
 	plot!(X, F.(X,a=a_opt, b=b_opt, c=c_opt), label="optimised"; settings...)
 end
+
+# ╔═╡ 901eed25-2aea-42a4-bd7e-68b919a8766c
+res
 
 # ╔═╡ 71d2bf30-0336-11eb-28ed-95518b9204a7
 
@@ -244,6 +248,9 @@ Try to solve the following problem:
 2. Solve the problem with [JuMP](https://github.com/jump-dev/JuMP.jl) (combined with [Ipopt](https://github.com/jump-dev/Ipopt.jl))
 """
 
+# ╔═╡ 02aedfec-d075-425b-8db6-e60d5d8a79c3
+model
+
 # ╔═╡ 053bae8a-087d-11eb-2e8c-73c41fb4e005
 let 
 	model = Model(Ipopt.Optimizer)
@@ -252,10 +259,13 @@ let
 	@constraint(model, - x[1] ^2 + x[2] >= 0)
 	@constraint(model, 1 - x[1] ^2 - x[2] ^2 >= 0)
 	optimize!(model)
-	termination_status(model)
-	objective_value(model)
+	println(termination_status(model))
+	println("minimum: $(objective_value(model))")
 	value.(x)
 end
+
+# ╔═╡ b5cf333b-5ffa-45d5-b9c0-00abc4b63196
+
 
 # ╔═╡ Cell order:
 # ╟─b4764948-0330-11eb-3669-974d75ab1134
@@ -269,6 +279,7 @@ end
 # ╠═66be5114-0335-11eb-01a9-c594b92937bf
 # ╠═15ef34dc-0336-11eb-0de5-b942e8871db8
 # ╠═e949078a-07d3-11eb-0146-8115e335b2e9
+# ╠═901eed25-2aea-42a4-bd7e-68b919a8766c
 # ╟─71d2bf30-0336-11eb-28ed-95518b9204a7
 # ╟─d0a304f2-0336-11eb-0d20-6de833d964b3
 # ╟─add5faba-03b8-11eb-0cc7-15f19eb1e0e2
@@ -279,4 +290,6 @@ end
 # ╠═68263aea-07d0-11eb-24f8-6383a3a1e09d
 # ╠═d5feb956-058b-11eb-1a7d-eb56768f00b1
 # ╟─ec264b44-03c2-11eb-1695-cbf638f8cea9
+# ╠═02aedfec-d075-425b-8db6-e60d5d8a79c3
 # ╠═053bae8a-087d-11eb-2e8c-73c41fb4e005
+# ╠═b5cf333b-5ffa-45d5-b9c0-00abc4b63196

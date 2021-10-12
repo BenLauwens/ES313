@@ -77,6 +77,7 @@ We are now able to write our objective function:
 \text{and }Y \ge 0
 ```
 
+* $\forall Y : Y \in \mathbb{N}$
 ### Implementation
 """
 
@@ -103,8 +104,12 @@ let
 	optimize!(model)
 	termination_status(model)
 	objective_value(model)
-	A' * value.(Y) .> B
+	#A' * value.(Y) .> B
+	sum(value.(Y))
 end
+
+# ╔═╡ 3bafd152-6724-4847-a79d-f2340e2ab5e4
+
 
 # ╔═╡ 4bc4c2aa-04b4-11eb-2b6e-452d4ecc258a
 md"""
@@ -113,7 +118,7 @@ Up to now, we have had constant numbers the minimum number of employees needed p
 """
 
 # ╔═╡ 6e48e306-04b4-11eb-2561-0151a5e0a908
-
+B
 
 # ╔═╡ 7a54f9b4-04b4-11eb-3a7c-8d90eb026392
 begin
@@ -201,6 +206,7 @@ md"""
 # ╠═572d14c4-03cb-11eb-2b68-234b3d7e9e8e
 # ╠═4ba4687e-087f-11eb-1cb0-2581818cbd93
 # ╠═79351ee4-087f-11eb-147d-d389de200857
+# ╠═3bafd152-6724-4847-a79d-f2340e2ab5e4
 # ╟─4bc4c2aa-04b4-11eb-2b6e-452d4ecc258a
 # ╠═6e48e306-04b4-11eb-2561-0151a5e0a908
 # ╠═7a54f9b4-04b4-11eb-3a7c-8d90eb026392

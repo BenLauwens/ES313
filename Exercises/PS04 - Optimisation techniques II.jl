@@ -60,8 +60,9 @@ let
 	println("got $minf at $minx after $numevals iterations (returned $ret)")
 end
 
-# ╔═╡ 2121e5be-03c9-11eb-2b8b-a10cb146216d
 
+# ╔═╡ 2121e5be-03c9-11eb-2b8b-a10cb146216d
+ret
 
 # ╔═╡ Cell order:
 # ╠═1c7e914c-03c9-11eb-11cf-0d9346305a53
