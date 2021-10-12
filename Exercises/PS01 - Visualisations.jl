@@ -6,6 +6,9 @@ using InteractiveUtils
 
 # ╔═╡ 8e3917d6-ec62-11ea-0c16-7d2749432dd1
 begin
+	using Pkg
+	cd(joinpath(dirname(@__FILE__),".."))
+    Pkg.activate(pwd())
 	using Distributions
 	using LaTeXStrings
 	using Plots
