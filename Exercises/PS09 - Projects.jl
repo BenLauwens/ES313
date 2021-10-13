@@ -73,6 +73,17 @@ md"""
 * [Scheduling](https://en.wikipedia.org/wiki/Scheduling_(computing)#Scheduling_disciplines)
 """
 
+# ╔═╡ cb784ac1-7dde-4163-a325-379f87ccb18b
+md"""
+## Fine-tuning a grading system
+Some universities allow a student to fail a course and still be able to go to the next year or be exempt from retaking the exam. A mishap in an otherwise good course can be forgiven as a result. The "optimal" ground rules of such a system are far from trivial. After all, there are conflicting interests to be realized. One wishes, on the one hand, to limit the number of students who can abuse the system and, on the other hand, to ensure that the majority of students can benefit from the system. In addition, for practical reasons, one may wish to limit the overall number of resits.
+
+### Possible project
+By using historical data over several years, it is possible to establish a multinomial distribution that describes the results of students in an academic bachelor. You can use this input to adjust the parameters of your system, taking into account a conflicting desired results (e.g. $<1\%$ “freeloaders”, limiting number of resits, maximal fair pardons).
+
+### References
+"""
+
 # ╔═╡ a7659bd3-796b-4155-b01f-1d9ef6b42f12
 
 
@@ -313,6 +324,7 @@ You can always come to use with your own project proposition.
 # ╟─d3195ce3-cc34-458f-a526-f346591b34b2
 # ╟─8bc9e310-3151-4c49-b009-04b4cc1a4a84
 # ╟─279eda92-e1cf-480e-a093-e17625046125
+# ╟─cb784ac1-7dde-4163-a325-379f87ccb18b
 # ╠═a7659bd3-796b-4155-b01f-1d9ef6b42f12
 # ╠═72df832c-442f-4693-9953-df873951a1db
 # ╠═65c30d33-de0e-410d-afa9-9e0e84431012
