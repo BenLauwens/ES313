@@ -107,15 +107,108 @@ let
 	abs.(round.(value.(F),digits=6))
 end
 
+# ╔═╡ 0f118a6f-9609-44b3-9e08-2e809f516377
+let
+	model = Model(Ipopt.Optimizer)
+	@variable(model,F[1:size(C,1), 1:size(C,2)])
+	# targt
+	@objective(model, Max, sum(F[1,:])) #@objective(model, Max, sum(F[:,end]))
+	# simplifier un peu
+	for ind in findall(iszero,C)
+		JuMP.fix(F[ind], 0., force=true)
+	end
+	# constraints
+	for i = 2:6
+		@constraint(model, sum(F[i,:]) == sum(F[:,i]))
+	end
+	@constraint(model, F .<= C)
+	@constraint(model, F .>= 0)
+	#
+	optimize!(model)
+	value.(F)
+	# actuellement débit = 27
+end
+
+# ╔═╡ e6ba22db-4fc3-4a23-bb56-fa500ef616d2
+let	
+	model = Model(Ipopt.Optimizer)
+	@variable(model,F[1:size(C,1), 1:size(C,2)])
+	# targt
+	@objective(model, Min, sum(F .* xcost)) # faux raisonnement :-(
+	# simplifier un peu
+	for ind in findall(iszero,C)
+		JuMP.fix(F[ind], 0., force=true)
+	end
+	# constraints
+	for i = 2:6
+		@constraint(model, sum(F[i,:]) == sum(F[:,i]))
+	end
+	@constraint(model, F .<= C .+ xcap)
+	@constraint(model, F .>= 0)
+	@constraint(model, sum(F[1,:]) == 35.)
+	#
+	optimize!(model)
+	value.(F)
+	# actuellement débit = 27
+	Δ_cap = value.(F) - C
+	ind_pos = Δ_cap .> 0
+	sum((Δ_cap .* xcost)[ind_pos])
+	Δ_cap
+end
+
+# ╔═╡ c38feffb-245b-4812-bcec-bdecd43d6c6c
+let	
+	model = Model(Ipopt.Optimizer)
+	@variable(model,F[1:size(C,1), 1:size(C,2)]) # capacité existante
+	@variable(model,G[1:size(C,1), 1:size(C,2)]) # capacité supplémentaire
+	# target
+	@objective(model, Min, sum(G .* xcost)) # bon raisonnement :-)
+	# simplifier un peu
+	for ind in findall(iszero,C)
+		JuMP.fix(F[ind], 0., force=true)
+		JuMP.fix(G[ind], 0., force=true)
+	end
+	# constraints
+	for i = 2:6
+		@constraint(model, sum(F[i,:] + G[i,:]) == sum(F[:,i] + G[:,i]))
+	end
+	@constraint(model, F .<= C)
+	@constraint(model, F .>= 0)
+	@constraint(model, G .<= xcap)
+	@constraint(model, G .>= 0)
+	@constraint(model, sum(F[1,:]+ G[1,:]) == 35.)
+	#
+	optimize!(model)
+	value.(F)
+	# actuellement débit = 27
+	sum(value.(G) .* xcost)
+	value.(G)
+end
+
+# ╔═╡ d82dbb55-1d31-445a-b5e4-ec11ec4fcf65
+
+
+# ╔═╡ 84804f16-8dfb-4bad-afe7-fe8ccd854e39
+
+
+# ╔═╡ d4f240a2-73c5-4828-b728-d922db6148b8
+
+
+# ╔═╡ 27080e2e-a7df-4acb-93a9-98f2352fd8b5
+
+
+# ╔═╡ 508ae591-46f9-4dd9-97b8-08a5fd90e6e1
+
+
 # ╔═╡ d3dcd770-058d-11eb-2829-fbb18e85f401
 begin
 	model = Model(Ipopt.Optimizer)
-	@variable(model, F[1:size(C,1),1:size(C,2)] >=0)
+	@variable(model, F[1:size(C,1),1:size(C,2)])
 	# gekende waarde op nul zetten
 	for ind in findall(iszero, C)
-		JuMP.setvalue(F[ind],0)
+		JuMP.fix(F[ind],0.)
 	end
-	@objective(model, Max, sum(F[1,:]))
+	@objective(model, Max, sum(F[1,:])) # of ook @objective(model, Max, sum(F[:,end]))
 	# capacity constraint
 	@constraint(model, F .<= C)
 	# maintain flow
@@ -126,11 +219,109 @@ begin
 	optimize!(model)
 end
 
+# ╔═╡ c78e64e1-df73-4c6d-b705-2e1766d8ef3a
+let
+	# capaciteitsverhoging
+	model = Model(Ipopt.Optimizer)
+	@variable(model, F[1:size(C,1),1:size(C,2)])
+	# gekende waarde op nul zetten
+	for ind in findall(iszero, C)
+		JuMP.fix(F[ind],0.)
+	end
+	# minimise total cost 
+	@objective(model, Min, sum(F .* xcost) ) # hier zit een redeneringsprobleem (!)
+	# better?
+	#helpfun(F) = F .- C .> 0
+	#@objective(model, Min, filter(x-> x>0, (F .- C) .* xcost))
+	
+	# capacity constraint
+	@constraint(model, F .<= C .+ xcap)
+	@constraint(model, F .>= 0)
+	# maintain flow
+	for i = 2:6
+		@constraint(model, sum(F[:,i]) == sum(F[i,:]))
+	end
+	# demand specifc throughput
+	@constraint(model, sum(F[1,:]) == 35)
+	
+	optimize!(model)
+	value.(F)
+	# value of extra cost?
+	Δ_cap = value.(F) .- C
+	indpos = Δ_cap .> 0.
+	sum(Δ_cap[indpos] .* xcost[indpos])
+	#helpfun(F)
+end
+
+# ╔═╡ 74a20456-a91a-44de-9e4b-3e6d86440392
+let
+	# capaciteitsverhoging
+	model = Model(Ipopt.Optimizer)
+	@variable(model, F[1:size(C,1),1:size(C,2)]) # oorspronkelijk
+	@variable(model, G[1:size(C,1),1:size(C,2)]) # extra
+	# gekende waarde op nul zetten
+	for ind in findall(iszero, C)
+		JuMP.fix(F[ind],0.)
+		JuMP.fix(G[ind],0.)
+	end
+	# minimise total cost of additional capacity
+	@objective(model, Min, sum(G .* xcost) )
+	
+	# capacity constraint
+	@constraint(model, F .<= C)
+	@constraint(model, G .<= xcap)
+	@constraint(model, F .>= 0)
+	@constraint(model, G .>= 0)
+	# maintain flow
+	for i = 2:6
+		@constraint(model, sum(F[:,i] .+ G[:,i]) == sum(F[i,:] .+ G[i,:]))
+	end
+	# demand specifc throughput
+	@constraint(model, sum(F[1,:] .+ G[1,:]) == 35)
+	
+	optimize!(model)
+	value.(F) .+ value.(G)
+	# total cost:
+	sum(value.(G) .* xcost)
+end
+
+# ╔═╡ 6ea03142-b487-4459-8391-cd50dae56340
+
+
 # ╔═╡ 42371ec0-55fa-459b-bcb2-a6ea4363d876
 value.(F)
 
 # ╔═╡ 0a95f12e-c5eb-490a-bc7c-0cd7a70edddb
 sum(value.(F)[1,:])
+
+# ╔═╡ ef581235-7b51-4d2d-8097-7f6637c40b24
+let
+	model = Model(Ipopt.Optimizer)
+	@variable(model, F[1:size(C,1),1:size(C,2)] >=0)
+	# gekende waarde op nul zetten
+	for ind in findall(iszero, C)
+		JuMP.fix(F[ind],0, force=true)
+	end
+	@objective(model, Max, sum(F[1,:]))
+	# capacity constraint
+	@constraint(model, F .<= C .+ xcap)
+	# maintain flow
+	for i = 2:6
+		@constraint(model, sum(F[:,i]) == sum(F[i,:]))
+	end
+	
+	optimize!(model)
+	value.(F)
+end
+
+# ╔═╡ 1283cdae-1a6b-4a4e-be2b-a9072bfc3972
+
+
+# ╔═╡ 55ac8bb2-eb86-4536-9a89-245cf3883763
+
+
+# ╔═╡ 7e852fdd-4363-4e15-ab24-e76448fbe1cf
+
 
 # ╔═╡ a510792e-04c0-11eb-0f6e-a7e40dfe602c
 md"""
@@ -158,9 +349,6 @@ You are given the covariance matrix and expected returns and you want study seve
     * the final portfolio value in function of the expected return
 """
 
-# ╔═╡ 56a7c778-04c1-11eb-03c0-fd5d27d989b1
-
-
 # ╔═╡ c4eca510-04c0-11eb-0e29-a5dcc1386bd5
 # data for problem
 begin
@@ -174,8 +362,121 @@ begin
 		 0.01 0.02 0.042 -0.06 -0.02 0.08]; # covariance matrix
 end
 
+# ╔═╡ 0589b400-06a9-4f91-99aa-97e52f191dd0
+let
+	# Q1
+	model = Model(Ipopt.Optimizer)
+	# variables 
+	@variable(model,S[1:length(μ)]) # % van ieder aandeel in mijn portefeuille
+	# objective
+	@objective(model, Max, μ'*S) # max profit, risico bestaat niet
+	# constraints
+	@constraint(model, sum(S) == 1.) # total 100 %
+	@constraint(model, S .>= 0.) # geen negatieve bijdrages
+	# los het op
+	optimize!(model)
+	value.(S)
+	
+	# Q2
+	model = Model(Ipopt.Optimizer)
+	# variables 
+	@variable(model,S[1:length(μ)]) # % van ieder aandeel in mijn portefeuille
+	# objective
+	@objective(model, Max, μ'*S) # max profit, risico bestaat niet
+	# constraints
+	@constraint(model, sum(S) == 1.) # total 100 %
+	@constraint(model, S .>= 0.) # geen negatieve bijdrages
+	@constraint(model, S .<= 0.4) # diversificatie!
+	# los het op
+	optimize!(model)
+	value.(S)
+	
+	# Q3 
+	model = Model(Ipopt.Optimizer)
+	# variables 
+	@variable(model,S[1:length(μ)]) # % van ieder aandeel in mijn portefeuille
+	# objective
+	@objective(model, Min, S'*Σ*S) # min risk
+	# constraints
+	@constraint(model, μ'*S >= 0.35) # min return van 0.35
+	@constraint(model, sum(S) == 1.) # total 100 %
+	@constraint(model, S .>= 0.) # geen negatieve bijdrages
+	@constraint(model, S .<= 0.4) # diversificatie!
+	# los het op
+	optimize!(model)
+	value.(S), μ'*value.(S)
+	termination_status(model)
+end
+
+# ╔═╡ e15f2647-04e0-4882-a193-5a63813852d4
+let
+	# ignorer le risque & maximiser le gain
+	model = Model(Ipopt.Optimizer)
+	@variable(model, S[1:length(P)])
+	@constraint(model, S .<= 1.) # pas plus de 100% par action
+	@constraint(model, S .>= 0.) # pas de proportion négative
+	@constraint(model, sum(S) == 1.) # Σproportion = 1
+	@objective(model, Max, μ' * S)
+	optimize!(model)
+	value.(S)
+	# ignorer le risque & maximiser le gain & <=40% par action
+	model = Model(Ipopt.Optimizer)
+	@variable(model, S[1:length(P)])
+	@constraint(model, S .<= 0.4) # pas plus de 100% par action
+	@constraint(model, S .>= 0.) # pas de proportion négative
+	@constraint(model, sum(S) == 1.) # Σproportion = 1
+	@objective(model, Max, μ' * S)
+	optimize!(model)
+	value.(S)
+	# minimiser le risque & gain minimal de 0.35
+	model = Model(Ipopt.Optimizer)
+	@variable(model, S[1:length(P)])
+	@constraint(model, S .<= 0.4) # pas plus de 100% par action
+	@constraint(model, S .>= 0.) # pas de proportion négative
+	@constraint(model, sum(S) == 1.) # Σproportion = 1
+	@constraint(model, μ' * S >= 0.35) # gain minimal à assurer
+	@objective(model, Min, S' * Σ * S)
+	
+	optimize!(model)
+	value.(S)
+	
+end
+
 # ╔═╡ c6cb56d8-058d-11eb-2f71-73a5e5ca3dd0
 
+
+# ╔═╡ ac5e426e-55f6-4ed0-98e4-19fb00ff1aec
+let
+	model = Model(Tulip.Optimizer)
+	N = 20
+	@variable(model, T[1:N] >= 0) # theorie part
+	@variable(model, A[1:N] >= 0) # application part
+	@constraint(model, T .<= 1) # logic
+	@constraint(model, A .<= 1) # logic
+	# teaching model
+	a = 2; b = 3;
+	@constraint(model, sum(A[1:N]) <= sum( T[b+1:N]))
+	for i = 1:N
+		if i <= b
+			JuMP.fix(T[i], 1., force=true)
+			JuMP.fix(A[i], 0., force=true)
+		else
+			@constraint(model, T[i] + A[i] == 1.)
+		end
+	end
+	# emotional states
+	s₀ = 0.
+	α = -0.1; θ = 0.05; β = 1.4;
+	S = [(1-θ)*s₀ + θ*(α*T[1] + β*A[1])]
+	for i = 2:N
+		push!(S, (1-θ)*S[i-1] + θ*(α*T[i-1] + β*A[i-1]))
+	end
+	@objective(model, Max, S[end])
+	optimize!(model)
+	termination_status(model)
+	plot(value.(T))
+	plot!(value.(A))
+end
 
 # ╔═╡ cb6898d6-0565-11eb-2a3c-1514a0fa4f50
 md"""
@@ -211,13 +512,30 @@ Questions:
 # ╠═a62a0de6-04b8-11eb-342f-bfea16900b85
 # ╠═5d0d7415-38fe-4c31-9c3d-59b2cbb54a8e
 # ╟─86702ce8-04b7-11eb-22d1-b7f1437cf740
+# ╠═0f118a6f-9609-44b3-9e08-2e809f516377
+# ╠═e6ba22db-4fc3-4a23-bb56-fa500ef616d2
+# ╠═c38feffb-245b-4812-bcec-bdecd43d6c6c
 # ╠═caf5c6d8-04b8-11eb-1c04-0966207fbf28
+# ╠═d82dbb55-1d31-445a-b5e4-ec11ec4fcf65
+# ╠═84804f16-8dfb-4bad-afe7-fe8ccd854e39
+# ╠═d4f240a2-73c5-4828-b728-d922db6148b8
+# ╠═27080e2e-a7df-4acb-93a9-98f2352fd8b5
+# ╠═508ae591-46f9-4dd9-97b8-08a5fd90e6e1
 # ╠═d3dcd770-058d-11eb-2829-fbb18e85f401
+# ╠═c78e64e1-df73-4c6d-b705-2e1766d8ef3a
+# ╠═74a20456-a91a-44de-9e4b-3e6d86440392
+# ╠═6ea03142-b487-4459-8391-cd50dae56340
 # ╠═42371ec0-55fa-459b-bcb2-a6ea4363d876
 # ╠═0a95f12e-c5eb-490a-bc7c-0cd7a70edddb
+# ╠═ef581235-7b51-4d2d-8097-7f6637c40b24
+# ╠═1283cdae-1a6b-4a4e-be2b-a9072bfc3972
+# ╠═55ac8bb2-eb86-4536-9a89-245cf3883763
+# ╠═7e852fdd-4363-4e15-ab24-e76448fbe1cf
 # ╟─a510792e-04c0-11eb-0f6e-a7e40dfe602c
-# ╠═56a7c778-04c1-11eb-03c0-fd5d27d989b1
+# ╠═0589b400-06a9-4f91-99aa-97e52f191dd0
 # ╠═c4eca510-04c0-11eb-0e29-a5dcc1386bd5
+# ╠═e15f2647-04e0-4882-a193-5a63813852d4
 # ╠═c6cb56d8-058d-11eb-2f71-73a5e5ca3dd0
+# ╠═ac5e426e-55f6-4ed0-98e4-19fb00ff1aec
 # ╟─cb6898d6-0565-11eb-2a3c-1514a0fa4f50
 # ╠═b76bae36-058d-11eb-216c-dfb8abd85772
