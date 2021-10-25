@@ -85,6 +85,39 @@ By using historical data over several years, it is possible to establish a multi
 """
 
 # ╔═╡ a7659bd3-796b-4155-b01f-1d9ef6b42f12
+md"""
+## Chemistry
+In the various chemistry courses, you have studied the reactions between molecules by means of kinetics. A reaction was modelled using a differential equation. However, it is also possible to model kinetics using stochastic methods. 
+
+### Possible projects
+Compare a stochastic model  (there are multiple in the reference) with a numerical method that you already know for some known reactions. In addition, use an optimisation method to fine-tune your reaction.
+
+### References
+* [Stochastic chemical kinetics](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5425731/)
+"""
+
+# ╔═╡ 57e9e568-4bb7-43d1-91cf-0711cc2fa905
+md"""
+## Finance
+Modeling and simulation is widely used in the financial sector. Different techniques can be used.
+### Possible projects
+* **Portfolio optimisation of crypto currencies in combination with discrete even simulation**: We have already briefly discussed portfolio optimisation in the practical applications. However, the crypto market is much more volatile, so here it may be worthwhile to combine these optimisations with discrete event simulation and real data.
+* **Insurance solvency**: Use Monte Carlo simulation or another suited method for a specific insurance to find an optimal balance between insurance premium and solvency.
+* **Global trade embargo effects:** In today's world, nations are less likely to declare war on another country, but first try to achieve their goals through diplomatic or economic means. The global trade network has been extensively studied and data is freely available. Study the effect of a trade embargo on a particular country and consider possible unexpected alliances (where you can consider trade as an optimisation problem).
+### References
+* [Solvency ratio](https://en.wikipedia.org/wiki/Solvency_ratio)
+* [Monte Carlo in insurance](https://www.researchgate.net/publication/332637928_Monte_Carlo_Methods_for_Insurance_Risk_Computation)
+* [World Trade Network](https://www.researchgate.net/publication/23786718_The_World_Trade_Network)
+* [World Trade Network dataset](http://www.cepii.fr/cepii/en/bdd_modele/presentation.asp?id=27), requires free registration, holds all network data.
+"""
+
+# ╔═╡ 2e4860bd-b74b-4671-8e57-c6849bc63d88
+
+
+# ╔═╡ 4357e4be-1005-470f-978b-90844dd31b1a
+
+
+# ╔═╡ 352bcff0-ecc4-47ef-ae55-0250fb2bba1d
 
 
 # ╔═╡ 72df832c-442f-4693-9953-df873951a1db
@@ -101,15 +134,6 @@ Managing the electricity grid is a major challenge.
 md"""input ben:
 - risicomodellen gecombineerd met discreet event + bayesiaans (covid + splitsen)
 - 
-"""
-
-# ╔═╡ 8a23e486-5f4e-4db3-8955-ac5a948203f1
-md"""
-## General topic
-
-### Possible projects
-
-### References
 """
 
 # ╔═╡ 79db607a-8af7-4f60-a339-0e27cd6edf1f
@@ -325,10 +349,13 @@ You can always come to use with your own project proposition.
 # ╟─8bc9e310-3151-4c49-b009-04b4cc1a4a84
 # ╟─279eda92-e1cf-480e-a093-e17625046125
 # ╟─cb784ac1-7dde-4163-a325-379f87ccb18b
-# ╠═a7659bd3-796b-4155-b01f-1d9ef6b42f12
+# ╟─a7659bd3-796b-4155-b01f-1d9ef6b42f12
+# ╟─57e9e568-4bb7-43d1-91cf-0711cc2fa905
+# ╠═2e4860bd-b74b-4671-8e57-c6849bc63d88
+# ╠═4357e4be-1005-470f-978b-90844dd31b1a
+# ╠═352bcff0-ecc4-47ef-ae55-0250fb2bba1d
 # ╠═72df832c-442f-4693-9953-df873951a1db
 # ╠═65c30d33-de0e-410d-afa9-9e0e84431012
-# ╠═8a23e486-5f4e-4db3-8955-ac5a948203f1
 # ╠═79db607a-8af7-4f60-a339-0e27cd6edf1f
 # ╠═3117a9ed-4577-47fb-bc7f-54fb9572e313
 # ╟─1e897cf4-18f5-11eb-2953-d1d83d41a044
