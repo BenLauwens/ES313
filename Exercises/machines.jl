@@ -25,6 +25,7 @@ processed.
 
 using Logging
 using SimJulia
+using ResumableFunctions
 import Base.show
 
 struct Product
