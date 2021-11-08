@@ -1,11 +1,55 @@
 ### A Pluto.jl notebook ###
-# v0.12.4
+# v0.17.1
 
 using Markdown
 using InteractiveUtils
 
 # ╔═╡ dc3c2030-144f-11eb-08ab-0b68dc2698ac
-using BenchmarkTools
+begin
+	using Pkg
+	cd(joinpath(dirname(@__FILE__),".."))
+    Pkg.activate(pwd())
+	using BenchmarkTools
+end
+
+# ╔═╡ 615d2b78-9a47-41bf-bae4-f0f7fb875956
+# Make cells wider
+html"""<style>
+/*              screen size more than:                     and  less than:                     */
+@media screen and (max-width: 699px) { /* Tablet */ 
+  /* Nest everything into here */
+    main { /* Same as before */
+        max-width: 1200px !important; /* Same as before */
+        margin-right: 100px !important; /* Same as before */
+    } /* Same as before*/
+
+}
+
+@media screen and (min-width: 700px) and (max-width: 1199px) { /* Laptop*/ 
+  /* Nest everything into here */
+    main { /* Same as before */
+        max-width: 1200px !important; /* Same as before */
+        margin-right: 100px !important; /* Same as before */
+    } /* Same as before*/
+}
+
+@media screen and (min-width:1000px) and (max-width: 1920px) { /* Desktop */ 
+  /* Nest everything into here */
+    main { /* Same as before */
+        max-width: 1000px !important; /* Same as before */
+        margin-right: 100px !important; /* Same as before */
+    } /* Same as before*/
+}
+
+@media screen and (min-width:1921px) { /* Stadium */ 
+  /* Nest everything into here */
+    main { /* Same as before */
+        max-width: 1200px !important; /* Same as before */
+        margin-right: 100px !important; /* Same as before */
+    } /* Same as before*/
+}
+</style>
+"""
 
 # ╔═╡ 1c49d8ae-144e-11eb-024a-137460f78b15
 md"""
@@ -23,7 +67,7 @@ At some point we try to make use of multithreading. You can see the number of th
 Threads.nthreads()
 ```
 
-Should this be only 1, you can set the number of threads ro use by setting the environment variable `JULIA_NUM_THREADS` to the required before starting julia.
+Should this be only 1, you can set the number of threads to use by setting the environment variable `JULIA_NUM_THREADS` to the required before starting julia.
 
 In a windows terminal:
 ```
@@ -42,7 +86,8 @@ both examples above suppose "julia" is known in your terminal. If this is not th
 """
 
 # ╔═╡ a4ed00b8-144f-11eb-0c66-932242a1767c
-"""
+begin
+	"""
     testfuns(F, args...; kwargs...)
 
 Benchmark the functions in F using `args` and `kwargs`.
@@ -65,6 +110,9 @@ function testfuns(F::Union{Array{Function,1}, Array{Type,1}}, args...; kwargs...
     speedup = round(Int,medians[end][2] / medians[1][2])
     println("\n$(speedup)x speedup (fastest: $(medians[1][1]), slowest: $(medians[end][1]))\n")
     return 
+
+end
+	nothing
 end
 
 # ╔═╡ e32569b0-144f-11eb-33e9-8fd8755c208f
@@ -89,6 +137,8 @@ begin
 	function equality(f::Function, g::Function, args...; kwargs...)
 		return all(isequal.(map(f->f(args...; kwargs...), [f, g])...))
 	end
+
+	nothing
 end
 
 # ╔═╡ ff480c88-144f-11eb-2839-598b8452a945
@@ -439,6 +489,7 @@ begin
 end
 
 # ╔═╡ Cell order:
+# ╟─615d2b78-9a47-41bf-bae4-f0f7fb875956
 # ╟─1c49d8ae-144e-11eb-024a-137460f78b15
 # ╠═dc3c2030-144f-11eb-08ab-0b68dc2698ac
 # ╠═a4ed00b8-144f-11eb-0c66-932242a1767c
