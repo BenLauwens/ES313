@@ -13,6 +13,7 @@ something with the cause of the interruption (in this case keeping track of who
 got liked by a puppy).
 =#
 using SimJulia
+using ResumableFunctions
 using Logging
 
 # known puppy properties

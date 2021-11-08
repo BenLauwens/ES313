@@ -1,111 +1,58 @@
 ### A Pluto.jl notebook ###
-# v0.12.4
+# v0.17.1
 
 using Markdown
 using InteractiveUtils
 
-# ╔═╡ 92928394-1462-11eb-04fd-557587660fc2
-using Logging
-
-# ╔═╡ 3cc48592-146d-11eb-1546-cd39a0f8e407
-using SimJulia, ResumableFunctions
-
-# ╔═╡ 73f24a8e-146f-11eb-2978-cfef033adae1
-let
-	@resumable function fill(sim::Simulation, c::Container)
-		while true 
-			@yield timeout(sim,rand(1:10))
-			@yield put(c,1)
-			@info "item added to the container on time $(now(sim))"
-		end
-	end
-
-	@resumable function empty(sim::Simulation, c::Container)
-		while true
-			@yield timeout(sim,rand(1:10))
-			n = rand(1:3)
-			@info "Filed my request for $(n) items on time $(now(sim))"
-			@yield get(c,n)
-			@info "Got my $(n) items on time $(now(sim))"
-		end
-	end
-
-	@resumable function monitor(sim::Simulation, c::Container)
-		while true
-			@info "$(now(sim)) - current container level: $(c.level)/$(c.capacity)"
-			@yield timeout(sim,1)
-		end
-	end
-	
-	# setup the simulation
-	# fix random seed for reproduction
+# ╔═╡ 4de0ee11-f8af-4865-8737-ba0dc5c3404e
+begin
+	using Pkg
+	cd(joinpath(dirname(@__FILE__),".."))
+    Pkg.activate(pwd())
+	using Logging
+	# for simulation
 	using Random
-	Random.seed!(173)
-	
-	@info "\n$("-"^70)\nWorking with containers\n$("-"^70)\n"
-	sim = Simulation()
-	c = Container(sim,10)
-	@process fill(sim,c)
-	@process monitor(sim,c)
-	@process empty(sim,c)
-	run(sim,30)
+	using SimJulia, ResumableFunctions
 end
 
-# ╔═╡ fbfed3c4-1470-11eb-0f28-231b891d0d9b
-let
-	# our own type of object
-	struct Object
-		id::Int
-	end
+# ╔═╡ 9cda8f1c-2394-42bf-883c-4dbe5df8ae56
+# Make cells wider
+html"""<style>
+/*              screen size more than:                     and  less than:                     */
+@media screen and (max-width: 699px) { /* Tablet */ 
+  /* Nest everything into here */
+    main { /* Same as before */
+        max-width: 1200px !important; /* Same as before */
+        margin-right: 100px !important; /* Same as before */
+    } /* Same as before*/
 
-	@resumable function fill(sim::Simulation, s::Store)
-		i = 0
-		while true 
-			i += 1
-			item = Object(i)
-			@yield timeout(sim,rand(1:10))
-			@yield put(s,item)
-			@info "item $(item) added to the store on time $(now(sim))"
-		end
-	end
-	
-	@resumable function empty(sim::Simulation, s::Store)
-		while true
-			@yield timeout(sim,rand(1:10))
-			n = rand(1:3)
-			@info "Filed my request for $(n) items on time $(now(sim))"
-			for _ in 1:n
-				@yield get(s)
-			end
-			@info "Got my $(n) items on time $(now(sim))"
-		end
-	end
-	
-	@resumable function monitor(sim::Simulation, s::Store)
-		while true
-			@info "$(now(sim)) - current store level: $(length(s.items))/$(s.capacity)"
-			@yield timeout(sim,1)
-		end
-	end
-	
-	# fix random seed for reproduction
-	using Random
-	Random.seed!(173)
-	
-	# setup the simulation
-	@info "\n$("-"^70)\nWorking with stores\n$("-"^70)\n"
-	sim = Simulation()
-	s = Store{Object}(sim, capacity=UInt(10))
-	
-	@process fill(sim, s)
-	@process empty(sim, s)
-	@process monitor(sim, s)
-	run(sim,30)
-	
-end
+}
 
-# ╔═╡ 951f3fc2-1538-11eb-3430-656e7a5c950a
-using Distributions
+@media screen and (min-width: 700px) and (max-width: 1199px) { /* Laptop*/ 
+  /* Nest everything into here */
+    main { /* Same as before */
+        max-width: 1200px !important; /* Same as before */
+        margin-right: 100px !important; /* Same as before */
+    } /* Same as before*/
+}
+
+@media screen and (min-width:1000px) and (max-width: 1920px) { /* Desktop */ 
+  /* Nest everything into here */
+    main { /* Same as before */
+        max-width: 1000px !important; /* Same as before */
+        margin-right: 100px !important; /* Same as before */
+    } /* Same as before*/
+}
+
+@media screen and (min-width:1921px) { /* Stadium */ 
+  /* Nest everything into here */
+    main { /* Same as before */
+        max-width: 1200px !important; /* Same as before */
+        margin-right: 100px !important; /* Same as before */
+    } /* Same as before*/
+}
+</style>
+"""
 
 # ╔═╡ c395df98-145a-11eb-1716-2de187df1a1a
 md"""
@@ -121,25 +68,29 @@ Below you find some practical examples of using this module.
 disable_logging(LogLevel(-5001))
 
 # ╔═╡ 0560f32a-1462-11eb-0685-09e4f341ddf5
-"""
-	logdemo1()
-
-A small demo where everything is run on a single logger. Keep in mind when using the global logger, that its lowest level is `Info` (`LogLevel(0)`), so you won't see anything below. 
-
-Also keep in mind that you need to modify the global settings before you can see anything below `Debug`. You can do this with `disable_logging(LogLevel(N))`. 
-
-### keywords
-* logger: the logger you want to use. Defaults to the global logger.
-"""
-function logdemo1(args...; kwargs...)
-	# direct all the following messages to my logger
-	logger = get(kwargs, :logger, Logging.global_logger())
-	with_logger(logger) do
-		# print some information about the function
-		@info "logdemo1 was invoked with:\n\t- args: $(args)\n\t- kwargs: $(kwargs)\n\t- using logger <$(logger)> (current logger's lowest level: $(Logging.min_enabled_level(logger)))"
-		@debug "logdemo1 lowest level message that allows the debug level"
-		@logmsg LogLevel(-2000) "not visible by default"
+begin		
+	"""
+		logdemo1()
+	
+	A small demo where everything is run on a single logger. Keep in mind when using the global logger, that its lowest level is `Info` (`LogLevel(0)`), so you won't see anything below. 
+	
+	Also keep in mind that you need to modify the global settings before you can see anything below `Debug`. You can do this with `disable_logging(LogLevel(N))`. 
+	
+	### keywords
+	* logger: the logger you want to use. Defaults to the global logger.
+	"""
+	function logdemo1(args...; kwargs...)
+		# direct all the following messages to my logger
+		logger = get(kwargs, :logger, Logging.global_logger())
+		with_logger(logger) do
+			# print some information about the function
+			@info "logdemo1 was invoked with:\n\t- args: $(args)\n\t- kwargs: $(kwargs)\n\t- using logger <$(logger)> (current logger's lowest level: $(Logging.min_enabled_level(logger)))"
+			@debug "logdemo1 lowest level message that allows the debug level"
+			@logmsg LogLevel(-2000) "not visible by default"
+		end
 	end
+
+	nothing;
 end
 
 # ╔═╡ 8ddac37c-1465-11eb-17d4-fdce80dc78fe
@@ -209,11 +160,13 @@ begin
 	function myspecialfun(args...; kwargs...)
 		@info "myspecialfun was invoked with:\n\t- args: $(args)\n\t- kwargs: $(kwargs)\n\t- using logger <$(kwargs[:speciallogger])> "
 	end
+
+	nothing
 end
 
 # ╔═╡ e3eae0ce-1462-11eb-2e02-fd2f746569d1
 begin
-	println("DEMO 2a - USING LOGGING DEFAULT SETTINGS\n$("-"^70)\n\n")
+	println("DEMO 2a - USING LOGGING DEFAULT SETTINGS\n$("-"^70)\n\n\n")
 	logdemo2(1,2, goedemorgen="bonjour")
 	println("-"^70)
 end
@@ -224,20 +177,6 @@ begin
 	logdemo2(1,2, myspecialfunlogfilename="demo2.log", maxrep=10)
 	println("-"^70)
 end
-
-# ╔═╡ 0368ea70-145b-11eb-0b5c-fb3a33bf2027
-md"""
-# SimJulia
-Before starting a larger project, we will look into some SimJulia tricks.
-
-There are some compatibility issues between Pluto and more complex SimJulia constructions, which is why you will find specific examples in a seperate file.
-
-You can execute these file by running them from the REPL by using 
-```julia
-include("path/to/file.jl")
-```
-
-"""
 
 # ╔═╡ dd63ff16-146d-11eb-059c-0586e1f972a5
 md"""
@@ -290,6 +229,20 @@ begin
 	end
 end
 
+# ╔═╡ 0368ea70-145b-11eb-0b5c-fb3a33bf2027
+md"""
+# SimJulia
+Before starting a larger project, we will look into some SimJulia tricks.
+
+There are some compatibility issues between Pluto and more complex SimJulia constructions, which is why you will find specific examples in a seperate file.
+
+You can execute these file by running them from the REPL by using 
+```julia
+include("path/to/file.jl")
+```
+
+"""
+
 # ╔═╡ 9da38750-146d-11eb-0757-2318eb6520ca
 md"""
 ## Working with `containers`
@@ -302,11 +255,104 @@ Experiment a bit with containers (::Container). Discover their attributes (envir
 3. a monitor proces that periodically prints an info message detailing the current level of the container. This process repeats forever.
 """
 
+# ╔═╡ 73f24a8e-146f-11eb-2978-cfef033adae1
+let
+	@resumable function fill(sim::Simulation, c::Container)
+		while true 
+			@yield timeout(sim,rand(1:10))
+			@yield put(c,1)
+			@info "item added to the container on time $(now(sim))"
+		end
+	end
+
+	@resumable function empty(sim::Simulation, c::Container)
+		while true
+			@yield timeout(sim,rand(1:10))
+			n = rand(1:3)
+			@info "Filed my request for $(n) items on time $(now(sim))"
+			@yield get(c,n)
+			@info "Got my $(n) items on time $(now(sim))"
+		end
+	end
+
+	@resumable function monitor(sim::Simulation, c::Container)
+		while true
+			@info "$(now(sim)) - current container level: $(c.level)/$(c.capacity)"
+			@yield timeout(sim,1)
+		end
+	end
+	
+	# setup the simulation
+	# fix random seed for reproduction
+
+	Random.seed!(174)
+	
+	@info "\n$("-"^70)\nWorking with containers\n$("-"^70)\n"
+	sim = Simulation()
+	c = Container(sim,10)
+	@process fill(sim,c)
+	@process monitor(sim,c)
+	@process empty(sim,c)
+	run(sim,30)
+end
+
 # ╔═╡ 71911828-1470-11eb-3519-bb52522ed2c9
 md"""
 ## Working with `Stores`
 A store can hold objects (struct) that can be used by other processes. Let's reconsider the same small scale application we did with the containers, i.e. generate a simple setting and verify everything works as intended (e.g. a fill, empty and monitor process). 
 """
+
+# ╔═╡ fbfed3c4-1470-11eb-0f28-231b891d0d9b
+let
+	# our own type of object
+	struct Object
+		id::Int
+	end
+
+	@resumable function fill(sim::Simulation, s::Store)
+		i = 0
+		while true 
+			i += 1
+			item = Object(i)
+			@yield timeout(sim,rand(1:10))
+			@yield put(s,item)
+			@info "item $(item) added to the store on time $(now(sim))"
+		end
+	end
+	
+	@resumable function empty(sim::Simulation, s::Store)
+		while true
+			@yield timeout(sim,rand(1:10))
+			n = rand(1:3)
+			@info "Filed my request for $(n) items on time $(now(sim))"
+			for _ in 1:n
+				@yield get(s)
+			end
+			@info "Got my $(n) items on time $(now(sim))"
+		end
+	end
+	
+	@resumable function monitor(sim::Simulation, s::Store)
+		while true
+			@info "$(now(sim)) - current store level: $(length(s.items))/$(s.capacity)"
+			@yield timeout(sim,1)
+		end
+	end
+	
+	# fix random seed for reproduction
+	Random.seed!(174)
+	
+	# setup the simulation
+	@info "\n$("-"^70)\nWorking with stores\n$("-"^70)\n"
+	sim = Simulation()
+	s = Store{Object}(sim, capacity=UInt(10))
+	
+	@process fill(sim, s)
+	@process empty(sim, s)
+	@process monitor(sim, s)
+	run(sim,30)
+	
+end
 
 # ╔═╡ 118eecdc-146d-11eb-1d4b-71b301d4d5e6
 md"""
@@ -496,12 +542,10 @@ Consider the following:
 # ╔═╡ 25a78e3a-1511-11eb-2239-1b938a2129fa
 
 
-# ╔═╡ de71f9fa-150e-11eb-01a5-ab89ea762405
-
-
 # ╔═╡ Cell order:
+# ╟─9cda8f1c-2394-42bf-883c-4dbe5df8ae56
+# ╠═4de0ee11-f8af-4865-8737-ba0dc5c3404e
 # ╟─c395df98-145a-11eb-1716-2de187df1a1a
-# ╠═92928394-1462-11eb-04fd-557587660fc2
 # ╠═dafa45ae-1462-11eb-3338-037167917f4d
 # ╠═0560f32a-1462-11eb-0685-09e4f341ddf5
 # ╠═8ddac37c-1465-11eb-17d4-fdce80dc78fe
@@ -509,11 +553,10 @@ Consider the following:
 # ╠═19b12fc6-1464-11eb-2fc1-cbb3f82479c5
 # ╠═e3eae0ce-1462-11eb-2e02-fd2f746569d1
 # ╠═12710aa4-146b-11eb-034a-97b515563abc
-# ╟─0368ea70-145b-11eb-0b5c-fb3a33bf2027
-# ╠═3cc48592-146d-11eb-1546-cd39a0f8e407
 # ╟─dd63ff16-146d-11eb-059c-0586e1f972a5
 # ╠═010af16a-1474-11eb-10dc-292a149988f1
 # ╠═363eba24-1474-11eb-26b8-718eed4e5f21
+# ╟─0368ea70-145b-11eb-0b5c-fb3a33bf2027
 # ╟─9da38750-146d-11eb-0757-2318eb6520ca
 # ╠═73f24a8e-146f-11eb-2978-cfef033adae1
 # ╟─71911828-1470-11eb-3519-bb52522ed2c9
@@ -527,8 +570,6 @@ Consider the following:
 # ╟─a955fd5c-1536-11eb-0405-9bc433188115
 # ╟─414b4ee2-1473-11eb-3d7b-ef4f49e7efa0
 # ╟─4bf1fce0-1470-11eb-1290-63d06c8246a2
-# ╠═951f3fc2-1538-11eb-3430-656e7a5c950a
 # ╠═f3c8a4ba-1474-11eb-06b0-7f0e5ba47670
 # ╟─c7b95ece-150e-11eb-0058-c15fde632ea0
 # ╠═25a78e3a-1511-11eb-2239-1b938a2129fa
-# ╠═de71f9fa-150e-11eb-01a5-ab89ea762405
