@@ -12,39 +12,31 @@ downloadfolder = joinpath(homedir(),"Documents")
 #            DO NOT CHANGE THIS                     #
 # ------------------------------------------------- #
 
-# add GitCommand
 using Pkg
-using Logging
 
 !ispath(downloadfolder) ? mkdir(downloadfolder) : nothing
 cd(downloadfolder)
 
 @info "Installing Git tools for Julia $(VERSION)..."
+Pkg.add("Git")
+using Git
 
-VERSION < v"1.6" ? (Pkg.add("GitCommand"), using GitCommand) : (Pkg.add("Git"), using Git)
 @info "Downloading course material into $(downloadfolder)"
 try
-    if VERSION < v"1.6"
-        GitCommand.git() do git
-            run(`$git clone https://github.com/BenLauwens/ES313.git`)
-        end
-    else
-        run(`$(git()) clone https://github.com/BenLauwens/ES313.git`)
-    end
+    run(`$(git()) clone https://github.com/BenLauwens/ES313.git`)
     @info "Download complete"
 catch err
-    @warn "Something went wrong, check one of the following:\n  - .gitignore file location\n  - destination folder already a git repository"
+    @warn "Something went wrong, check one of the following:\n  - .gitignore file location\n  - destination folder already is a git repository"
     @info err
 end
 
- 
 # Install & download required packages into environment
 cd(joinpath(downloadfolder,"ES313"))
 Pkg.activate(".")
 @info "Downloading required packages"
 Pkg.instantiate()
-@info "Checking for package updates"
-Pkg.update()
+#@info "Checking for package updates"
+#Pkg.update()
 
 
 # overview of install instruction per package (covered in Project.toml)
