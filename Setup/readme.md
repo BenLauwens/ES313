@@ -31,10 +31,10 @@ from the software center when connected to CDN and then connect to an open netwo
         ```
 
         **Note: during the tests, no explicit CDN account info was passed along and it worked, so only include your own credentials if there appears to be a problem.**
-    * The location where you want the course documentation to be downloaded. This defaults to
-        * `C:\\Users\\YourAccount\\ES313` on Windows 
-        * `/Users/YourAccount/ES313` on Mac
-        * `/home/YourAccount/ES313` on Linux
+    * The location where you want the course documentation to be downloaded. By default, the `ES313` folder will be installed in
+        * `C:\\Users\\YourAccount\\` on Windows 
+        * `/Users/YourAccount/` on Mac
+        * `/home/YourAccount/` on Linux
 
         if you want to use another path, you can change it, e.g.
         ```Julia
@@ -57,6 +57,7 @@ from the software center when connected to CDN and then connect to an open netwo
     ```
 
 You are now ready to start working on the course.
+
 ### Getting updates (run when needed)
 Some lectures may get updates during the semester. If you have followed the installation process, you can get the most recent version of the lecture by running the update script.
 

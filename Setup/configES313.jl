@@ -3,15 +3,13 @@
 # ------------------------------------------------- #
 
 # set the proxy server setting if required (on CDN)
-#ENV["HTTP_PROXY"] = "http://CDNUSER:CDNPSW@dmzproxy005.idcn.mil.intra:8080"
+ENV["HTTP_PROXY"] = "http://CDNUSER:CDNPSW@dmzproxy005.idcn.mil.intra:8080"
 # set the path
 downloadfolder = joinpath(homedir(),"Documents")
-
 
 # ------------------------------------------------- #
 #            DO NOT CHANGE THIS                     #
 # ------------------------------------------------- #
-
 using Pkg
 
 !ispath(downloadfolder) ? mkdir(downloadfolder) : nothing
@@ -32,48 +30,7 @@ end
 
 # Install & download required packages into environment
 cd(joinpath(downloadfolder,"ES313"))
-Pkg.activate(".")
+Pkg.activate(pwd())
 @info "Downloading required packages"
 Pkg.instantiate()
-#@info "Checking for package updates"
-#Pkg.update()
-
-
-# overview of install instruction per package (covered in Project.toml)
-#=
-# General
-Pkg.add("Logging")
-Pkg.add("Dates")
-Pkg.add("Statistics")
-Pkg.add("Distributions")
-Pkg.add("HypothesisTests")
-Pkg.add("CSV")
-Pkg.add("JLD2")
-
-# Plots
-Pkg.add("Plots")
-Pkg.add("StatsPlots")
-Pkg.add("LaTeXStrings")
-Pkg.add("Measures")
-Pkg.add(PackageSpec(url="https://github.com/BenLauwens/NativeSVG.jl.git"))
-
-# Optimisation
-Pkg.add("JuMP")
-Pkg.add("GLPK")
-Pkg.add("Tulip")
-Pkg.add("Optim")
-Pkg.add(PackageSpec(url="https://github.com/B4rtDC/GeneralQP.jl"))
-#Pkg.add("NLopt") # not CDN compatible (CMake fails to build)
-Pkg.add("Ipopt")
-
-# Discrete event simulation
-Pkg.add("ResumableFunctions")
-Pkg.add("SimJulia")
-
-# Notebooks
-Pkg.add("Pluto")
-Pkg.add("PlutoUI")
-
-# Performance
-Pkg.add("BenchmarkTools")
-=#
+@info "Finished"
