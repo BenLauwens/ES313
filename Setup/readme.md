@@ -73,6 +73,10 @@ Some lectures may get updates during the semester. If you have followed the inst
     include("C:\\path\\to\\folder name with a space\\ES313\\setup\\start.jl") # on Windows
     include("path/to/ES313/setup/start.jl") # on Mac/Linux
     ```
+    For MacOS/Linux users, you can also use the following command directly in the terminal (this required you to have added the `julia` to your `PATH`, cf. [Platform Specific Instructions](https://julialang.org/downloads/platform/)):
+    ```
+    julia path/to/ES313/setup/start.jl # on Mac/Linux
+    ```
 2. By default the present working directory is changed to the one for this course, this means that you can open every single notebook simply by using a relative path e.g. `./Exercises/PS01 - Visualisation.jl` or `./Lectures/Lecture00.jl`. After typing `./`, you can even use the tab key for autocomplete.
 ### Troubleshooting
 * Should you experience troubles with the installation, you can always delete the files in `C:\\Users\\YourAccount\\.julia\\` and then repeat the getting started sequence.
