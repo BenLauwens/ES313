@@ -1,16 +1,30 @@
 ### A Pluto.jl notebook ###
-# v0.16.0
+# v0.19.11
 
 using Markdown
 using InteractiveUtils
 
 # ╔═╡ cc106912-0b14-4981-a67b-580dda8a56ed
 begin
+	# Pkg needs to be used to force Pluto to use the current project instead of making an environment for each notebook
 	using Pkg
 	cd(joinpath(dirname(@__FILE__),".."))
     Pkg.activate(pwd())
-    using Distributions, LinearAlgebra, Plots, InteractiveUtils
+    using Distributions, LinearAlgebra, Plots, InteractiveUtils, Graphs
 end
+
+# ╔═╡ f6ac02a6-6fd5-4527-bd45-d77c96526517
+html"""
+ <! -- this adapts the width of the cells to display its being used on -->
+<style>
+	main {
+		margin: 0 auto;
+		max-width: 2000px;
+    	padding-left: max(160px, 10%);
+    	padding-right: max(160px, 10%);
+	}
+</style>
+"""
 
 # ╔═╡ 235e2200-fce9-11ea-0696-d36cddaa843e
 md"""
@@ -53,90 +67,19 @@ We split the problem in a series of subproblems:
 
 """
 
-# ╔═╡ 976bb1e0-07c9-11eb-2a4f-fb7aac69f8ec
-begin
-	function gengraph(N::Int, p::Float64)
-		d = Bernoulli(p) # define the distribution
-		A = rand(d, N, N)
-		# set main diagonal to 0
-		A[diagind(A)] = zeros(Int,N)
-		return LinearAlgebra.Symmetric(A)
-	end
-	
-	function avgdegree(A)
-		return mean(sum(A, dims=1))
-	end
-	
-	"""
-		neighbors(A, i)
-	
-	Détermine les voisins du noeud i dans le graph représenté par A
-	"""
-	function neighbors(A, i)
-		findall(x -> isequal(x, 1), @view A[i,:])
-	end
-	
-	function components(A)
-		N = size(A,1) # network size
-		visited = Dict(i => false for i in 1:N)
-		comps = []
-		for n in 1:N
-			if !visited[n]
-				push!(comps,dig(A, n, visited))
-				end
-		end
-
-		return maximum(length,comps) / N
-	end
-	
-	function dig(A, n, visited, comp=[])
-		visited[n] = true
-		push!(comp, n)
-		for neigbor in neighbors(A, n)
-			if !visited[neigbor]
-				dig(A, neigbor, visited, comp)
-			end
-		end
-		return comp
-	end
-	
-	function sim(N::Int, p::Float64)
-		A = gengraph(N,p)
-		return components(A), avgdegree(A)
-	end
-end
-
-# ╔═╡ 42f5cca6-07d1-11eb-3169-cd3650c42081
-N = 1000
-
-# ╔═╡ a060dc62-07cb-11eb-2aaa-7190bde5dc36
-# simulation part (range of probabilities, 10 simulations for each probability)
-let N = N
-	P = range(5e-5, 3e-3, length=20)
-	rat_comp = Array{Float64, 1}()
-	k_moy = Array{Float64, 1}()
-	for p in P
-		for _ in 1:10
-			res = sim(N,p)
-			push!(rat_comp, res[1])
-			push!(k_moy, res[2])
-		end
-	end
-	scatter(k_moy, rat_comp, ylims=(0,1), label="", xlabel="<k>", ylabel="N_largest_comp / N")
-end
-
-# ╔═╡ 1f0d3e38-402b-4d82-a041-c623c5d531b3
+# ╔═╡ 88477467-5ff0-40ff-bdfe-950838bc65ec
 md"""
-# Test from previous years
-* ants foraging (cf. "./Exercises/data/test2019.pdf")
-* housing evolution (cf. "./Exercises/data/test2020.pdf")
+# From theory to simulation
+Read through the paper "[Phase transition for the SIR model with random transition rates on complete graphs](https://arxiv.org/pdf/1609.05974.pdf)".
 
+Do you understand this model? Can you:
+1. implement the SIR model on graphs? (hint: use Graphs.jl and or SimpleWeightedGraphs.jl)
+2. show how the S-I-R evolve over time?
+3. observe the theoretical results in your simulation?
 """
 
 # ╔═╡ Cell order:
+# ╟─f6ac02a6-6fd5-4527-bd45-d77c96526517
 # ╠═cc106912-0b14-4981-a67b-580dda8a56ed
 # ╟─235e2200-fce9-11ea-0696-d36cddaa843e
-# ╠═976bb1e0-07c9-11eb-2a4f-fb7aac69f8ec
-# ╠═42f5cca6-07d1-11eb-3169-cd3650c42081
-# ╠═a060dc62-07cb-11eb-2aaa-7190bde5dc36
-# ╟─1f0d3e38-402b-4d82-a041-c623c5d531b3
+# ╟─88477467-5ff0-40ff-bdfe-950838bc65ec
