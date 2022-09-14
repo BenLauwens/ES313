@@ -204,6 +204,9 @@ end
 # ╔═╡ 50fc17c1-13a3-4c2a-a828-5c7192a84dcc
 genstate("./Exercises/data/Langtonstart.txt")
 
+# ╔═╡ 1d542a92-d75d-4bf0-b2fe-37f30202a68d
+heatmap(genstate("./Exercises/data/Langtonstart.txt"), yflip=true,color=mycmap,size=(300,300), title="Langton start situation")
+
 # ╔═╡ f31f3bba-23d7-42ea-bcbb-df06774fcf49
 md"""
 ### Generating a new state
@@ -243,6 +246,11 @@ end
 
 # ╔═╡ 32c1b6d7-48c0-4068-904b-a03cc3114c7e
 newstate(genstate("./Exercises/data/Langtonstart.txt"), rules("./Exercises/data/Langtonsrules.txt"))
+
+# ╔═╡ 6c75e759-0b7e-485e-91d3-1a2c6164a0f8
+plot( heatmap(genstate("./Exercises/data/Langtonstart.txt"), yflip=true,color=mycmap, title="Langton start situation"),
+	heatmap(newstate(genstate("./Exercises/data/Langtonstart.txt"), rules("./Exercises/data/Langtonsrules.txt")), yflip=true,color=mycmap, title="Langton one iteration"),size=(600,300)
+)
 
 # ╔═╡ 2066d962-db1c-414d-9c36-a77ddedd2a7d
 md"""
@@ -408,7 +416,202 @@ As an additional question, you might want to think about how you could incorpora
 """
 
 # ╔═╡ 79bfb454-a11a-42cb-b94d-dec0eb04cd31
+"""
+	Ant
 
+Generate an ant on location (x,y) with a direction. This is a `Bool`, where 1 = up, 0 = down
+"""
+mutable struct Ant
+	x::Int
+	y::Int
+	dir::Bool
+end
+
+# ╔═╡ 4ba2cb98-e019-4009-adc4-e1f7254292b2
+"""
+	Antworld
+
+The world of the ants. Holds the feromones when hunting for food in `feromone_hunt` and those linked the finding food in `feromone_food`. Fermone values are stored as integers. Food locations are stored is `food_locations`.
+"""
+struct Antworld
+	feromone_hunt::Dict
+	feromone_food::Dict
+	food_locations::Set
+	function Antworld(; feromone_hunt = Dict{Tuple{Int64, Int64}, Int64}(),  
+						feromone_food = Dict{Tuple{Int64, Int64}, Int64}(),
+						food_locations = Set{Tuple{Int64, Int64}}())
+		return new(feromone_hunt, feromone_food, food_locations)
+	end
+end
+
+# ╔═╡ c28f1388-d534-4777-b1e3-bc0a1eafd0d9
+Base.show(io::IO, a::Ant) = print(io, """🐜@($(a.x), $(a.y)) going $(a.dir ? "⬆" : "⬇")""")
+
+# ╔═╡ 720bce28-71d0-41a4-bafd-a180a184e5fc
+# constant used for change in x direction
+const Δx = [-1;0;1]
+
+# ╔═╡ 77142da6-bad9-418a-80ef-e7629885d61e
+"""
+	move_ant_naive!(a::Ant)
+
+implements the random walk of the ant accounting for its direction.
+"""
+function move_ant_naive!(a::Ant)
+	a.y += a.dir ? 1 : -1
+	a.x += rand(Δx)
+	return nothing
+end
+
+# ╔═╡ 20fbd7ac-05a0-4a5b-9521-05be4ca9b561
+"""
+	next_Δx(a,b,c)
+
+Given the feromone counts a, b and c on the left, forward and right position with respect to the movement direction of the ant, 
+pick the next lation
+"""
+function next_Δx(a,b,c; α=1.)
+	# probability distribution
+	dist = cumsum([(1+α*a)/(3+α*(a+b+c)); (1+α*b)/(3+α*(a+b+c)); (1+α*c)/(3+α*(a+b+c))])
+
+	# pick random value from Δx
+	return Δx[findfirst( rand() .<= dist)]
+end
+
+# ╔═╡ cedbddc2-6446-4790-91dd-03ea98f80fc3
+"""
+	move_ant!(a::Ant, w::Antworld)
+
+implements ant movement accounting for its direction and the world.
+"""
+function move_ant!(a::Ant, w::Antworld)
+	# feromone placement (depends on the direction)
+	# when going up:
+	if a.dir
+		# get!(w.feromone_hunt, (a.x, a.y), 0) is to avoid having errors in case the value does not exist yet
+		w.feromone_hunt[(a.x, a.y)] = get!(w.feromone_hunt, (a.x, a.y), 0)  + 1 
+		# determine the next x location
+		a.x += next_Δx( get(w.feromone_food, (a.x-1, a.y+1), 0), 
+						get(w.feromone_food, (a.x,   a.y+1), 0),
+						get(w.feromone_food, (a.x+1, a.y+1), 0))
+	# when going down
+	else
+		# leave feromone
+		w.feromone_food[(a.x, a.y)] = get!(w.feromone_food, (a.x, a.y), 0)  + 1 
+		# detemrine the next x location (note, when looking down, the order changes)
+		a.x += next_Δx( get(w.feromone_food, (a.x+1, a.y-1), 0), 
+						get(w.feromone_food, (a.x,   a.y-1), 0),
+						get(w.feromone_food, (a.x-1, a.y-1), 0))
+	end
+	
+	# next y location
+	a.y += a.dir ? 1 : -1
+	
+	# check if I'm on food and flip the direction
+	if (a.x, a.y) ∈ w.food_locations
+		a.dir = !a.dir # Note: by flipping this you can also turn away in the wrong direction in a multi food world
+	end
+	
+end
+
+# ╔═╡ 22729fda-0111-4f54-9408-c552d213eb89
+let
+	# make a simple ant with simple movement
+	myant = Ant(0, 0, true)
+	println(myant)
+	move_ant_naive!(myant); 
+	println(myant)
+end
+
+# ╔═╡ da10cdd0-7e92-4e8b-9532-33d529d05f68
+let
+	# make a simple ant with simple movement
+	myant = Ant(0, 0, true)
+	myworld = Antworld()
+	for _ = 1:2
+		println(myant)
+		move_ant!(myant, myworld); 
+	end
+	println(myant)
+	myworld
+end
+
+# ╔═╡ 15d75ea9-7ca7-4210-8d40-c38154994e7e
+Base.broadcastable(f::Antworld) = Ref(f) # to make an Antworld non-iterable (cf. docs)
+
+# ╔═╡ cf09cb1b-edcd-4bc9-9d28-e2b53a56e04e
+let
+	# a demo with three ants
+	myants = [Ant(0,0, true) for _ in 1:3]
+	myworld = Antworld()
+	for _ in 1:5
+		move_ant!.(myants, myworld)
+	end
+	println(join(["$(ant)" for ant in myants], "\n"))
+	myworld
+end
+
+# ╔═╡ 30b93916-0666-4b61-b141-459aa79786a1
+"""
+	antlife(n)
+
+Run a small scale simulation for n iterations. A new ant spawns at each iteration. 
+"""
+function antlife(n=200; food_pos=Set([(1,20)]))
+	myants = Ant[]
+
+	myantworld = Antworld(food_locations=food_pos)
+	for i = 1:n
+		# spawn a new ant
+		push!(myants, Ant(0,0,true))
+		# move all the ants
+		# Note: this move each ant after the other and not all of them at the same time. The latter option would required you to have a copy of the feromone states that will be updated. This can be done, but be aware of the difference between copy and deepcopy.
+		move_ant!.(myants, myantworld)
+		# check if ants should be removed, e.g. ants within a manhattan distance of 1 from the nest and with a negative y value are removed from the simulation
+		to_keep = filter(ant -> ant.y >= 0 && abs(ant.x) >= 0, myants)
+		myants = to_keep
+	end
+
+	return myants, myantworld
+end
+
+# ╔═╡ cc28df9c-965b-4c71-8f4c-a637c44735ee
+"""
+	showworld(w::Antworld; kind=:food)
+
+Generate a plot for the feromone counts for the :food or the :hunt feromones
+"""
+function showworld(w::Antworld; kind=:food)
+	if kind ==:food
+		d = w.feromone_food
+		t = "food feromones"
+	elseif kind==:hunt
+		d = w.feromone_hunt
+		t = "hunting feromones"
+	end
+	# determine limits
+	xmin, xmax = minimum(x[1] for x in keys(d)), maximum(x[1] for x in keys(d))
+	ymin, ymax = minimum(x[2] for x in keys(d)), maximum(x[2] for x in keys(d))
+
+	# generate matrix
+	A = zeros(Int, xmax - xmin + 1, ymax - ymin + 1)
+	for (coord, val) in d
+		A[coord[1] - xmin + 1, coord[2] - ymin + 1] = val
+	end
+	
+	# actual plot
+	heatmap(log10.(permutedims(A)), yflip=false, title=t, color=:blues)
+	xticks!(1:(xmax-xmin+1) ÷ 10:xmax-xmin+1, ["$(v)" for v in xmin:(xmax-xmin+1) ÷ 10:xmax])
+	xlabel!("x")
+	yticks!(1:(ymax-ymin+1) ÷ 10:ymax-ymin+1, ["$(v)" for v in ymin:(ymax-ymin+1) ÷ 10:ymax])
+end
+
+# ╔═╡ 96309e1f-ceec-4220-8d49-8575dd8de376
+# actual simulation
+ants, world = antlife(250, food_pos=Set([(7,25); (-7,25)]));
+
+# ╔═╡ af4dbfb2-f38b-4b68-a9d6-bf9c5d0480f7
+plot(showworld(world, kind=:food), showworld(world, kind=:hunt), size=(800,600), colorbar_title="log(feromonne)")
 
 # ╔═╡ Cell order:
 # ╟─1e9ecd99-5a36-448f-9b07-71a070655c0f
@@ -424,10 +627,12 @@ As an additional question, you might want to think about how you could incorpora
 # ╟─334f0860-8ee1-4592-a362-e0e8cc1a21da
 # ╠═e17b8cbf-4abb-41d9-8774-b53dc3aa4298
 # ╠═50fc17c1-13a3-4c2a-a828-5c7192a84dcc
+# ╠═1d542a92-d75d-4bf0-b2fe-37f30202a68d
 # ╟─f31f3bba-23d7-42ea-bcbb-df06774fcf49
 # ╠═c330993e-8c5f-49a4-bca9-beab4657a201
 # ╠═a35721fb-947e-4144-b861-0620487be9b6
 # ╠═32c1b6d7-48c0-4068-904b-a03cc3114c7e
+# ╟─6c75e759-0b7e-485e-91d3-1a2c6164a0f8
 # ╟─2066d962-db1c-414d-9c36-a77ddedd2a7d
 # ╠═d0ff5030-d067-4451-b0cf-07144399bb27
 # ╠═eba86c45-7dce-430c-a67c-1ba7af403180
@@ -455,3 +660,17 @@ As an additional question, you might want to think about how you could incorpora
 # ╠═2ee542c5-f5e7-478a-8832-92c0f1c41e7a
 # ╟─1bf90bd6-3e8c-45ca-9357-ae047cb29f39
 # ╠═79bfb454-a11a-42cb-b94d-dec0eb04cd31
+# ╠═4ba2cb98-e019-4009-adc4-e1f7254292b2
+# ╠═c28f1388-d534-4777-b1e3-bc0a1eafd0d9
+# ╠═720bce28-71d0-41a4-bafd-a180a184e5fc
+# ╠═77142da6-bad9-418a-80ef-e7629885d61e
+# ╠═cedbddc2-6446-4790-91dd-03ea98f80fc3
+# ╠═20fbd7ac-05a0-4a5b-9521-05be4ca9b561
+# ╠═22729fda-0111-4f54-9408-c552d213eb89
+# ╠═da10cdd0-7e92-4e8b-9532-33d529d05f68
+# ╠═15d75ea9-7ca7-4210-8d40-c38154994e7e
+# ╠═cf09cb1b-edcd-4bc9-9d28-e2b53a56e04e
+# ╠═30b93916-0666-4b61-b141-459aa79786a1
+# ╠═cc28df9c-965b-4c71-8f4c-a637c44735ee
+# ╠═96309e1f-ceec-4220-8d49-8575dd8de376
+# ╠═af4dbfb2-f38b-4b68-a9d6-bf9c5d0480f7
