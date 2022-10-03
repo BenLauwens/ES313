@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.16.0
+# v0.19.11
 
 using Markdown
 using InteractiveUtils
@@ -11,6 +11,19 @@ begin
     Pkg.activate(pwd())
 	using NLopt
 end
+
+# ╔═╡ b01ec500-f17f-4a13-af7c-1058359003a1
+html"""
+ <! -- this adapts the width of the cells to display its being used on -->
+<style>
+	main {
+		margin: 0 auto;
+		max-width: 2000px;
+    	padding-left: max(160px, 10%);
+    	padding-right: max(160px, 10%);
+	}
+</style>
+"""
 
 # ╔═╡ 1866ec44-03c9-11eb-0a21-416587e4e0e0
 # Solve the problem with NLopt
@@ -65,6 +78,7 @@ end
 ret
 
 # ╔═╡ Cell order:
+# ╠═b01ec500-f17f-4a13-af7c-1058359003a1
 # ╠═1c7e914c-03c9-11eb-11cf-0d9346305a53
 # ╠═1866ec44-03c9-11eb-0a21-416587e4e0e0
 # ╠═2121e5be-03c9-11eb-2b8b-a10cb146216d
