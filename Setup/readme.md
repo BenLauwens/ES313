@@ -30,7 +30,11 @@ from the software center when connected to CDN and then connect to an open netwo
         #ENV["HTTP_PROXY"] = "http://CDNUSER:CDNPSW@dmzproxy005.idcn.mil.intra:8080"
         ```
 
-        **Note: during the tests, no explicit CDN account info was passed along and it worked, so only include your own credentials if there appears to be a problem.**
+        **Notes:** 
+
+            - during previous tests, no explicit CDN account info was passed along and it worked, so only include your own credentials if there appears to be a problem.
+
+            - currently, GitHub is NOT accessible when connected to the CDN network, so the installation should be done while connected to another network.
     * The location where you want the course documentation to be downloaded. By default, the `ES313` folder will be installed in
         * `C:\\Users\\YourAccount\\` on Windows 
         * `/Users/YourAccount/` on Mac
@@ -45,7 +49,7 @@ from the software center when connected to CDN and then connect to an open netwo
         *  `/Users/YourAccount/Documents/3Ba/Sem1/ES313` (MacOS)
         * `/home/YourAccount/3Ba/Sem1/ES313` (Linux)
     
-3. **Required only for the CDN computer when behind a proxy**. Download the .gitconfig  from [here](https://raw.githubusercontent.com/BenLauwens/ES313/master/Setup/.gitconfig) and store it as a .gitignore file (e.g. with Notepad++) on the following locations:
+3. **CURRENTLY NOT REQUIRED, only for the CDN computer when behind a proxy**. Download the .gitconfig  from [here](https://raw.githubusercontent.com/BenLauwens/ES313/master/Setup/.gitconfig) and store it as a .gitignore file (e.g. with Notepad++) on the following locations:
     * `C:\\Users\\YourAccount\\`
     * `U:\\`
     
