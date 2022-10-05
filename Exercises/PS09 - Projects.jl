@@ -1,8 +1,88 @@
 ### A Pluto.jl notebook ###
-# v0.19.11
+# v0.19.12
 
 using Markdown
 using InteractiveUtils
+
+# ╔═╡ fc0426fc-d2b6-4751-9c48-ecf31a7b5a3b
+html"""
+ <! -- this adapts the width of the cells to display its being used on -->
+<style>
+	main {
+		margin: 0 auto;
+		max-width: 2000px;
+    	padding-left: max(160px, 10%);
+    	padding-right: max(160px, 10%);
+	}
+</style>
+"""
+
+# ╔═╡ 5126163e-0f60-4712-97fd-5a085af91744
+md"""
+# 2022 project ideas
+## Renewable energy production
+Wind farms are used to generate renewable energy. Both wind direction and wind strength are variable. To account for this, one can adjust the orientation of the wind turbines so that they are perpendicular to the wind direction. An undesirable effect of this is that one turbine may be in the wake of another. As a result, the airflow received by the downstream turbine is typically more turbulent and its average speed is lower, reducing its efficiency. Turning the upstream turbine slightly (yaw angle) can attenuate this downstream effect. The efficiency of a turbine that is not perpendicular to the wind direction is naturally lower. This leads to an overall optimization problem where one has to dynamically control the different wind turbines taking into account the current wind direction.
+
+### References:
+* [Replacing wakes with streaks in wind turbine arrays](https://onlinelibrary.wiley.com/doi/full/10.1002/we.2577)
+* [Application of a LES technique to characterize the wake deflection of a wind turbine in yaw](https://onlinelibrary.wiley.com/doi/epdf/10.1002/we.380)
+* [Measurements on a Wind Turbine Wake: 3D Effects and Bluff Body Vortex Shedding](https://onlinelibrary.wiley.com/doi/epdf/10.1002/we.156)
+
+
+## Renewable energy production (2)
+Hydroelectric is another form of renewable energy. Water reservoirs are created by placing one or multiple dams on a river. These reservoirs drive a turbine which powers a generator. There are multiple challenges involved with hydroelectric power. The rainfall or water supply is seldom constant over the year. Placing multiple (not coordinated) dams on a river can have a large impact on the downstream ecosystems, power generation and flow. Proper management of the systems of dams on the network can lead to substantial increases in overall power generation.
+
+### References:
+* [Forecast-informed hydropower optimization at long and short-time scales for a multiple dam network](https://aip.scitation.org/doi/abs/10.1063/1.5124097)
+* [Optimal Control Method of Electric Power Generation in Multi Level Water Dams](https://link.springer.com/chapter/10.1007/978-3-642-16444-6_42)
+* [Application of the Harmony Search optimization algorithm for the solution of the multiple dam system scheduling](https://link.springer.com/article/10.1007/s11081-011-9183-x)
+
+## Renewable energy production (3)
+Solar energy is becoming ever more visible in our environment. The optimal placement and configuration of a solar panel installation is not so trivial. Different effect play a role such as shading, panel orientation, solar angle evolution. Given a specific case, you could consider how to develop the optimal layout (accounting for seasonal variability). 
+
+### References:
+* [Spatial layout optimization for solar photovoltaic (PV) panel installation](https://www.sciencedirect.com/science/article/abs/pii/S0960148119319718)
+* [An optical-energy model for optimizing the geometrical layout of solar photovoltaic arrays in a constrained field](https://www.sciencedirect.com/science/article/abs/pii/S0960148119319123)
+* [Solar Array System Layout Optimization for Reducing Partial Shading Effect](http://przyrbwn.icm.edu.pl/APP/PDF/130/a130z1p014.pdf)
+
+
+## Optimal deployment of law enforcement forces
+During large scale events (e.g. sport events, european summit, protest) additional law enforcement forces are deployed. Just as in a military context, the form of deployment of troops can have a major impact on the successful control of a mass of people. Possibly historical data can be used for this (cooperation police Antwerp). 
+
+### References:
+* [Devising and Optimizing Crowd Control Strategies Using Agent-Based Modeling and Simulation](https://ieeexplore.ieee.org/document/9108875)
+* [Simulating Crowd Behavior Using Artificial Potential Fields: An Agent-Based Simulation Approach](https://jstinp.um.ac.ir/article_42613_592bf75c5efc86ff6bcb6dfca776914b.pdf)
+* [Crowd Simulation](https://link.springer.com/content/pdf/10.1007/978-3-319-65202-3.pdf)
+
+## CCTV camera placement
+One of the means used to deter crime and to detect traffic violations are CCTV cameras. The optimal placement of these cameras is a challenge. (cooperation police Antwerp).
+
+### References:
+* [On the real-world applicability of state-of-the-art algorithms for the optimal camera placement problem](https://ieeexplore.ieee.org/abstract/document/8820295)
+* [On the optimal placement of cameras for surveillance and the underlying set cover problem](https://www.sciencedirect.com/science/article/abs/pii/S1568494618305829)
+
+## DES for logistics
+Discrete event simulation can be used in multiple domains of logistics (in the broad sense). For a specific application you could consider this approach.
+
+### References:
+* [Discrete event simulation of multimodal and unimodal transportation in the wood supply chain: a literature review](https://www.silvafennica.fi/article/9984/author/18687)
+* [Predicting the effect of nurse–patient ratio on nurse workload and care quality using discrete event simulation](https://sci-hub.st/https://doi.org/10.1111/jonm.12757)
+* [Modeling Electric Vehicle Charging Demand with the Effect of Increasing EVSEs: A Discrete Event Simulation-Based Model](https://www.mdpi.com/1996-1073/14/13/3734)
+* [Using discrete-event simulation to compare congestion management initiatives at a port terminal](https://www.sciencedirect.com/science/article/abs/pii/S1569190X21000769)
+* [Modeling and discrete event simulation in industrial systems considering consumption and electrical energy generation](https://www.sciencedirect.com/science/article/abs/pii/S0959652619309576)
+* [Full-Scale Discrete Event Simulation of an Automated Modular Conveyor System for Warehouse Logistics](https://link.springer.com/chapter/10.1007/978-3-030-29996-5_4)
+
+## Cellular automata
+Cellular automata (cf. Conway's game of life) have been around for a while. At the same time, they still are being used in research for different types of applications.
+
+### References:
+* [A review of assessment methods for cellular automata models of land-use change and urban growth](https://www.tandfonline.com/doi/abs/10.1080/13658816.2019.1684499)
+* [Cellular automata for simulating land-use change with a constrained irregular space representation: A case study in Nanjing city, China](https://journals.sagepub.com/doi/abs/10.1177/2399808320949889)
+* [Modelling urban change with cellular automata: Contemporary issues and future research directions](https://journals.sagepub.com/doi/full/10.1177/0309132519895305)
+* [A Modified Cellular Automaton Model for Accounting for Traffic Behaviors during Signal Change Intervals](https://www.hindawi.com/journals/jat/2018/8961454/)
+* [On the consistency of urban cellular automata models based on hexagonal and square cells](https://journals.sagepub.com/doi/abs/10.1177/2399808319898501)
+* [Modeling and analyzing malware diffusion in wireless sensor networks based on cellular automaton](https://journals.sagepub.com/doi/full/10.1177/1550147720972944)
+"""
 
 # ╔═╡ 023da279-7a42-4cb1-addb-613d1363a282
 md"""
@@ -204,6 +284,8 @@ manifest_format = "2.0"
 """
 
 # ╔═╡ Cell order:
+# ╟─fc0426fc-d2b6-4751-9c48-ecf31a7b5a3b
+# ╟─5126163e-0f60-4712-97fd-5a085af91744
 # ╟─023da279-7a42-4cb1-addb-613d1363a282
 # ╟─42968b6f-a86f-48dd-b354-d06dfd53624c
 # ╟─d3195ce3-cc34-458f-a526-f346591b34b2
