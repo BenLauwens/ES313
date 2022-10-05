@@ -347,6 +347,38 @@ begin
 
 end
 
+# ╔═╡ 841fcd56-1fee-495c-ae4e-47a3ad36b953
+let
+	# prentje
+	h= 0.0125
+	β = 1e-3
+	t = range(0, 1, step=h)
+	s = gensample.(t, 0.01)
+	plot(t, bₚ.(t), label="ground thruth")
+	scatter!(t, s, label="sample", legendposition=:topleft)
+
+	# poging tot optimalisatie
+	res = optimize(u -> ϕ₁(u, s, h, β), s)
+	res.minimizer
+	plot!(t, res.minimizer, marker=:circle, label="fit")
+end
+
+# ╔═╡ 2a1e165c-b26a-4962-b243-184d83fa00da
+let
+	p = plot(range(0, 1, step=0.01), bₚ.(range(0, 1, step=0.01)), "real")
+	# conept solution
+	for h in [0.0125; 0.008]
+		for (β, noise) in [(1e-3, 0.01); (1e-3, 0.1); (1e-4, 0.01); (1e-4, 0.1)]
+			t = range(0, 1, step=h)
+			s = gensample.(t, noise)
+			fit = optimize(u -> ϕ₁(u, s, h, β), s).minimizer
+			plot!(t, fit, label="fit (β = $(β), noise = $(noise))")
+
+		end
+	end
+	p
+end
+
 # ╔═╡ eac72e64-8584-4588-8b0e-03ddb04956f8
 md"""
 From the previous results, you might not be satisfied, so we propose an additional loss function ϕ₂, this time using anouter regularization term. Repeat the exercise, but using ϵ=1e-6, 
@@ -450,6 +482,8 @@ end
 # ╠═053bae8a-087d-11eb-2e8c-73c41fb4e005
 # ╟─b5cf333b-5ffa-45d5-b9c0-00abc4b63196
 # ╠═c53141dc-37ef-4295-a94d-7eee43177e5b
+# ╠═841fcd56-1fee-495c-ae4e-47a3ad36b953
+# ╠═2a1e165c-b26a-4962-b243-184d83fa00da
 # ╟─eac72e64-8584-4588-8b0e-03ddb04956f8
 # ╠═128d37f1-f4b0-44f8-8a47-5c75e0c44875
 # ╠═8da27e06-3798-423d-b882-b8c98eb36f6a
