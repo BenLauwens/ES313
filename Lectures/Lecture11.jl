@@ -5,13 +5,14 @@ using Markdown
 using InteractiveUtils
 
 # ╔═╡ 1c83c71e-0fa9-11eb-28d3-49496955dc7f
-using CSV
-
-# ╔═╡ 39ea5400-0fa9-11eb-185b-096971c52c61
-using Plots
-
-# ╔═╡ 1e083062-df6d-461b-b64b-1c82e3cf3516
-using DataFrames
+begin
+	using Pkg
+	cd(joinpath(dirname(@__FILE__),".."))
+	Pkg.activate(pwd())
+	using CSV
+	using Plots
+	using DataFrames
+end
 
 # ╔═╡ bd6092b0-0fa7-11eb-0ec2-cdc01bf1360b
 md"""# Atomic Bomb and the Monte Carlo Method
