@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.15.1
+# v0.19.11
 
 using Markdown
 using InteractiveUtils
@@ -7,8 +7,9 @@ using InteractiveUtils
 # This Pluto notebook uses @bind for interactivity. When running this notebook outside of Pluto, the following 'mock version' of @bind gives bound variables a default value (instead of an error).
 macro bind(def, element)
     quote
+        local iv = try Base.loaded_modules[Base.PkgId(Base.UUID("6e696c72-6542-2067-7265-42206c756150"), "AbstractPlutoDingetjes")].Bonds.initial_value catch; b -> missing; end
         local el = $(esc(element))
-        global $(esc(def)) = Core.applicable(Base.get, el) ? Base.get(el) : missing
+        global $(esc(def)) = Core.applicable(Base.get, el) ? Base.get(el) : iv(el)
         el
     end
 end
@@ -24,6 +25,19 @@ end
 
 # ╔═╡ 880bced0-ebb3-11ea-0cdf-f3f1c399de51
 using Random
+
+# ╔═╡ 20c074f8-46ac-4fa2-8a9c-ec01f1031191
+html"""
+ <! -- this adapts the width of the cells to display its being used on -->
+<style>
+	main {
+		margin: 0 auto;
+		max-width: 2000px;
+    	padding-left: max(160px, 10%);
+    	padding-right: max(160px, 10%);
+	}
+</style>
+"""
 
 # ╔═╡ fb1cdbe0-ebb2-11ea-1034-a3632723963b
 md"""# Game of Life
@@ -240,6 +254,7 @@ There are initial patterns that never stabilize, eg. a gun or a puffer train
 The Game of Life was proved Turing complete in 1982. Since then, several people have constructed GoL patterns that implement a Turing machine or another machine known to be Turing complete."""
 
 # ╔═╡ Cell order:
+# ╟─20c074f8-46ac-4fa2-8a9c-ec01f1031191
 # ╟─fb1cdbe0-ebb2-11ea-1034-a3632723963b
 # ╠═295178e0-ebb3-11ea-1213-b531a8ef5828
 # ╟─2cf79d80-ebb3-11ea-2ce7-85ca9f3edc7d

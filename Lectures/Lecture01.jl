@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.15.1
+# v0.19.11
 
 using Markdown
 using InteractiveUtils
@@ -18,6 +18,19 @@ using Random
 
 # ╔═╡ 43627847-ce0d-4969-b6e1-2d59a54d1fd2
 using PlutoUI
+
+# ╔═╡ e9873822-4bf1-425e-bc32-98922b27995f
+html"""
+ <! -- this adapts the width of the cells to display its being used on -->
+<style>
+	main {
+		margin: 0 auto;
+		max-width: 2000px;
+    	padding-left: max(160px, 10%);
+    	padding-right: max(160px, 10%);
+	}
+</style>
+"""
 
 # ╔═╡ 56f41ca0-eb93-11ea-1ea6-11b0e8bb9a7d
 md"""# Cellular Automaton
@@ -323,6 +336,7 @@ with_terminal() do
 end
 
 # ╔═╡ Cell order:
+# ╟─e9873822-4bf1-425e-bc32-98922b27995f
 # ╟─56f41ca0-eb93-11ea-1ea6-11b0e8bb9a7d
 # ╠═310ce685-2661-4f32-bf14-91a4f4e569ce
 # ╟─dab709d0-eb93-11ea-050e-3bfa6a5e1836

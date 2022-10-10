@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.16.1
+# v0.19.11
 
 using Markdown
 using InteractiveUtils
@@ -213,7 +213,7 @@ The package `Ipopt` integrated in `JuMP` solves a quadratic problem with an inte
 
 # ╔═╡ 705fed7e-0192-11eb-3f1f-9d13ebbb4fb9
 let
-	model = Model(with_optimizer(Ipopt.Optimizer))
+	model = Model(Ipopt.Optimizer)
 	@variable(model, 0 <= x, start=2)
 	@variable(model, 0 <= y, start=0)
 	@NLobjective(model, Min, (x-1)^2+(y-2.5)^2)
@@ -294,7 +294,7 @@ strategy as in the quadratic programming case. """
 
 # ╔═╡ 96b90420-0193-11eb-3f8f-b1fdc9e66341
 let
-	m = Model(with_optimizer(Ipopt.Optimizer))
+	m = Model(Ipopt.Optimizer)
 
 	a1 = 2
 	b1 = 0
@@ -313,7 +313,7 @@ let
 end
 
 # ╔═╡ Cell order:
-# ╟─82ecf9c7-bc7c-4827-a025-920609acfb80
+# ╠═82ecf9c7-bc7c-4827-a025-920609acfb80
 # ╟─444a0740-0191-11eb-382f-dd522542f7c4
 # ╟─db7adcc0-0191-11eb-07b4-5b3fbfc45f72
 # ╟─e2fe62a0-0191-11eb-0a1d-51d009d5ab5c

@@ -1,8 +1,29 @@
 ### A Pluto.jl notebook ###
-# v0.14.7
+# v0.19.11
 
 using Markdown
 using InteractiveUtils
+
+# ╔═╡ 235906f2-38a6-4abb-b554-555120bebe45
+begin
+	# Pkg needs to be used to force Pluto to use the current project instead of making an environment for each notebook
+	using Pkg
+	cd(joinpath(dirname(@__FILE__),".."))
+    Pkg.activate(pwd())
+end
+
+# ╔═╡ ab2334fb-668c-4574-867b-738eb036bb6c
+html"""
+ <! -- this adapts the width of the cells to display its being used on -->
+<style>
+	main {
+		margin: 0 auto;
+		max-width: 2000px;
+    	padding-left: max(160px, 10%);
+    	padding-right: max(160px, 10%);
+	}
+</style>
+"""
 
 # ╔═╡ bef0f870-eb91-11ea-02b6-dd0f1a40947c
 md"# Introduction"
@@ -33,39 +54,39 @@ md"""## Schedule
 
 ### Theory
 
-- 31/08: Cellular Automaton + Game of Life
-- 01/09: Year Coord
-- 14/09: Physical Modelling + Self-Organization
-- 21/09: Optimisation Techniques
-- 22/09: Linear Programming I
-- 28/09: Linear Programming II + Applications I
-- 29/09: Applications of Linear Programming II
-- 19/10: Introduction to Discrete Event Simulation
-- 20/10: Process Driven DES: SimJulia I
-- 26/10: Process Driven DES II + Applications I
-- 27/10: Applications with SimJulia II
+- 30/08: Cellular Automaton + Game of Life
+- 31/08: Year Coord
+- 07/09: Physical Modelling
+- 14/09: Self-Organization
+- 20/09: Optimisation Techniques
+- 21/09: Linear Programming I
+- 28/09: Linear Programming II
+- 05/10: Applications of Linear Programming II
+- 11/10: Introduction to Discrete Event Simulation
+- 12/10: Process Driven DES: SimJulia I
+- 25/10: Process Driven DES II + Applications I
+- 26/10: Applications with SimJulia II
 
 ### Practice
 
-- 07/09: Visualisation
-- 08/09: Cellular Automaton
-- 15/09: Game of Life
-- 05/10: Physical Modelling + Self-Organization
-- 06/10: Optimisation Techniques I
-- 12/10: Optimisation Techniques II + Linear Programming I
-- 13/10: Linear Programming II
-- 09/11: Introduction to Discrete Event Simulation
-- 10/11: Process Driven DES: SimJulia I
-- 16/11: Process Driven DES II + Applications with SimJulia I
-- 17/11: Applications with SimJulia II
-- 24/11: Performance
+- 06/09: Visualisation
+- 13/09: Cellular Automaton + Game of Life
+- 27/09: Physical Modelling + Self-Organization
+- 04/10: Optimisation Techniques I
+- 18/10: Optimisation Techniques II + Linear Programming I
+- 19/10: Linear Programming II
+- 08/11: Introduction to Discrete Event Simulation
+- 09/11: Process Driven DES: SimJulia I
+- 15/11: Process Driven DES II + Applications with SimJulia I
+- 16/11: Applications with SimJulia II
+- 23/11: Performance
 
 ### Project
 
-- 09/11: List of projects available
+- 08/11: List of projects available
 - we are available during contact hours
-- 23/11: obligatory meeting: understanding of the problem
-- 07/12: obligatory meeting: progress"""
+- 22/11: obligatory meeting: understanding of the problem
+- 06/12: obligatory meeting: progress"""
 
 # ╔═╡ 0b3e8cf2-eb93-11ea-140d-35c9f1074ea9
 md"""## Evaluation
@@ -82,26 +103,18 @@ Examen: Project with Oral Defense
 
 # ╔═╡ 5fe3a710-ebbe-11ea-3987-3fec2c7f3057
 md"""## Julia
+The `Readme.md` of the `Setup` folder has [instructions]((https://github.com/BenLauwens/ES313/tree/master/Setup)) on how to configure your laptop and how to run the notebooks for the course. The instructions are also rendered below (albeit slightly less readable)
 
-- Install Julia on CDN laptop
-- Install Notepad++ on CDN laptop
-- Start Julia and install Pluto:
+***
 
-```julia
-using Pkg
-pkg"add Pluto"
-pkg"add PlutoUI"
-```
+***
 
-- Start Pluto:
-
-```julia
-using Pluto
-Pluto.run()
-```
+$(Markdown.parse.(readlines("./Setup/readme.md"),flavor=:julia))
 """
 
 # ╔═╡ Cell order:
+# ╟─ab2334fb-668c-4574-867b-738eb036bb6c
+# ╟─235906f2-38a6-4abb-b554-555120bebe45
 # ╟─bef0f870-eb91-11ea-02b6-dd0f1a40947c
 # ╟─e6959750-eb91-11ea-3aea-519bdec8f9f6
 # ╟─0f6a2ab2-eb92-11ea-2a06-0d9b69dd1358

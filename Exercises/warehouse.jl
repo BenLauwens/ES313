@@ -27,6 +27,7 @@ other ones or introducing unwanted artifacts.
 
 using Logging
 using SimJulia
+using ResumableFunctions
 import Base.show
 
 struct Warehouse

@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.16.1
+# v0.19.11
 
 using Markdown
 using InteractiveUtils
@@ -7,8 +7,9 @@ using InteractiveUtils
 # This Pluto notebook uses @bind for interactivity. When running this notebook outside of Pluto, the following 'mock version' of @bind gives bound variables a default value (instead of an error).
 macro bind(def, element)
     quote
+        local iv = try Base.loaded_modules[Base.PkgId(Base.UUID("6e696c72-6542-2067-7265-42206c756150"), "AbstractPlutoDingetjes")].Bonds.initial_value catch; b -> missing; end
         local el = $(esc(element))
-        global $(esc(def)) = Core.applicable(Base.get, el) ? Base.get(el) : missing
+        global $(esc(def)) = Core.applicable(Base.get, el) ? Base.get(el) : iv(el)
         el
     end
 end
@@ -303,7 +304,7 @@ function visualizepileonekind(pile, dim, val)
 end
 
 # ╔═╡ bc1f2d22-f683-11ea-1dcc-21b4e3a235d2
-visualizepileonekind(pile131.array, 4, 0) # 0, 1, 2, 3
+visualizepileonekind(pile131.array, 4, 1) # 0, 1, 2, 3
 
 # ╔═╡ d0a5d958-f683-11ea-0f60-2189804eedd2
 md"""Visually, these patterns resemble fractals, but looks can be deceiving. To be more confident, we can estimate the fractal dimension for each pattern using box-counting.
@@ -349,7 +350,7 @@ end
 # ╔═╡ 1d2387c6-f684-11ea-28cc-bb2ad15a66ab
 md"""On a log-log scale, the cell counts form nearly straight lines, which indicates that we are measuring fractal dimension over a valid range of box sizes.
 
-To estimate the slopes of these lines, we have to fot a line to the data by linear regression"""
+To estimate the slopes of these lines, we have to fit a line to the data by linear regression"""
 
 # ╔═╡ cd1481b0-f683-11ea-3e20-2b9af0d081f5
 function linres(x, y)
@@ -381,7 +382,7 @@ md"""The estimated fractal dimensions are:
 
 # ╔═╡ Cell order:
 # ╟─f260f2c2-f67d-11ea-0132-4523bff8cea4
-# ╠═fe5b0068-f67d-11ea-11e2-5925e8699ff0
+# ╟─fe5b0068-f67d-11ea-11e2-5925e8699ff0
 # ╟─1839ed8c-f67e-11ea-2c86-8954fe2d6dd5
 # ╟─2210e0ae-f67e-11ea-3052-87bff5a116fa
 # ╟─2a6c14b2-f67e-11ea-0ad1-db86beb0602a

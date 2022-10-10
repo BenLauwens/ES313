@@ -1,11 +1,58 @@
 ### A Pluto.jl notebook ###
-# v0.12.4
+# v0.17.1
 
 using Markdown
 using InteractiveUtils
 
-# ╔═╡ 2f228f34-0c97-11eb-0997-f3dbab0362d1
-using Distributions, StatsPlots, LaTeXStrings, HypothesisTests
+# ╔═╡ b77c944b-88e4-421d-a629-0d96bf95ea70
+begin
+	using Pkg
+	cd(joinpath(dirname(@__FILE__),".."))
+    Pkg.activate(pwd())
+	# Simulation packages
+	using Distributions, HypothesisTests
+	# Plotting packages
+	using StatsPlots, LaTeXStrings, Measures
+end
+
+# ╔═╡ 86a87f27-7b57-4420-8cef-836ac531a254
+# Make cells wider
+html"""<style>
+/*              screen size more than:                     and  less than:                     */
+@media screen and (max-width: 699px) { /* Tablet */ 
+  /* Nest everything into here */
+    main { /* Same as before */
+        max-width: 1200px !important; /* Same as before */
+        margin-right: 100px !important; /* Same as before */
+    } /* Same as before*/
+
+}
+
+@media screen and (min-width: 700px) and (max-width: 1199px) { /* Laptop*/ 
+  /* Nest everything into here */
+    main { /* Same as before */
+        max-width: 1200px !important; /* Same as before */
+        margin-right: 100px !important; /* Same as before */
+    } /* Same as before*/
+}
+
+@media screen and (min-width:1000px) and (max-width: 1920px) { /* Desktop */ 
+  /* Nest everything into here */
+    main { /* Same as before */
+        max-width: 1000px !important; /* Same as before */
+        margin-right: 100px !important; /* Same as before */
+    } /* Same as before*/
+}
+
+@media screen and (min-width:1921px) { /* Stadium */ 
+  /* Nest everything into here */
+    main { /* Same as before */
+        max-width: 1200px !important; /* Same as before */
+        margin-right: 100px !important; /* Same as before */
+    } /* Same as before*/
+}
+</style>
+"""
 
 # ╔═╡ bcbed56c-0c94-11eb-0e8c-2de8d1a20f47
 md"""
@@ -60,33 +107,6 @@ Our model is complete, we make no assumptions
 ###### Construct a computer program
 """
 
-# ╔═╡ b1bae776-0dfe-11eb-291b-53f9a87c4a41
-# other method of creating a game
-begin
-	mutable struct Game
-		heads::Int
-		tails::Int
-		lenght::Int
-	end
-	
-	function play!(g::Game, limit::Int=3)
-		while abs(g.heads - g.tails) < limit 
-			g.lenght += 1
-			if rand()<=1/2
-				g.heads += 1
-			else
-				g.tails += 1
-			end
-			
-		end
-		
-		return g
-	end
-	
-	g = Game(0,0,0)
-	play!(g)
-end
-
 # ╔═╡ 3a20552e-0c97-11eb-3f0d-2586b1bb46ed
 begin
 	"""
@@ -124,7 +144,35 @@ begin
 		
 		return L,G
 	end
+
+	nothing
+end
+
+# ╔═╡ b1bae776-0dfe-11eb-291b-53f9a87c4a41
+# other method of creating a game
+begin
+	mutable struct Game
+		heads::Int
+		tails::Int
+		length::Int
+	end
 	
+	function play!(g::Game, limit::Int=3)
+		while abs(g.heads - g.tails) < limit 
+			g.length += 1
+			if rand()<=1/2
+				g.heads += 1
+			else
+				g.tails += 1
+			end
+			
+		end
+		
+		return g
+	end
+	
+	g = Game(0,0,0)
+	play!(g)
 end
 
 # ╔═╡ 65c6476c-0c98-11eb-2c7d-3bc3ba8d51e2
@@ -158,8 +206,8 @@ end;
 
 # ╔═╡ fae1e448-0c98-11eb-3721-dddb169e403f
 # show results
-plot([histogram(L,xlabel="Game length"),histogram(G,xlabel="Gains")]...,
-     label="",grid=false,ylabel="Frequency",size=(600,250))
+plot(histogram(L,xlabel="Game length"),histogram(G,xlabel="Gains"),
+     label="",grid=false,ylabel="Frequency",size=(600,250) ,bottom_margin=5mm)
 
 # ╔═╡ a39a3a72-0c99-11eb-00df-e92eb7a6ce07
 plot([boxplot(L,ylabel="Game length", ylims=(0,maximum(L)+4)),
@@ -295,10 +343,12 @@ begin
 	"""
 	function PM(D::Array, N::Int=100)
 		# Generate data
-		S = [rand.(D) for _ in 1:N]#rand.(D, N)
+		S = [rand.(D) for _ in 1:N]
 		# get durations
 		return map(duration, S)
 	end
+
+	nothing;
 end
 
 # ╔═╡ 864b050c-0d1e-11eb-03d8-8ffcf23e019e
@@ -330,13 +380,14 @@ let
 	#  CDF
 	p1 = StatsPlots.cdensity(res,label="Experimental CDF",legend=:bottomright)
 	title!("P(X <= $(x)): $(sum(res .< x)/N)")
+	
 	plot!([avg_D; avg_D], [0; 1], line=:dash, label="mean duration $(round(avg_D,digits=2))")
-	ylabel!(L"F_X(x)")
+	ylabel!("F_{X}(x) ")
 	xlabel!("duration")
 	# PDF
 	p2 = StatsPlots.density(res, label="Experimental PDF")
 	xlabel!("duration")
-	ylabel!(L"f_X(x)")
+	ylabel!("f_{X}(x)")
 	# total plot
 	plot(p1, p2)
 end
@@ -390,11 +441,12 @@ With respect to the initial goals, we can conclude the following:
 """
 
 # ╔═╡ Cell order:
+# ╟─86a87f27-7b57-4420-8cef-836ac531a254
+# ╠═b77c944b-88e4-421d-a629-0d96bf95ea70
 # ╟─bcbed56c-0c94-11eb-0e8c-2de8d1a20f47
 # ╟─349b8586-0c96-11eb-2e7b-5b3230d1cf27
-# ╠═2f228f34-0c97-11eb-0997-f3dbab0362d1
-# ╠═b1bae776-0dfe-11eb-291b-53f9a87c4a41
 # ╠═3a20552e-0c97-11eb-3f0d-2586b1bb46ed
+# ╠═b1bae776-0dfe-11eb-291b-53f9a87c4a41
 # ╟─65c6476c-0c98-11eb-2c7d-3bc3ba8d51e2
 # ╟─5b08b538-0c97-11eb-0319-877b39c4c4ed
 # ╟─607e4392-0c98-11eb-0a9d-ddfab6b42b26
@@ -413,7 +465,7 @@ With respect to the initial goals, we can conclude the following:
 # ╟─864b050c-0d1e-11eb-03d8-8ffcf23e019e
 # ╠═f9562612-0d1e-11eb-1e16-bfa53760c18c
 # ╟─d18a68b2-0d20-11eb-0f39-150f9bc9e0e9
-# ╟─da7801bc-0ca0-11eb-0480-33f07e16c85b
+# ╠═da7801bc-0ca0-11eb-0480-33f07e16c85b
 # ╟─3d5f9648-0d21-11eb-14c4-65704b349ed6
 # ╠═d8b821a0-0d21-11eb-08bc-f7027b1cbea1
 # ╠═d89eb800-0d21-11eb-29d9-c119c9347dbc
