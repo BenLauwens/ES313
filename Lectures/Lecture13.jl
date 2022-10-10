@@ -5,13 +5,14 @@ using Markdown
 using InteractiveUtils
 
 # ╔═╡ 82b07d30-0faf-11eb-3b48-2dccf08d0545
-using ResumableFunctions
-
-# ╔═╡ 0ba3d880-0fb0-11eb-3508-d55bfc20056c
-using SimJulia
-
-# ╔═╡ 3ca57832-0fb0-11eb-1853-a947bdd4ebc1
-using Logging
+begin
+	using Pkg
+	cd(joinpath(dirname(@__FILE__),".."))
+  Pkg.activate(pwd())
+  using ResumableFunctions
+  using SimJulia
+	using Logging
+end
 
 # ╔═╡ 1546ff80-0faf-11eb-2e03-a3ed4337a0df
 md"""# SimJulia

@@ -5,25 +5,18 @@ using Markdown
 using InteractiveUtils
 
 # ╔═╡ 5ce221c0-0fab-11eb-106a-6bf5967d6cc2
-using SimJulia
-
-# ╔═╡ 7f8048b0-0fab-11eb-0890-7bd87ab0ded0
-using Distributions
-
-# ╔═╡ 7f8096d0-0fab-11eb-26ad-515f91fd7129
-using Plots
-
-# ╔═╡ 7f8355f0-0fab-11eb-33ed-29cac6407828
-using StatsPlots
-
-# ╔═╡ 7f8774a2-0fab-11eb-3a6b-2beb81d6f5c4
-using CSV
-
-# ╔═╡ 7f894960-0fab-11eb-1494-37a3616aa3c2
-using Logging
-
-# ╔═╡ 9f99d11d-c335-4667-8e5f-47151b679b97
-using DataFrames
+begin
+	using Pkg
+	cd(joinpath(dirname(@__FILE__),".."))
+	Pkg.activate(pwd())
+	using SimJulia
+	using Distributions
+	using Plots
+	using StatsPlots
+	using CSV
+	using Logging
+	using DataFrames
+end
 
 # ╔═╡ da36e622-0faa-11eb-11cd-45664830e371
 md"""# Simulating the Atomic Bomb"""
