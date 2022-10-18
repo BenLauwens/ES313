@@ -6,13 +6,16 @@ using InteractiveUtils
 
 # ╔═╡ bd423f92-1529-11eb-11e7-359bce6c0764
 begin
+	using Pkg
+	cd(joinpath(dirname(@__FILE__),".."))
+	Pkg.activate(pwd())
+    using ResumableFunctions
 	using SimJulia
 	using Distributions
 	using Plots
 	using StatsPlots
-	using HypothesisTests
 	using Logging
-	using ResumableFunctions
+	using HypothesisTests
 end
 
 # ╔═╡ 726eab70-1529-11eb-2909-17dad0c9fcfb
