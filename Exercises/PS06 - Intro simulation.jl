@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.17.1
+# v0.19.12
 
 using Markdown
 using InteractiveUtils
@@ -16,41 +16,15 @@ begin
 end
 
 # ╔═╡ 86a87f27-7b57-4420-8cef-836ac531a254
-# Make cells wider
-html"""<style>
-/*              screen size more than:                     and  less than:                     */
-@media screen and (max-width: 699px) { /* Tablet */ 
-  /* Nest everything into here */
-    main { /* Same as before */
-        max-width: 1200px !important; /* Same as before */
-        margin-right: 100px !important; /* Same as before */
-    } /* Same as before*/
-
-}
-
-@media screen and (min-width: 700px) and (max-width: 1199px) { /* Laptop*/ 
-  /* Nest everything into here */
-    main { /* Same as before */
-        max-width: 1200px !important; /* Same as before */
-        margin-right: 100px !important; /* Same as before */
-    } /* Same as before*/
-}
-
-@media screen and (min-width:1000px) and (max-width: 1920px) { /* Desktop */ 
-  /* Nest everything into here */
-    main { /* Same as before */
-        max-width: 1000px !important; /* Same as before */
-        margin-right: 100px !important; /* Same as before */
-    } /* Same as before*/
-}
-
-@media screen and (min-width:1921px) { /* Stadium */ 
-  /* Nest everything into here */
-    main { /* Same as before */
-        max-width: 1200px !important; /* Same as before */
-        margin-right: 100px !important; /* Same as before */
-    } /* Same as before*/
-}
+html"""
+ <! -- this adapts the width of the cells to display its being used on -->
+<style>
+	main {
+		margin: 0 auto;
+		max-width: 2000px;
+    	padding-left: max(160px, 10%);
+    	padding-right: max(160px, 10%);
+	}
 </style>
 """
 
@@ -441,7 +415,7 @@ With respect to the initial goals, we can conclude the following:
 """
 
 # ╔═╡ Cell order:
-# ╟─86a87f27-7b57-4420-8cef-836ac531a254
+# ╠═86a87f27-7b57-4420-8cef-836ac531a254
 # ╠═b77c944b-88e4-421d-a629-0d96bf95ea70
 # ╟─bcbed56c-0c94-11eb-0e8c-2de8d1a20f47
 # ╟─349b8586-0c96-11eb-2e7b-5b3230d1cf27
