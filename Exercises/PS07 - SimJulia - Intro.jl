@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.17.1
+# v0.19.14
 
 using Markdown
 using InteractiveUtils
@@ -16,41 +16,15 @@ begin
 end
 
 # ╔═╡ 9cda8f1c-2394-42bf-883c-4dbe5df8ae56
-# Make cells wider
-html"""<style>
-/*              screen size more than:                     and  less than:                     */
-@media screen and (max-width: 699px) { /* Tablet */ 
-  /* Nest everything into here */
-    main { /* Same as before */
-        max-width: 1200px !important; /* Same as before */
-        margin-right: 100px !important; /* Same as before */
-    } /* Same as before*/
-
-}
-
-@media screen and (min-width: 700px) and (max-width: 1199px) { /* Laptop*/ 
-  /* Nest everything into here */
-    main { /* Same as before */
-        max-width: 1200px !important; /* Same as before */
-        margin-right: 100px !important; /* Same as before */
-    } /* Same as before*/
-}
-
-@media screen and (min-width:1000px) and (max-width: 1920px) { /* Desktop */ 
-  /* Nest everything into here */
-    main { /* Same as before */
-        max-width: 1000px !important; /* Same as before */
-        margin-right: 100px !important; /* Same as before */
-    } /* Same as before*/
-}
-
-@media screen and (min-width:1921px) { /* Stadium */ 
-  /* Nest everything into here */
-    main { /* Same as before */
-        max-width: 1200px !important; /* Same as before */
-        margin-right: 100px !important; /* Same as before */
-    } /* Same as before*/
-}
+html"""
+ <! -- this adapts the width of the cells to display its being used on -->
+<style>
+	main {
+		margin: 0 auto;
+		max-width: 2000px;
+    	padding-left: max(160px, 10%);
+    	padding-right: max(160px, 10%);
+	}
 </style>
 """
 
@@ -59,18 +33,32 @@ md"""
 # Logging
 The [Logging](https://docs.julialang.org/en/v1/stdlib/Logging/index.html) module will be used for efficient debugging and testing during development. 
 
-A logger has its own lower bound on the `LogLevel` that it can show. In addition to this, there is a global setting that determines the lowest level that will be registered.
+A logger has its own lower bound on the `LogLevel` that it can show. In addition to this, there is a global setting that determines the lowest level that will be registered. When you are running a Julia script in the REPL, the default logger's minimal level is `Info`, so you won't see any messages below this level. When working with a Pluto notebook, as is the case here, a specific logger has ben built with the default level set to `Debug`.
 
 Below you find some practical examples of using this module.
 """
 
 # ╔═╡ dafa45ae-1462-11eb-3338-037167917f4d
-disable_logging(LogLevel(-5001))
+# Current logger's minimal level
+Logging.min_enabled_level(current_logger())
+
+# ╔═╡ f23a3616-6b07-4853-8a77-564cce1bacc7
+begin 
+	# Setting global settings
+	disable_logging(LogLevel(-1001))
+	@debug "globally visible"
+	disable_logging(Info)
+	@debug "no longer visible"
+
+	# enable more for later use
+	disable_logging(LogLevel(-5001))
+	nothing
+end
 
 # ╔═╡ 0560f32a-1462-11eb-0685-09e4f341ddf5
 begin		
 	"""
-		logdemo1()
+		logging_demo_1()
 	
 	A small demo where everything is run on a single logger. Keep in mind when using the global logger, that its lowest level is `Info` (`LogLevel(0)`), so you won't see anything below. 
 	
@@ -79,13 +67,13 @@ begin
 	### keywords
 	* logger: the logger you want to use. Defaults to the global logger.
 	"""
-	function logdemo1(args...; kwargs...)
-		# direct all the following messages to my logger
-		logger = get(kwargs, :logger, Logging.global_logger())
+	function logging_demo_1(args...; logger=Logging.global_logger(), kwargs...)
 		with_logger(logger) do
-			# print some information about the function
-			@info "logdemo1 was invoked with:\n\t- args: $(args)\n\t- kwargs: $(kwargs)\n\t- using logger <$(logger)> (current logger's lowest level: $(Logging.min_enabled_level(logger)))"
-			@debug "logdemo1 lowest level message that allows the debug level"
+			# a message at the info level
+			@info "logging_demo_1 was invoked with:\n\t- args: $(args)\n\t- kwargs: $(kwargs)\n\t- using logger <$(logger)> (current logger's lowest level: $(Logging.min_enabled_level(logger)))"
+			# a message at the debug level (-1000; visible)
+			@debug "logging_demo_1 lowest level message that allows the debug level"
+			# a message at an even lower level
 			@logmsg LogLevel(-2000) "not visible by default"
 		end
 	end
@@ -94,24 +82,20 @@ begin
 end
 
 # ╔═╡ 8ddac37c-1465-11eb-17d4-fdce80dc78fe
-begin
-	println("DEMO 1a - USING LOGGING DEFAULT SETTINGS\n$("-"^70)\n\n")
-	logdemo1(1,2, goedemorgen="bonjour")
-	println("-"^70)
-end
+# DEMO 1a - USING LOGGING DEFAULT SETTINGS
+logging_demo_1(1,2, goedemorgen="bonjour")
 
 # ╔═╡ b05f57c2-1466-11eb-272f-5fc93c04c744
 begin 
-	println("DEMO 1b - USING A SPECIFIC LOGGER THAT WILL SHOW THE LAST MESSAGE\n$("-"^70)\n\n")
-	customlogger = Logging.SimpleLogger(stdout, LogLevel(-2000))
-	logdemo1(3,4,logger=customlogger, goedenavond="bonsoir")
-	println("-"^70)
+	# DEMO 1b - USING A SPECIFIC LOGGER THAT WILL SHOW THE LOWER LEVEL MESSAGE
+	customlogger = Logging.SimpleLogger(stdout, LogLevel(-3000))
+	logging_demo_1(3,4,logger=customlogger, goedenavond="bonsoir")
 end
 
 # ╔═╡ 19b12fc6-1464-11eb-2fc1-cbb3f82479c5
 begin
 	"""
-		logdemo2()
+		logging_demo_2()
 
 	A small demo where it is possible to direct the logs generated by a specific function to a file. The can be very handy for debugging purposes or analysis after a simulation. By default everything is run on a single logger. 
 
@@ -120,33 +104,29 @@ begin
 	* myspecialfunlogfilename: if you want to log `myspecialfun` to a file specify its name. When not specified the global logger is used 
 	* myspecialfunlogfilemode: the mode you want to use to write to a file. Defaults to "w" (cf. [write modes](https://docs.julialang.org/en/v1/base/io-network/#Base.open))
 	"""
-	function logdemo2(args...; kwargs...)
-		# direct all the following messages to my logger
-		logger = get(kwargs, :logger, Logging.global_logger())
-		with_logger(logger) do
-			# log message from the 
-			@info "logdemo2 was invoked with:\n\t- args: $(args)\n\t- kwargs: $(kwargs)\n\t- using logger <$(logger)> (current logger's lowest level: $(Logging.min_enabled_level(logger)))"
+	function logging_demo_2(args...; globallogger=Logging.global_logger(), 
+									 extraloggerfilename::Union{Nothing, String}=nothing,
+									 extraloggerwritemode::Union{Nothing, String}=nothing,
+									 outstream::Union{Nothing, IO} = !isnothing(extraloggerfilename) && !isnothing(extraloggerwritemode) ? open(extraloggerfilename, extraloggerwritemode) : nothing,
+									 maxrep=3,
+									 kwargs...)
+		# direct all the following messages to the selected logger
+		with_logger(globallogger) do
+			# log message for the global logger
+			@info "logging_demo_2 was invoked with:\n\t- args: $(args)\n\t- kwargs: $(kwargs)\n\t- using logger <$(globallogger)> (current logger's lowest level: $(Logging.min_enabled_level(globallogger)))"
+			
 			# verify if a special logger should be used
-			if haskey(kwargs, :myspecialfunlogfilename)
-				logname = kwargs[:myspecialfunlogfilename]
-				logmode = get(kwargs, :myspecialfunlogfilemode, "w")
-				io = open(logname, logmode)
-				speciallogger = SimpleLogger(io)
-			else
-				speciallogger = logger
-			end
+			speciallogger = isnothing(outstream) ? globallogger : SimpleLogger(outstream)
 			
 			# run the function with the appropriate logger
 			with_logger(speciallogger) do
-				for i in 1:get(kwargs,:maxrep, 20)
+				for i in 1:maxrep
 					myspecialfun(i; speciallogger=speciallogger)
 				end
 			end
 			
-			# close io if required
-			if haskey(kwargs, :myspecialfunlogfilename)
-				close(io)
-			end
+			# close outstream if required
+			isnothing(outstream) ? nothing : close(outstream)
 		end
 	end
 
@@ -154,8 +134,6 @@ begin
 		myspecialfun(args...; kwargs...)
 	
 	a function that generates log messages
-	
-	### keywords
 	"""
 	function myspecialfun(args...; kwargs...)
 		@info "myspecialfun was invoked with:\n\t- args: $(args)\n\t- kwargs: $(kwargs)\n\t- using logger <$(kwargs[:speciallogger])> "
@@ -164,19 +142,16 @@ begin
 	nothing
 end
 
-# ╔═╡ e3eae0ce-1462-11eb-2e02-fd2f746569d1
-begin
-	println("DEMO 2a - USING LOGGING DEFAULT SETTINGS\n$("-"^70)\n\n\n")
-	logdemo2(1,2, goedemorgen="bonjour")
-	println("-"^70)
-end
+# ╔═╡ fec37932-89b5-4cd2-a472-aea8c07856a4
+# DEMO 2a - USING LOGGING DEFAULT SETTINGS
+logging_demo_2(1,2, goedemorgen="bonjour", maxrep=2)
 
-# ╔═╡ 12710aa4-146b-11eb-034a-97b515563abc
-begin
-	println("DEMO 2b - USING LOGGING TO FILE SETTINGS\n$("-"^70)\n\n")
-	logdemo2(1,2, myspecialfunlogfilename="demo2.log", maxrep=10)
-	println("-"^70)
-end
+# ╔═╡ e3eae0ce-1462-11eb-2e02-fd2f746569d1
+# DEMO 2a - USING LOGGING TO FILE SETTINGS
+logging_demo_2(1,2, goedemorgen="bonjour", 
+				extraloggerfilename="./Exercises/logging_demo_2.log",
+				extraloggerwritemode="a+",
+				maxrep=2)
 
 # ╔═╡ dd63ff16-146d-11eb-059c-0586e1f972a5
 md"""
@@ -259,34 +234,34 @@ Experiment a bit with containers (::Container). Discover their attributes (envir
 let
 	@resumable function fill(sim::Simulation, c::Container)
 		while true 
-			@yield timeout(sim,rand(1:10))
+			@yield timeout(sim, rand(1:10))
 			@yield put(c,1)
-			@info "item added to the container on time $(now(sim))"
+			@info "$(now(sim)) - item added to the container"
 		end
 	end
 
 	@resumable function empty(sim::Simulation, c::Container)
 		while true
-			@yield timeout(sim,rand(1:10))
+			@yield timeout(sim, rand(1:10))
 			n = rand(1:3)
-			@info "Filed my request for $(n) items on time $(now(sim))"
+			@info "$(now(sim)) - Filed a request for $(n) items"
 			@yield get(c,n)
-			@info "Got my $(n) items on time $(now(sim))"
+			@info "$(now(sim)) - Got my $(n) items"
 		end
 	end
 
 	@resumable function monitor(sim::Simulation, c::Container)
 		while true
 			@info "$(now(sim)) - current container level: $(c.level)/$(c.capacity)"
-			@yield timeout(sim,1)
+			@yield timeout(sim, 1)
 		end
 	end
 	
-	# setup the simulation
-	# fix random seed for reproduction
-
-	Random.seed!(174)
 	
+	# fix random seed for reproducibility
+	Random.seed!(175)
+
+	# setup the simulation
 	@info "\n$("-"^70)\nWorking with containers\n$("-"^70)\n"
 	sim = Simulation()
 	c = Container(sim,10)
@@ -314,33 +289,33 @@ let
 		while true 
 			i += 1
 			item = Object(i)
-			@yield timeout(sim,rand(1:10))
+			@yield timeout(sim, rand(1:10))
 			@yield put(s,item)
-			@info "item $(item) added to the store on time $(now(sim))"
+			@info "$(now(sim)) - item $(item) added to the store"
 		end
 	end
 	
 	@resumable function empty(sim::Simulation, s::Store)
 		while true
-			@yield timeout(sim,rand(1:10))
+			@yield timeout(sim, rand(1:10))
 			n = rand(1:3)
-			@info "Filed my request for $(n) items on time $(now(sim))"
+			@info "$(now(sim)) - filed my request for $(n) items"
 			for _ in 1:n
 				@yield get(s)
 			end
-			@info "Got my $(n) items on time $(now(sim))"
+			@info "$(now(sim)) - Got my $(n) items"
 		end
 	end
 	
 	@resumable function monitor(sim::Simulation, s::Store)
 		while true
 			@info "$(now(sim)) - current store level: $(length(s.items))/$(s.capacity)"
-			@yield timeout(sim,1)
+			@yield timeout(sim, 1)
 		end
 	end
 	
 	# fix random seed for reproduction
-	Random.seed!(174)
+	Random.seed!(175)
 	
 	# setup the simulation
 	@info "\n$("-"^70)\nWorking with stores\n$("-"^70)\n"
@@ -363,10 +338,10 @@ Below you have an illustration of a process waiting for another one to terminate
 # ╔═╡ 363592fc-146d-11eb-2dde-d56c18095702
 let
 	@resumable function basic(sim::Simulation)
-    	@info "Basic goes to work on time $(now(sim))"
+    	@info "$(now(sim)) - Basic goes to work"
     	p = @process bottleneck(sim)
     	@yield p
-    	@info "Basic continues after bottleneck completion on time $(now(sim))"
+    	@info "$(now(sim)) - Basic continues after bottleneck completion"
 	end
 
 	@resumable function bottleneck(sim::Simulation)
@@ -396,7 +371,7 @@ something with the cause of the interruption (in this case keeping track of who
 got liked by a puppy).
 
 ```julia
-include("path/to/puppies.jl")
+include("path/to/PS07 - SimJulia - Puppies.jl")
 ```
 
 
@@ -429,7 +404,7 @@ continuing the simulation. Keep in mind that this requires ALL events to be
 processed.
 
 ```julia
-include("path/to/machines.jl")
+include("path/to/PS07 - SimJulia - Machines.jl")
 ```
 """
 
@@ -504,9 +479,44 @@ i.e. taking whatever resource(s) come(s) available first without blocking the
 other ones or introducing unwanted artifacts.
 
 ```julia
-include("path/to/warehouse.jl")
+include("path/to/PS07 - SimJulia - Warehouse.jl")
 ```
 
+"""
+
+# ╔═╡ 418601ce-8469-4cad-967b-73cba91d566e
+md"""
+### Minimalistic evacuation simulation
+We build a small simulation in which victims are generated and evacuated to a nearby hospital.
+
+```Julia
+include("path/to/PS07 - SimJulia - Ambulances.jl")
+```
+
+"""
+
+# ╔═╡ 2bc8a711-3c47-4969-8755-80364148387b
+md"""
+### Minimalistic parachute life cycle simulation
+We build a small simulation to model the life cycle of a parachute. his application illustrates how you can transfer objects between stores and act on them.
+
+```Julia
+include("path/to/PS07 - SimJulia - Parachutes.jl")
+```
+
+"""
+
+# ╔═╡ 3a41b319-0d19-4ddd-b6da-c6c53212fe54
+md"""
+### Minimalistic simulation with priorities
+We build a small simulation in which different jobs are generated. These jobs can have different priorities. Each day we will look for tasks that are scheduled. The ones with the highest priority are done first.
+
+This application illustrates how you can work with stores and priorities.
+
+
+```Julia
+include("path/to/PS07 - SimJulia - Jobman.jl")
+```
 """
 
 # ╔═╡ 414b4ee2-1473-11eb-3d7b-ef4f49e7efa0
@@ -544,15 +554,16 @@ Consider the following:
 
 # ╔═╡ Cell order:
 # ╟─9cda8f1c-2394-42bf-883c-4dbe5df8ae56
-# ╠═4de0ee11-f8af-4865-8737-ba0dc5c3404e
+# ╟─4de0ee11-f8af-4865-8737-ba0dc5c3404e
 # ╟─c395df98-145a-11eb-1716-2de187df1a1a
 # ╠═dafa45ae-1462-11eb-3338-037167917f4d
+# ╠═f23a3616-6b07-4853-8a77-564cce1bacc7
 # ╠═0560f32a-1462-11eb-0685-09e4f341ddf5
 # ╠═8ddac37c-1465-11eb-17d4-fdce80dc78fe
 # ╠═b05f57c2-1466-11eb-272f-5fc93c04c744
 # ╠═19b12fc6-1464-11eb-2fc1-cbb3f82479c5
+# ╠═fec37932-89b5-4cd2-a472-aea8c07856a4
 # ╠═e3eae0ce-1462-11eb-2e02-fd2f746569d1
-# ╠═12710aa4-146b-11eb-034a-97b515563abc
 # ╟─dd63ff16-146d-11eb-059c-0586e1f972a5
 # ╠═010af16a-1474-11eb-10dc-292a149988f1
 # ╠═363eba24-1474-11eb-26b8-718eed4e5f21
@@ -568,6 +579,9 @@ Consider the following:
 # ╟─63db05d2-1546-11eb-169c-7b23fe0009c4
 # ╠═9abf31ea-1546-11eb-3ff2-41ad2484a04b
 # ╟─a955fd5c-1536-11eb-0405-9bc433188115
+# ╟─418601ce-8469-4cad-967b-73cba91d566e
+# ╟─2bc8a711-3c47-4969-8755-80364148387b
+# ╟─3a41b319-0d19-4ddd-b6da-c6c53212fe54
 # ╟─414b4ee2-1473-11eb-3d7b-ef4f49e7efa0
 # ╟─4bf1fce0-1470-11eb-1290-63d06c8246a2
 # ╠═f3c8a4ba-1474-11eb-06b0-7f0e5ba47670

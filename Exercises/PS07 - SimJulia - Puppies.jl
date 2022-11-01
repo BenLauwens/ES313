@@ -12,6 +12,7 @@ This application illustrates how you can interrupt an ongoing process and even d
 something with the cause of the interruption (in this case keeping track of who 
 got liked by a puppy).
 =#
+
 using SimJulia
 using ResumableFunctions
 using Logging
@@ -87,9 +88,16 @@ end
     end
 end
 
+"""
+    mysim(humannames, dognames)
+
+This is the main simulation function in which we first create the litter, followed by the humans. The 
+creation of the objects will generate the processes that will run in the background. We then run the
+simulation for 100 time units.
+"""
 function mysim(humannames=["Anaïs", "Pieter", "Bart"],
                dognames=["Django", "Zappa", "Squeez", "Fluffy"])
-    @info "\n$("-"^70)\nPuppy life\n$("-"^70)\n"
+    @info "\n$("-"^70)\nPS07 - SimJulia: Puppy life\n$("-"^70)\n"
     sim = Simulation()
     # add puppies
     litter = [Puppy(sim, name) for name in dognames]
@@ -105,13 +113,14 @@ function mysim(humannames=["Anaïs", "Pieter", "Bart"],
 end
 
 # logging settings
-Logging.disable_logging(LogLevel(-1000)) # (de-)activate debug messages
-logger = Logging.ConsoleLogger(stdout, Logging.Debug)
+Logging.disable_logging(LogLevel(-1001)) # (de-)activate debug messages
+logger = Logging.ConsoleLogger(stdout, Logging.Debug) # custom loggor to allow for debug messages
 
 # run simulation
 with_logger(logger) do
     mysim()
 end
+
 
 
 

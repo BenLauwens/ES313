@@ -80,7 +80,7 @@ end
 
 function mysim()
     # setup simulation
-    @info "\n$("-"^70)\nwarehouse application\n$("-"^70)\n"
+    @info "\n$("-"^70)\nPS07 - SimJulia: warehouse application\n$("-"^70)\n"
     sim = Simulation()
     # warehouses
     names = ["Brussels", "Amsterdam", "Paris"]

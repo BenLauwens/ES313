@@ -88,9 +88,15 @@ end
     
 end
 
+"""
+    mysim()
+
+This is the main simulation function in which we first create the store, followed by the products, the result
+container and the machines. Finally, we start the simulation and wait for it to finish.
+"""
 function mysim()
     # setup simulation
-    @info "\n$("-"^70)\nMachine application\n$("-"^70)\n"
+    @info "\n$("-"^70)\nPS07 - SimJulia: Machine application\n$("-"^70)\n"
     sim = Simulation()
     # products
     prod_store = Store{Product}(sim)
@@ -99,7 +105,7 @@ function mysim()
     # combined results
     result_container = Container(sim, 10)
     # machines
-    machines = [Machine("Machine $(i)",products[i], prod_times[i],prod_store) for i in 1:length(products)]
+    machines = [Machine("Machine $(i)", products[i], prod_times[i], prod_store) for i in 1:length(products)]
     @process combiner(sim, prod_store, products, result_container)
     run(sim)
 end
