@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.17.1
+# v0.19.14
 
 using Markdown
 using InteractiveUtils
@@ -13,41 +13,15 @@ begin
 end
 
 # ╔═╡ 615d2b78-9a47-41bf-bae4-f0f7fb875956
-# Make cells wider
-html"""<style>
-/*              screen size more than:                     and  less than:                     */
-@media screen and (max-width: 699px) { /* Tablet */ 
-  /* Nest everything into here */
-    main { /* Same as before */
-        max-width: 1200px !important; /* Same as before */
-        margin-right: 100px !important; /* Same as before */
-    } /* Same as before*/
-
-}
-
-@media screen and (min-width: 700px) and (max-width: 1199px) { /* Laptop*/ 
-  /* Nest everything into here */
-    main { /* Same as before */
-        max-width: 1200px !important; /* Same as before */
-        margin-right: 100px !important; /* Same as before */
-    } /* Same as before*/
-}
-
-@media screen and (min-width:1000px) and (max-width: 1920px) { /* Desktop */ 
-  /* Nest everything into here */
-    main { /* Same as before */
-        max-width: 1000px !important; /* Same as before */
-        margin-right: 100px !important; /* Same as before */
-    } /* Same as before*/
-}
-
-@media screen and (min-width:1921px) { /* Stadium */ 
-  /* Nest everything into here */
-    main { /* Same as before */
-        max-width: 1200px !important; /* Same as before */
-        margin-right: 100px !important; /* Same as before */
-    } /* Same as before*/
-}
+html"""
+ <! -- this adapts the width of the cells to display its being used on -->
+<style>
+	main {
+		margin: 0 auto;
+		max-width: 2000px;
+    	padding-left: max(160px, 10%);
+    	padding-right: max(160px, 10%);
+	}
 </style>
 """
 
@@ -490,8 +464,8 @@ end
 
 # ╔═╡ Cell order:
 # ╟─615d2b78-9a47-41bf-bae4-f0f7fb875956
+# ╟─dc3c2030-144f-11eb-08ab-0b68dc2698ac
 # ╟─1c49d8ae-144e-11eb-024a-137460f78b15
-# ╠═dc3c2030-144f-11eb-08ab-0b68dc2698ac
 # ╠═a4ed00b8-144f-11eb-0c66-932242a1767c
 # ╠═e32569b0-144f-11eb-33e9-8fd8755c208f
 # ╟─ff480c88-144f-11eb-2839-598b8452a945

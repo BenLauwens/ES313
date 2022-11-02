@@ -1,48 +1,27 @@
 ### A Pluto.jl notebook ###
-# v0.17.1
+# v0.19.14
 
 using Markdown
 using InteractiveUtils
 
-# ╔═╡ a1373212-153d-11eb-0716-d98194a1fbe4
-using PlutoUI
+# ╔═╡ 50cf3ffd-614a-4f6f-a064-bc26767d7a59
+begin
+	using Pkg
+	cd(joinpath(dirname(@__FILE__),".."))
+    Pkg.activate(pwd())
+	using PlutoUI
+end
 
 # ╔═╡ 647a69ae-5af7-4ab1-92f3-e0132f79fa1b
-# Make cells wider
-html"""<style>
-/*              screen size more than:                     and  less than:                     */
-@media screen and (max-width: 699px) { /* Tablet */ 
-  /* Nest everything into here */
-    main { /* Same as before */
-        max-width: 1200px !important; /* Same as before */
-        margin-right: 100px !important; /* Same as before */
-    } /* Same as before*/
-
-}
-
-@media screen and (min-width: 700px) and (max-width: 1199px) { /* Laptop*/ 
-  /* Nest everything into here */
-    main { /* Same as before */
-        max-width: 1200px !important; /* Same as before */
-        margin-right: 100px !important; /* Same as before */
-    } /* Same as before*/
-}
-
-@media screen and (min-width:1000px) and (max-width: 1920px) { /* Desktop */ 
-  /* Nest everything into here */
-    main { /* Same as before */
-        max-width: 1000px !important; /* Same as before */
-        margin-right: 100px !important; /* Same as before */
-    } /* Same as before*/
-}
-
-@media screen and (min-width:1921px) { /* Stadium */ 
-  /* Nest everything into here */
-    main { /* Same as before */
-        max-width: 1200px !important; /* Same as before */
-        margin-right: 100px !important; /* Same as before */
-    } /* Same as before*/
-}
+html"""
+ <! -- this adapts the width of the cells to display its being used on -->
+<style>
+	main {
+		margin: 0 auto;
+		max-width: 2000px;
+    	padding-left: max(160px, 10%);
+    	padding-right: max(160px, 10%);
+	}
 </style>
 """
 
@@ -125,12 +104,17 @@ We need to some data from the activities in our shop:
 * Include orders that are place by phone before a specific time. How do you include this in the process of the staff?
 * Consider the reverse problem: how many clients do you need for it to be worth it to add an extra person? You could one of the optimisation methods we saw in earlier sessions for this.
 
-
 """
 
 # ╔═╡ b0e1d068-160e-11eb-1362-01c43074510b
 md"""
 ## Implementation
+Below you can find some excerpts from the code you can run yourself
+```Julia
+include("/path/to/PS08 - SimJulia Application (Sandwich shop).jl")
+```
+
+
 We start with by loading up the dependencies and by defining some shared constants and useful functions.
 ```julia
 using Dates              # for actual time & date
@@ -392,7 +376,7 @@ multisim(staff=2,plt=true)
 """
 
 # ╔═╡ 1bbd3af4-1776-11eb-0226-91212c01c89b
-LocalResource("multisim - 100 iterations - 1 staff.png")
+LocalResource("./Exercises/multisim - 100 iterations - 1 staff.png")
 
 # ╔═╡ 9833c350-1776-11eb-108f-e197d9e465df
 md"""
@@ -401,7 +385,7 @@ md"""
 """
 
 # ╔═╡ 77b5ac42-1776-11eb-23b0-936d3918e053
-LocalResource("multisim - 100 iterations - 2 staff.png")
+LocalResource("./Exercises/multisim - 100 iterations - 2 staff.png")
 
 # ╔═╡ abb70132-1776-11eb-298c-bf23946166b2
 md"""
@@ -441,7 +425,7 @@ end
 """
 
 # ╔═╡ 4ef4c1c0-1777-11eb-2cc8-f1c40fa6154e
-LocalResource("determinesamplesize.png")
+LocalResource("./Exercises/determinesamplesize.png")
 
 # ╔═╡ 1a2ac91e-1778-11eb-0d8d-653f6a55f915
 md"""
@@ -501,137 +485,171 @@ end
 ```
 """
 
-# ╔═╡ 00000000-0000-0000-0000-000000000001
-PLUTO_PROJECT_TOML_CONTENTS = """
-[deps]
-PlutoUI = "7f904dfe-b85e-4ff6-b463-dae2292396a8"
+# ╔═╡ c33d60cd-0fff-4a2a-b995-88842a17c96b
+md"""
+# Counter-Battery fire
+There are numerous use cases for simulation in a military context:
+- long history, starting with the atomic bomb
+- large scale conflicts with combination of all components (e.g. air defense operations)
+- mass casualty events
+- planning phase of operations
+- operationality of fleet 
+- agent based modeling for optimal assault scenario
 
-[compat]
-PlutoUI = "~0.7.18"
+## Counterbattery principle
+NATO definition:
+```
+Fire delivered for the purpose of destroying or neutralizing the enemy's fire support system**
+```
+
+$(PlutoUI.LocalResource("./Exercises/img/CBoverview.png",:width => 2000))
+
+## Motivation:
+
+➡ Statistical exploitation ↔ single trial (real world)
+
+➡ Flexibility
+* Evaluate different tactics
+* Compare different weapon systems
+* Parametric study sensors
+
+➡ Use cases:
+* Compare contestants in the procurement phase
+* Fine-tuning the tactics in a pre-deployment phase (using latest battlefield info)
+
+
+Active research domain:
+* Networks of radar stations ([2021](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3855034),  [2022](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4139697))
+* Networks of acoustic sensors ([2019](https://asa.scitation.org/doi/10.1121/1.5138927))
+* Military research budgets (DARPA/EDA) (e.g. [covert sensing](https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/opportunities/topic-details/edf-2022-ra-sens-csens;callCode=null;freeTextSearchKeyword=;matchWholeText=false;typeCodes=1,2,8;statusCodes=31094501;programmePeriod=null;programCcm2Id=null;programDivisionCode=null;focusAreaCode=null;destination=null;mission=null;geographicalZonesCode=null;programmeDivisionProspect=null;startDateLte=null;startDateGte=null;crossCuttingPriorityCode=null;cpvCode=null;performanceOfDelivery=null;sortQuery=startDate;orderBy=asc;onlyTenders=false;topicListKey=callTopicSearchTableState))
+* all the classified research in collaboration with industry (or not)
+
 """
 
-# ╔═╡ 00000000-0000-0000-0000-000000000002
-PLUTO_MANIFEST_TOML_CONTENTS = """
-# This file is machine-generated - editing it directly is not advised
+# ╔═╡ 7fdf6c82-449b-490b-b7c6-f7d2bb253f2b
+md"""
+## Methodology
+Remember the different steps in the simulation process:
+###### Formulate the problem and plan the study
+The counter-battery fire problem is complicated. We will focus on a specific problem within this context. E.g. An enemy artillery unit is firing on targets using a shoot and scoot strategy. We try to determine their location and fire upon them in order to disable the unit. We use passive sensing (acoustic detection) to trigger our active sensing (radar). Limiting active sensing makes sense from a tactical point of view (limit exposure). We also follow a shoot and scoot strategy to avoid becoming victim of counter-battery fire ourselves.
 
-[[AbstractPlutoDingetjes]]
-deps = ["Pkg"]
-git-tree-sha1 = "0ec322186e078db08ea3e7da5b8b2885c099b393"
-uuid = "6e696c72-6542-2067-7265-42206c756150"
-version = "1.1.0"
+We want to:
+1. compare different weapon systems in terms of efficiency.
+2. evaluate the impact of proximity of passive sensors on counter battery effectiveness. This can be used in a mission planning phase to find a trade-off between putting troops at risk and eliminating enemy capacity.
 
-[[Base64]]
-uuid = "2a0f44e3-6c83-55bd-87e4-b1978d98bd5f"
 
-[[Dates]]
-deps = ["Printf"]
-uuid = "ade2ca70-3891-5945-98fb-dc099432e06a"
 
-[[Distributed]]
-deps = ["Random", "Serialization", "Sockets"]
-uuid = "8ba89e20-285c-5b6f-9357-94700520ee1b"
+###### Collect the data and formulate the simulation model
+* For this application some data is provided for different weapon systems
+* Make a schematical representation of what is going on and who needs to "communicate" with whom.
+* Tackling this problem requires you to look at it from a different angle. Some examples:
+  - sound wave of a shot (receive ↔ actively trigger)
+  - radar for point of origin (emit radar waves ↔ signal visibility)
+  - damage assessment (tangible ↔ proximity scan & damage model(s))
+  - standard operating procedures of units (small ➡ large, coherence)
 
-[[Hyperscript]]
-deps = ["Test"]
-git-tree-sha1 = "8d511d5b81240fc8e6802386302675bdf47737b9"
-uuid = "47d2ed2b-36de-50cf-bf87-49c2cf4b8b91"
-version = "0.0.4"
 
-[[HypertextLiteral]]
-git-tree-sha1 = "2b078b5a615c6c0396c77810d92ee8c6f470d238"
-uuid = "ac1192a8-f4b3-4bfe-ba22-af5b92cd3ab2"
-version = "0.9.3"
+###### Check the accuracy of the simulation model (assumptions, limitations etc.)
+* 2D world without obstacles
+* constant speed of sound, no attenuation of the sound wave (signal-to-noise always high)
+* rectilinear movement for projectiles (vs PMM, MPMM, 6DOF)
+* a fired shot is visible to the radar in a specific window (central part of its trajectory).
+* shoot and scoot strategy for artillery units
+* a canon can no longer move if its health is below 1/2 and no longer able to fire if its health is below 1/3
+* we ignore the military decision making process wich normally determines if and when to return fire, i.e. we suppose we always have the go to return fire.
+* a firing mission has a shelf life
 
-[[IOCapture]]
-deps = ["Logging", "Random"]
-git-tree-sha1 = "f7be53659ab06ddc986428d3a9dcc95f6fa6705a"
-uuid = "b5f81e59-6552-4d32-b1f0-c071b021bf89"
-version = "0.2.2"
+###### Construct a computer program
+We will build a modular and layered composition of the program. The details can be found in
+```Julia
+include("/path/to/PS08 - SimJulia Application (Counter-battery).jl")
+```
 
-[[InteractiveUtils]]
-deps = ["Markdown"]
-uuid = "b77e0a4c-d291-57a0-90e8-8db25a27a240"
 
-[[JSON]]
-deps = ["Dates", "Mmap", "Parsers", "Unicode"]
-git-tree-sha1 = "8076680b162ada2a031f707ac7b4953e30667a37"
-uuid = "682c06a0-de6a-54ab-a142-c8b1cf79cde6"
-version = "0.21.2"
+Technical types:
+- ammunition type (velocity, lethal radius)
+- canon type (precision, type of ammunition, timings, movement)
 
-[[LibGit2]]
-deps = ["Printf"]
-uuid = "76f85450-5226-5b5a-8eaa-529ad045b433"
+Tactical types:
+- Equipment
+  - Canon (position, health, positions)
+  - Acoustic (ownership = other party!)
+  - Radar (ownership = other party!)
+- Shot (source canon, target, time of flight, ammunition type...)
+- FiringMission
+- Unit
+  - Platoon
+  - Battery
+- Battlefield
 
-[[Libdl]]
-uuid = "8f399da3-3557-5675-b5ff-fb832c97cbdb"
+Processes
+* enemy mission generator: generate firing mission for the adversary
+* battery cycle: complete process for this tactical level (dispatching fires, movement, waiting for subunits)
+* platooncycle: complete process for this tactical level (dispatching fires, movement, waiting for subunits)
+* canoncycle: for this tactical level (fires, movement)
+* mission scheduler: dispatch the firing according to a specific strategy at a certain level (e.g. max simultaneous firings)
+* move: make a specific tactical level move to a new position
+* acousticdetection: simulation of the soundwave
+* getmissions: get a mission from the unit's queue, check validity, combine or split and return the actual mission that will be executed
+* fire: determine order of actions and schedule them accordingly for each shot fired
+* impactassessment: evaluate damage of a shot on impact location to nearby units according to a damage model
+* radarvisible: increase number of shots from a specific canon that can be seen by the radar
+* radarnonvisible: decrease number of shots from a specific canon that can be seen by the radar
+* radarscan: simulation of the radar actually scanning the sky. This results in a firing mission based on the location the shot was fired from
+* missionscheduler: used to dispatches firing mission to a lower lever tactical unit
 
-[[Logging]]
-uuid = "56ddb016-857b-54e1-b83d-db4d58db5568"
+"""
 
-[[Markdown]]
-deps = ["Base64"]
-uuid = "d6f4376e-aef5-505a-96c1-9c027394607a"
+# ╔═╡ 91cb22d0-3b01-4378-9f89-f9fdf9e14341
+md"""
+$(PlutoUI.LocalResource("./Exercises/img/principle.png",:width => 2000))
+"""
 
-[[Mmap]]
-uuid = "a63ad114-7e13-5084-954f-fe012c677804"
+# ╔═╡ fd246bac-2929-41fc-ac82-7fd404bc3333
+md"""
+###### Test the validity of the simulation model
+We will run some simple tests to ensure the simulation works as intended.
 
-[[Parsers]]
-deps = ["Dates"]
-git-tree-sha1 = "ae4bbcadb2906ccc085cf52ac286dc1377dceccc"
-uuid = "69de0a69-1ddd-5017-9359-2bf0b02dc9f0"
-version = "2.1.2"
+###### Plan the simulations to be performed
+Let's compare the current Belgian artillery systems with a future artillery system in a counter battery setting where the adversary is using a shoot and scoot strategy.
+* scenario_1: classic FA vs classic FA
+* scenario_2: classic FA vs more mobile FA
+* scenario_3: classic FA vs extremely mobile FA
 
-[[Pkg]]
-deps = ["Dates", "LibGit2", "Libdl", "Logging", "Markdown", "Printf", "REPL", "Random", "SHA", "UUIDs"]
-uuid = "44cfe95a-1eb2-52ea-b672-e2afdf69b78f"
+###### Conduct the simulation runs and analyze the results
+The comparison of the different scenarios can be run by
+```Julia
+p_mobkil, p_inops = compare_scenarios(scenario_1, scenario_2, n=100)
+```
 
-[[PlutoUI]]
-deps = ["AbstractPlutoDingetjes", "Base64", "Dates", "Hyperscript", "HypertextLiteral", "IOCapture", "InteractiveUtils", "JSON", "Logging", "Markdown", "Random", "Reexport", "UUIDs"]
-git-tree-sha1 = "57312c7ecad39566319ccf5aa717a20788eb8c1f"
-uuid = "7f904dfe-b85e-4ff6-b463-dae2292396a8"
-version = "0.7.18"
+The impact of the sensor location can be run by
+```Julia
+p_sensor = distance_study(0.:2000.:10000.,100)
+```
 
-[[Printf]]
-deps = ["Unicode"]
-uuid = "de0858da-6303-5e67-8744-51eddeeeb8d7"
 
-[[REPL]]
-deps = ["InteractiveUtils", "Markdown", "Sockets"]
-uuid = "3fa0cd96-eef1-5676-8a61-b3b8758bbffb"
+###### Present the conclusions
+We were able to show that current Belgian artillery system is unable to provide addequate counter-battery fire against and adversary using a shoot and scoot strategy. The newer systems are able to provide adequate counter-battery fire. It was found that mobility and the in- and out-of-action timings are crucial for success.
 
-[[Random]]
-deps = ["Serialization"]
-uuid = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
+$(PlutoUI.LocalResource("./Exercises/img/inoperational.png",:width => 500))
 
-[[Reexport]]
-git-tree-sha1 = "45e428421666073eab6f2da5c9d310d99bb12f9b"
-uuid = "189a3867-3050-52da-a836-e630ba90ab69"
-version = "1.2.2"
+$(PlutoUI.LocalResource("./Exercises/img/sensorlocation.png",:width => 500))
 
-[[SHA]]
-uuid = "ea8e919c-243c-51af-8825-aaa63cd721ce"
+"""
 
-[[Serialization]]
-uuid = "9e88b42a-f829-5b0c-bbe9-9e923198166b"
-
-[[Sockets]]
-uuid = "6462fe0b-24de-5631-8697-dd941f90decc"
-
-[[Test]]
-deps = ["Distributed", "InteractiveUtils", "Logging", "Random"]
-uuid = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
-
-[[UUIDs]]
-deps = ["Random", "SHA"]
-uuid = "cf7118a7-6976-5b1a-9a39-7adc72f591a4"
-
-[[Unicode]]
-uuid = "4ec0a83e-493e-50e2-b9ac-8f72acf5a8f5"
+# ╔═╡ a92d9284-a02f-4e49-a683-9d14c69467e8
+md"""
+## Possible extensions of our simulation:
+* Combine differential equations in the SimJulia framework (6DOF)
+* Additional damage models (feasible, thanks to modular composition)
+* more "players" (feasible: array of sensors instead of single sensor)
+* real world topography, line-of-sight limitations, signal dampening (both radar and sound)
+* ``\dots``
 """
 
 # ╔═╡ Cell order:
+# ╟─50cf3ffd-614a-4f6f-a064-bc26767d7a59
 # ╟─647a69ae-5af7-4ab1-92f3-e0132f79fa1b
-# ╠═a1373212-153d-11eb-0716-d98194a1fbe4
 # ╟─ac736b76-153d-11eb-2dd8-f79d303626fa
 # ╟─b0e1d068-160e-11eb-1362-01c43074510b
 # ╟─8d8a51fc-1777-11eb-0690-8575e369cdc9
@@ -644,5 +662,8 @@ uuid = "4ec0a83e-493e-50e2-b9ac-8f72acf5a8f5"
 # ╟─1a2ac91e-1778-11eb-0d8d-653f6a55f915
 # ╟─0323d94a-177a-11eb-2efe-7fe0cb9c922a
 # ╟─1b2e8bb0-177b-11eb-119b-4f1bef23fed2
-# ╟─00000000-0000-0000-0000-000000000001
-# ╟─00000000-0000-0000-0000-000000000002
+# ╟─c33d60cd-0fff-4a2a-b995-88842a17c96b
+# ╟─7fdf6c82-449b-490b-b7c6-f7d2bb253f2b
+# ╟─91cb22d0-3b01-4378-9f89-f9fdf9e14341
+# ╟─fd246bac-2929-41fc-ac82-7fd404bc3333
+# ╟─a92d9284-a02f-4e49-a683-9d14c69467e8

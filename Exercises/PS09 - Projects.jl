@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.12
+# v0.19.14
 
 using Markdown
 using InteractiveUtils
@@ -82,6 +82,15 @@ Cellular automata (cf. Conway's game of life) have been around for a while. At t
 * [A Modified Cellular Automaton Model for Accounting for Traffic Behaviors during Signal Change Intervals](https://www.hindawi.com/journals/jat/2018/8961454/)
 * [On the consistency of urban cellular automata models based on hexagonal and square cells](https://journals.sagepub.com/doi/abs/10.1177/2399808319898501)
 * [Modeling and analyzing malware diffusion in wireless sensor networks based on cellular automaton](https://journals.sagepub.com/doi/full/10.1177/1550147720972944)
+
+## Pedestrian dynamics
+Simple mathematical model for pedestrian dynamics can capture a number of features that are observed in actual pedestrian flows on walkways. For example, when obstacles get in their way, either physical obstacles or other pedestrians, walkers experience a repulsive social force, that alters their velocity and current direction to avoid collision. This alone is sufficient to produce a variety of patterns that are reminiscent of actual pedestrian dynamics. The explorable is a simplified variant of a series of beautiful models introduced by Dirk Helbing that have found a wide range of application, e.g. panic dynamics, crowd turbulence, traffic jams and more.
+
+### References
+* [Social force model for pedestrian dynamics](https://journals.aps.org/pre/abstract/10.1103/PhysRevE.51.4282)
+* [Simulating dynamical features of escape panic](https://www.nature.com/articles/35035023)
+* [Modelling the evolution of human trail systems](https://www.nature.com/articles/40353)
+* [Social Self-Organization](https://link.springer.com/book/10.1007/978-3-642-24004-1)
 """
 
 # ╔═╡ 023da279-7a42-4cb1-addb-613d1363a282
@@ -250,24 +259,6 @@ Managing the electricity grid is a major challenge.
 - [Introduction to electricity markets](https://www.e-education.psu.edu/ebf483/node/816)
 """
 
-# ╔═╡ 65c30d33-de0e-410d-afa9-9e0e84431012
-md"""input ben:
-- risicomodellen gecombineerd met discreet event + bayesiaans (covid + splitsen)
-- 
-"""
-
-# ╔═╡ 79db607a-8af7-4f60-a339-0e27cd6edf1f
-md"""
-## General topic
-
-### Possible projects
-
-### References
-"""
-
-# ╔═╡ 3117a9ed-4577-47fb-bc7f-54fb9572e313
-
-
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
 [deps]
@@ -277,8 +268,9 @@ PLUTO_PROJECT_TOML_CONTENTS = """
 PLUTO_MANIFEST_TOML_CONTENTS = """
 # This file is machine-generated - editing it directly is not advised
 
-julia_version = "1.7.3"
+julia_version = "1.8.2"
 manifest_format = "2.0"
+project_hash = "da39a3ee5e6b4b0d3255bfef95601890afd80709"
 
 [deps]
 """
@@ -298,8 +290,5 @@ manifest_format = "2.0"
 # ╟─4357e4be-1005-470f-978b-90844dd31b1a
 # ╟─88b57987-b284-41a7-8c35-3b29a0436d0f
 # ╟─72df832c-442f-4693-9953-df873951a1db
-# ╠═65c30d33-de0e-410d-afa9-9e0e84431012
-# ╠═79db607a-8af7-4f60-a339-0e27cd6edf1f
-# ╠═3117a9ed-4577-47fb-bc7f-54fb9572e313
 # ╟─00000000-0000-0000-0000-000000000001
 # ╟─00000000-0000-0000-0000-000000000002
