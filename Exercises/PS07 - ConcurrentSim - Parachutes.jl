@@ -16,7 +16,7 @@ required to be folded again and put back in the warehouse.
 
 This application illustrates how you can transfer objects between stores and act on them.
 =#
-
+using ResumableFunctions
 using ConcurrentSim
 
 mutable struct Chute

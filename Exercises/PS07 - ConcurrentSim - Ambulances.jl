@@ -13,7 +13,7 @@ victim and see its status. We also create a type `Ambulance` that has a number,
 is linked to a hospital, a traveltime and an associated Process.
 
 =#
-
+using ResumableFunctions
 using ConcurrentSim
 
 const hospitals = ["St. Luc", "Erasme", "UZ Jette"]

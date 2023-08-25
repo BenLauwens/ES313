@@ -5,8 +5,8 @@ using ResumableFunctions
 using ConcurrentSim
 using Distributions, StatsBase
 using StatsPlots
-#plotlyjs()
-#StatsPlots.plotlyjs()
+
+
 
 ### constants 
 # for logging
@@ -125,7 +125,7 @@ function show_me_positions(;n_friends::Int=12,n_foe::Int=6)
                 legend=:outertopright)
     scatter!(vcat(F...), label="friends")
     scatter!(vcat(E...), label="foes")
-    Plots.savefig(fig, "canonplacement.png")
+    Plots.savefig(fig, "./Exercises/img/canonplacement.png")
     return fig
 end  
 

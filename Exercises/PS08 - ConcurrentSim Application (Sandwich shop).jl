@@ -227,7 +227,7 @@ function overviewplot(Nreneg::Array{Int64,1}, MWT::Array{Float64,1},
                               xlabel="MQL",
                               ylabel="Experimental probability")
     p = plot(p1, p2, p3, layout=(1,3), size=(1200, 500))
-    savefig(p, fname)
+    savefig(p, joinpath("./Exercises/img/",fname))
     return
 end
 
@@ -350,7 +350,7 @@ function determinesamplesize(;maxpow::Int=3, fname::String="determinesamplesize.
     )
     xticks!(collect(1:maxpow), ["$(n)" for n in labels])
     xlabel!("Sample length")
-    savefig(p, fname)
+    savefig(p, joinpath("./Exercises/img/",fname))
     
 end
 
@@ -372,7 +372,7 @@ function evalnorm(;α::Float64=0.05)
         p = plot(E,n,marker=:circle,label="", yscale=:log10)
         xlabel!("precision on MWT [s]")
         ylabel!("Required sample size")
-        savefig(p,"samplesize.png")
+        savefig(p,"./Exercises/img/samplesize.png")
     else
         @info "data not normal"
     end

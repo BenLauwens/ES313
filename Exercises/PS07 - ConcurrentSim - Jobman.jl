@@ -10,7 +10,7 @@ and a modified remaining duration.
 
 This application illustrates how you can work with stores and priorities and work with time.
 =#
-
+using ResumableFunctions
 using ConcurrentSim
 
 mutable struct Job
