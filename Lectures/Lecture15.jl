@@ -1,8 +1,31 @@
 ### A Pluto.jl notebook ###
-# v0.16.4
+# v0.19.27
 
 using Markdown
 using InteractiveUtils
+
+# ╔═╡ 357b011e-aa92-41a3-b12c-d45a60fb03dc
+begin
+	using Pkg
+	cd(joinpath(dirname(@__FILE__),".."))
+	Pkg.activate(pwd())
+	using ResumableFunctions
+	using ConcurrentSim
+	using Logging
+end
+
+# ╔═╡ 8144db9a-fcf7-4084-bd43-a1cf4ee3f422
+html"""
+ <! -- this adapts the width of the cells to display its being used on -->
+<style>
+	main {
+		margin: 0 auto;
+		max-width: 2000px;
+    	padding-left: max(160px, 10%);
+    	padding-right: max(160px, 10%);
+	}
+</style>
+"""
 
 # ╔═╡ 6541fa72-1528-11eb-157a-a3e1f9aa82a0
 md"""# Simulation of a Computer Network
@@ -149,4 +172,6 @@ Stationnarity vs Ergodicity
 """
 
 # ╔═╡ Cell order:
+# ╟─8144db9a-fcf7-4084-bd43-a1cf4ee3f422
+# ╟─357b011e-aa92-41a3-b12c-d45a60fb03dc
 # ╟─6541fa72-1528-11eb-157a-a3e1f9aa82a0

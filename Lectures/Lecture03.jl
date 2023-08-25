@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.16.0
+# v0.19.27
 
 using Markdown
 using InteractiveUtils
@@ -7,8 +7,9 @@ using InteractiveUtils
 # This Pluto notebook uses @bind for interactivity. When running this notebook outside of Pluto, the following 'mock version' of @bind gives bound variables a default value (instead of an error).
 macro bind(def, element)
     quote
+        local iv = try Base.loaded_modules[Base.PkgId(Base.UUID("6e696c72-6542-2067-7265-42206c756150"), "AbstractPlutoDingetjes")].Bonds.initial_value catch; b -> missing; end
         local el = $(esc(element))
-        global $(esc(def)) = Core.applicable(Base.get, el) ? Base.get(el) : missing
+        global $(esc(def)) = Core.applicable(Base.get, el) ? Base.get(el) : iv(el)
         el
     end
 end
@@ -22,6 +23,19 @@ begin
     using NativeSVG
 	using Plots
 end
+
+# ╔═╡ a62f8ca0-4680-4a73-8333-8c56b385839f
+html"""
+ <! -- this adapts the width of the cells to display its being used on -->
+<style>
+	main {
+		margin: 0 auto;
+		max-width: 2000px;
+    	padding-left: max(160px, 10%);
+    	padding-right: max(160px, 10%);
+	}
+</style>
+"""
 
 # ╔═╡ e6ff0e98-f662-11ea-03a7-e3d09e6272a6
 md"""# Physical Modelling
@@ -473,6 +487,7 @@ When `q` is larger than the critical value, nearly every porous cell gets filled
 When `q` is substantially smaller than the critical value, the number of wet cells is proportional to the linear size of the array, so it has dimension 1."""
 
 # ╔═╡ Cell order:
+# ╟─a62f8ca0-4680-4a73-8333-8c56b385839f
 # ╟─e6ff0e98-f662-11ea-03a7-e3d09e6272a6
 # ╟─1d6260d4-f663-11ea-03da-efe9ed63f9bd
 # ╟─2abf49e0-f663-11ea-25f3-2f9229de732e

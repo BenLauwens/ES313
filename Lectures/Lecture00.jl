@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.11
+# v0.19.27
 
 using Markdown
 using InteractiveUtils
@@ -33,7 +33,7 @@ md"""## Who are we?
 
 Lecturer: LCL IMM Ben Lauwens / D30.20 / [ben.lauwens@mil.be]()
 
-Assistant: CPN Bart De Clerck / D30.20 / [bart.declerck@mil.be]()"""
+Assistant: CDT Bart De Clerck / D30.20 / [bart.declerck@mil.be]()"""
 
 # ╔═╡ 0f6a2ab2-eb92-11ea-2a06-0d9b69dd1358
 md"""## Why Modelling and Simulation
@@ -54,39 +54,39 @@ md"""## Schedule
 
 ### Theory
 
-- 30/08: Cellular Automaton + Game of Life
-- 31/08: Year Coord
-- 07/09: Physical Modelling
-- 14/09: Self-Organization
-- 20/09: Optimisation Techniques
-- 21/09: Linear Programming I
-- 28/09: Linear Programming II
-- 05/10: Applications of Linear Programming II
+- 29/08: Cellular Automaton + Game of Life
+- 30/08: Year Coord (TBC)
+- 12/09: Physical Modelling
+- 13/09: Self-Organization
+- 19/09: Optimisation Techniques
+- 20/09: Linear Programming I
+- 03/10: Linear Programming II
+- 04/10: Applications of Linear Programming II
 - 11/10: Introduction to Discrete Event Simulation
-- 12/10: Process Driven DES: SimJulia I
-- 25/10: Process Driven DES II + Applications I
+- 17/10: Process Driven DES: SimJulia I
+- 18/10: Process Driven DES II + Applications I
 - 26/10: Applications with SimJulia II
 
 ### Practice
 
-- 06/09: Visualisation
-- 13/09: Cellular Automaton + Game of Life
-- 27/09: Physical Modelling + Self-Organization
-- 04/10: Optimisation Techniques I
-- 18/10: Optimisation Techniques II + Linear Programming I
-- 19/10: Linear Programming II
-- 08/11: Introduction to Discrete Event Simulation
-- 09/11: Process Driven DES: SimJulia I
-- 15/11: Process Driven DES II + Applications with SimJulia I
-- 16/11: Applications with SimJulia II
-- 23/11: Performance
+- 05/09: Visualisation 
+- 06/09: Cellular Automaton + Game of Life
+- 26/09: Physical Modelling + Self-Organization
+- 27/09: Optimisation Techniques I
+- 10/10: Optimisation Techniques II + Linear Programming I
+- 24/10: Linear Programming II
+- 25/10: Introduction to Discrete Event Simulation
+- 31/10: Process Driven DES: SimJulia I
+- 31/10: Process Driven DES II + Applications with SimJulia I
+- 07/11: Applications with SimJulia II
+- 08/11: Performance
 
 ### Project
 
 - 08/11: List of projects available
 - we are available during contact hours
-- 22/11: obligatory meeting: understanding of the problem
-- 06/12: obligatory meeting: progress"""
+- 21/11: obligatory meeting: understanding of the problem
+- 05/12: obligatory meeting: progress"""
 
 # ╔═╡ 0b3e8cf2-eb93-11ea-140d-35c9f1074ea9
 md"""## Evaluation

@@ -1,14 +1,31 @@
 ### A Pluto.jl notebook ###
-# v0.19.11
+# v0.19.27
 
 using Markdown
 using InteractiveUtils
 
-# ╔═╡ bf54eece-fc02-11ea-3dbc-b37a5644eab1
-using Plots
+# ╔═╡ bad3c765-f4c2-4517-9e45-75080ebc8e4e
+# Explicit use of own environment instead of a local one for each notebook
+begin
+	using Pkg
+	cd(joinpath(dirname(@__FILE__),".."))
+    Pkg.activate(pwd())
+    using LaTeXStrings
+	using Plots
+end
 
-# ╔═╡ cd9cc940-fc02-11ea-2a40-19bc6f79a6d3
-using LaTeXStrings
+# ╔═╡ d24f322d-fee6-4e92-ac2a-a40028d20f43
+html"""
+ <! -- this adapts the width of the cells to display its being used on -->
+<style>
+	main {
+		margin: 0 auto;
+		max-width: 2000px;
+    	padding-left: max(160px, 10%);
+    	padding-right: max(160px, 10%);
+	}
+</style>
+"""
 
 # ╔═╡ dad114fe-fbfb-11ea-32dd-a302838af30f
 md"# Linear Programming: Introduction"
@@ -300,13 +317,13 @@ Let $\vec x$ be the vector whose first $m$ components are equal to $\vec x_\math
 The fundamental theorem of linear programming states that when solving a linear programming problem, we need only consider basic feasible solutions. This is because the optimal value (if it exists) is always achieved at a basic solution."""
 
 # ╔═╡ Cell order:
+# ╟─d24f322d-fee6-4e92-ac2a-a40028d20f43
+# ╟─bad3c765-f4c2-4517-9e45-75080ebc8e4e
 # ╟─dad114fe-fbfb-11ea-32dd-a302838af30f
 # ╟─fdab0c70-fbfb-11ea-116d-9f1b613f9d0d
 # ╟─0d88a212-fbfc-11ea-37ae-c5e0c6a894e8
 # ╟─67071830-fbfc-11ea-3925-798d3d288500
 # ╟─3bb281f0-fc02-11ea-34f0-fd00648c27bb
-# ╠═bf54eece-fc02-11ea-3dbc-b37a5644eab1
-# ╠═cd9cc940-fc02-11ea-2a40-19bc6f79a6d3
 # ╠═e5488250-fc02-11ea-0bc1-4365461fb202
 # ╟─08de4fb0-fc03-11ea-08fb-616f792f7c7f
 # ╟─cfd86bf0-fc03-11ea-22ef-b99d3e3fbfce

@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.11
+# v0.19.27
 
 using Markdown
 using InteractiveUtils
@@ -13,6 +13,19 @@ begin
 	using JuMP
 	using GLPK
 end
+
+# ╔═╡ ba5d19fb-274f-4166-9467-5435f6e2cb97
+html"""
+ <! -- this adapts the width of the cells to display its being used on -->
+<style>
+	main {
+		margin: 0 auto;
+		max-width: 2000px;
+    	padding-left: max(160px, 10%);
+    	padding-right: max(160px, 10%);
+	}
+</style>
+"""
 
 # ╔═╡ 6f96aa50-fc11-11ea-22c9-01e5e73d8ab0
 md"# Applications of Linear Programming"
@@ -238,7 +251,8 @@ P_i\ge0
 ```"""
 
 # ╔═╡ Cell order:
-# ╠═1d0b540f-45b0-4c2c-945a-cb098db32b67
+# ╟─ba5d19fb-274f-4166-9467-5435f6e2cb97
+# ╟─1d0b540f-45b0-4c2c-945a-cb098db32b67
 # ╟─6f96aa50-fc11-11ea-22c9-01e5e73d8ab0
 # ╟─8c3d90b0-fc11-11ea-2873-934ec496d1ee
 # ╠═acba3730-fc11-11ea-2d31-27432ab5e777

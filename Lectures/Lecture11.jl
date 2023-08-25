@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.12
+# v0.19.27
 
 using Markdown
 using InteractiveUtils
@@ -13,6 +13,19 @@ begin
 	using Plots
 	using DataFrames
 end
+
+# ╔═╡ cc246156-a4c1-43da-a1d7-f89e71c2dae7
+html"""
+ <! -- this adapts the width of the cells to display its being used on -->
+<style>
+	main {
+		margin: 0 auto;
+		max-width: 2000px;
+    	padding-left: max(160px, 10%);
+    	padding-right: max(160px, 10%);
+	}
+</style>
+"""
 
 # ╔═╡ bd6092b0-0fa7-11eb-0ec2-cdc01bf1360b
 md"""# Atomic Bomb and the Monte Carlo Method
@@ -241,9 +254,10 @@ U235 has a halflife of 7.037 10^8 years and generates 1.86 neutrons. Spontaneous
 ρᵤ * 4/3 * π * 9^3 * 0.0003
 
 # ╔═╡ Cell order:
+# ╟─cc246156-a4c1-43da-a1d7-f89e71c2dae7
+# ╟─1c83c71e-0fa9-11eb-28d3-49496955dc7f
 # ╟─bd6092b0-0fa7-11eb-0ec2-cdc01bf1360b
 # ╟─0911b590-0fa8-11eb-0b36-315109cc9657
-# ╠═1c83c71e-0fa9-11eb-28d3-49496955dc7f
 # ╠═40c34200-0fa9-11eb-12b5-6196f71e1a7c
 # ╟─8553233e-0fa9-11eb-119d-01b79be544b7
 # ╠═95544670-0fa9-11eb-36a5-6987b08129a0

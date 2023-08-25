@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.11
+# v0.19.27
 
 using Markdown
 using InteractiveUtils
@@ -15,6 +15,19 @@ begin
 	using GeneralQP
 	using NLopt
 end
+
+# ╔═╡ 720c6151-ad19-4e25-9e6e-3b2fa8ec5ef1
+html"""
+ <! -- this adapts the width of the cells to display its being used on -->
+<style>
+	main {
+		margin: 0 auto;
+		max-width: 2000px;
+    	padding-left: max(160px, 10%);
+    	padding-right: max(160px, 10%);
+	}
+</style>
+"""
 
 # ╔═╡ 9f5f8730-0188-11eb-209f-e771579d35ce
 md"# Sequential Quadratic Programming"
@@ -578,6 +591,7 @@ let
 end
 
 # ╔═╡ Cell order:
+# ╟─720c6151-ad19-4e25-9e6e-3b2fa8ec5ef1
 # ╟─ffed97e2-dc07-48bb-870a-737a115e69dc
 # ╟─9f5f8730-0188-11eb-209f-e771579d35ce
 # ╟─c30dbe90-0188-11eb-0c2b-ed5e93a86b0b

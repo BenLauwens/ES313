@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.11
+# v0.19.27
 
 using Markdown
 using InteractiveUtils
@@ -23,6 +23,19 @@ begin
     using NativeSVG
 	using Plots
 end
+
+# ╔═╡ aea7c1dd-5a59-44d1-85e0-2a4115fca307
+html"""
+ <! -- this adapts the width of the cells to display its being used on -->
+<style>
+	main {
+		margin: 0 auto;
+		max-width: 2000px;
+    	padding-left: max(160px, 10%);
+    	padding-right: max(160px, 10%);
+	}
+</style>
+"""
 
 # ╔═╡ f260f2c2-f67d-11ea-0132-4523bff8cea4
 md"""# Self-Organized Criticality
@@ -381,6 +394,7 @@ md"""The estimated fractal dimensions are:
 3. 2.081"""
 
 # ╔═╡ Cell order:
+# ╟─aea7c1dd-5a59-44d1-85e0-2a4115fca307
 # ╟─f260f2c2-f67d-11ea-0132-4523bff8cea4
 # ╟─fe5b0068-f67d-11ea-11e2-5925e8699ff0
 # ╟─1839ed8c-f67e-11ea-2c86-8954fe2d6dd5

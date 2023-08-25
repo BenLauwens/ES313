@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.16.1
+# v0.19.27
 
 using Markdown
 using InteractiveUtils
@@ -10,23 +10,30 @@ begin
 	cd(joinpath(dirname(@__FILE__),".."))
   Pkg.activate(pwd())
   using ResumableFunctions
-  using SimJulia
+  using ConcurrentSim
 	using Logging
 end
 
+# ╔═╡ ef11256b-c5ee-43d4-8757-918a05ad3d1d
+html"""
+ <! -- this adapts the width of the cells to display its being used on -->
+<style>
+	main {
+		margin: 0 auto;
+		max-width: 2000px;
+    	padding-left: max(160px, 10%);
+    	padding-right: max(160px, 10%);
+	}
+</style>
+"""
+
 # ╔═╡ 1546ff80-0faf-11eb-2e03-a3ed4337a0df
-md"""# SimJulia
+md"""# ConcurrentSim
 ## Basic Concepts
 
-Simjulia is a discrete-event simulation library. The behavior of active components (like vehicles, customers or messages) is modeled with processes. All processes live in an environment. They interact with the environment and with each other via events.
+ConcurrentSim is a discrete-event simulation library. The behavior of active components (like vehicles, customers or messages) is modeled with processes. All processes live in an environment. They interact with the environment and with each other via events.
 
 Processes are described by `@resumable` functions. You can call them process function. During their lifetime, they create events and `@yield` them in order to wait for them to be triggered."""
-
-# ╔═╡ 3689b520-0faf-11eb-3743-95fd62f74574
-#using Pkg
-
-# ╔═╡ 7926ee20-0faf-11eb-0b72-990ad61c08ea
-#pkg"add ResumableFunctions"
 
 # ╔═╡ 57765b80-0faf-11eb-2e25-f9d8a95128be
 @resumable function fibonacci(n::Int) :: Int
@@ -63,7 +70,7 @@ let
 end
 
 # ╔═╡ e85462f0-0faf-11eb-0d54-e52e8c1e9b26
-md"""When a process yields an event, the process gets suspended. SimJulia resumes the process, when the event occurs (we say that the event is triggered). Multiple processes can wait for the same event. SimJulia resumes them in the same order in which they yielded that event.
+md"""When a process yields an event, the process gets suspended. ConcurrentSim resumes the process, when the event occurs (we say that the event is triggered). Multiple processes can wait for the same event. ConcurrentSim resumes them in the same order in which they yielded that event.
 
 An important event type is the `timeout`. Events of this type are scheduled after a certain amount of (simulated) time has passed. They allow a process to sleep (or hold its state) for the given time. A `timeout` and all other events can be created by calling a constructor having the environment as first argument."""
 
@@ -115,7 +122,7 @@ The `Process` instance that is returned by `@process` macro can be utilized for 
 
 ### Waiting for a Process
 
-As it happens, a SimJulia `Process` can be used like an event. If you yield it, you are resumed once the process has finished. Imagine a car-wash simulation where cars enter the car-wash and wait for the washing process to finish, or an airport simulation where passengers have to wait until a security check finishes.
+As it happens, a ConcurrentSim `Process` can be used like an event. If you yield it, you are resumed once the process has finished. Imagine a car-wash simulation where cars enter the car-wash and wait for the washing process to finish, or an airport simulation where passengers have to wait until a security check finishes.
 
 Lets assume that the car from our last example is an electric vehicle. Electric vehicles usually take a lot of time charging their batteries after a trip. They have to wait until their battery is charged before they can start driving again.
 
@@ -158,7 +165,7 @@ md"""### Interrupting Another Process
 
 Imagine, you don’t want to wait until your electric vehicle is fully charged but want to interrupt the charging process and just start driving instead.
 
-SimJulia allows you to interrupt a running process by calling the `interrupt` function:"""
+ConcurrentSim allows you to interrupt a running process by calling the `interrupt` function:"""
 
 # ╔═╡ 16770920-0fb1-11eb-1551-67668809b19a
 @resumable function driver(env::Environment, car_process::Process)
@@ -200,9 +207,9 @@ end;
 # ╔═╡ 1d92d712-0fb2-11eb-23fd-4554371e8a3b
 md"""## Shared Resources
 
-SimJulia offers three types of resources that help you modeling problems, where multiple processes want to use a resource of limited capacity (e.g., cars at a fuel station with a limited number of fuel pumps) or classical producer-consumer problems.
+ConcurrentSim offers three types of resources that help you modeling problems, where multiple processes want to use a resource of limited capacity (e.g., cars at a fuel station with a limited number of fuel pumps) or classical producer-consumer problems.
 
-In this section, we’ll briefly introduce SimJulia’s Resource class.
+In this section, we’ll briefly introduce ConcurrentSim’s Resource class.
 
 ### Basic Resource Usage
 
@@ -243,7 +250,7 @@ end
 # ╔═╡ 9a77cd30-0fb2-11eb-1196-df634baf199d
 md"""### Priority resource
 
-As you may know from the real world, not every one is equally important. To map that to SimJulia, the methods `request(res, priority=priority)` and `release(res, priority=priority)` lets requesting and releasing processes provide a priority for each request/release. More important requests/releases will gain access to the resource earlier than less important ones. Priority is expressed by integer numbers; smaller numbers mean a higher priority:"""
+As you may know from the real world, not every one is equally important. To map that to ConcurrentSim, the methods `request(res, priority=priority)` and `release(res, priority=priority)` lets requesting and releasing processes provide a priority for each request/release. More important requests/releases will gain access to the resource earlier than less important ones. Priority is expressed by integer numbers; smaller numbers mean a higher priority:"""
 
 # ╔═╡ c8dbb78e-0fb2-11eb-1ed5-554d10df71a8
 @resumable function resource_user(sim::Simulation, name::Int, res::Resource, wait::Float64, prio::Int)
@@ -285,6 +292,14 @@ struct GasStation
   end
 end
 
+# ╔═╡ fa9830e0-0fb4-11eb-0098-5d09cf3ae3e2
+@resumable function tanker(env::Environment, gs::GasStation)
+  @yield timeout(env, 10.0)
+  @info("Tanker arriving at $(now(env))")
+  amount = gs.gas_tank.capacity - gs.gas_tank.level
+  @yield put(gs.gas_tank, amount)
+end
+
 # ╔═╡ c3526920-0fb4-11eb-09cb-c320ebe70780
 @resumable function monitor_tank(env::Environment, gs::GasStation)
   while true
@@ -294,14 +309,6 @@ end
     end
     @yield timeout(env, 15.0)
   end
-end
-
-# ╔═╡ fa9830e0-0fb4-11eb-0098-5d09cf3ae3e2
-@resumable function tanker(env::Environment, gs::GasStation)
-  @yield timeout(env, 10.0)
-  @info("Tanker arriving at $(now(env))")
-  amount = gs.gas_tank.capacity - gs.gas_tank.level
-  @yield put(gs.gas_tank, amount)
 end
 
 # ╔═╡ 8c905050-0fb4-11eb-3218-ad71581a62e9
@@ -404,202 +411,9 @@ let sim = Simulation()
 	run(sim)
 end
 
-# ╔═╡ 00000000-0000-0000-0000-000000000001
-PLUTO_PROJECT_TOML_CONTENTS = """
-[deps]
-Logging = "56ddb016-857b-54e1-b83d-db4d58db5568"
-ResumableFunctions = "c5292f4c-5179-55e1-98c5-05642aab7184"
-SimJulia = "428bdadb-6287-5aa5-874b-9969638295fd"
-
-[compat]
-ResumableFunctions = "~0.6.1"
-SimJulia = "~0.8.2"
-"""
-
-# ╔═╡ 00000000-0000-0000-0000-000000000002
-PLUTO_MANIFEST_TOML_CONTENTS = """
-# This file is machine-generated - editing it directly is not advised
-
-[[ArgTools]]
-uuid = "0dad84c5-d112-42e6-8d28-ef12dabb789f"
-
-[[Artifacts]]
-uuid = "56f22d72-fd6d-98f1-02f0-08ddc0907c33"
-
-[[Base64]]
-uuid = "2a0f44e3-6c83-55bd-87e4-b1978d98bd5f"
-
-[[Compat]]
-deps = ["Base64", "Dates", "DelimitedFiles", "Distributed", "InteractiveUtils", "LibGit2", "Libdl", "LinearAlgebra", "Markdown", "Mmap", "Pkg", "Printf", "REPL", "Random", "SHA", "Serialization", "SharedArrays", "Sockets", "SparseArrays", "Statistics", "Test", "UUIDs", "Unicode"]
-git-tree-sha1 = "31d0151f5716b655421d9d75b7fa74cc4e744df2"
-uuid = "34da2185-b29b-5c13-b0c7-acf172513d20"
-version = "3.39.0"
-
-[[DataStructures]]
-deps = ["Compat", "InteractiveUtils", "OrderedCollections"]
-git-tree-sha1 = "7d9d316f04214f7efdbb6398d545446e246eff02"
-uuid = "864edb3b-99cc-5e75-8d2d-829cb0a9cfe8"
-version = "0.18.10"
-
-[[Dates]]
-deps = ["Printf"]
-uuid = "ade2ca70-3891-5945-98fb-dc099432e06a"
-
-[[DelimitedFiles]]
-deps = ["Mmap"]
-uuid = "8bb1440f-4735-579b-a4ab-409b98df4dab"
-
-[[Distributed]]
-deps = ["Random", "Serialization", "Sockets"]
-uuid = "8ba89e20-285c-5b6f-9357-94700520ee1b"
-
-[[Downloads]]
-deps = ["ArgTools", "LibCURL", "NetworkOptions"]
-uuid = "f43a241f-c20a-4ad4-852c-f6b1247861c6"
-
-[[InteractiveUtils]]
-deps = ["Markdown"]
-uuid = "b77e0a4c-d291-57a0-90e8-8db25a27a240"
-
-[[LibCURL]]
-deps = ["LibCURL_jll", "MozillaCACerts_jll"]
-uuid = "b27032c2-a3e7-50c8-80cd-2d36dbcbfd21"
-
-[[LibCURL_jll]]
-deps = ["Artifacts", "LibSSH2_jll", "Libdl", "MbedTLS_jll", "Zlib_jll", "nghttp2_jll"]
-uuid = "deac9b47-8bc7-5906-a0fe-35ac56dc84c0"
-
-[[LibGit2]]
-deps = ["Base64", "NetworkOptions", "Printf", "SHA"]
-uuid = "76f85450-5226-5b5a-8eaa-529ad045b433"
-
-[[LibSSH2_jll]]
-deps = ["Artifacts", "Libdl", "MbedTLS_jll"]
-uuid = "29816b5a-b9ab-546f-933c-edad1886dfa8"
-
-[[Libdl]]
-uuid = "8f399da3-3557-5675-b5ff-fb832c97cbdb"
-
-[[LinearAlgebra]]
-deps = ["Libdl"]
-uuid = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
-
-[[Logging]]
-uuid = "56ddb016-857b-54e1-b83d-db4d58db5568"
-
-[[MacroTools]]
-deps = ["Markdown", "Random"]
-git-tree-sha1 = "5a5bc6bf062f0f95e62d0fe0a2d99699fed82dd9"
-uuid = "1914dd2f-81c6-5fcd-8719-6d5c9610ff09"
-version = "0.5.8"
-
-[[Markdown]]
-deps = ["Base64"]
-uuid = "d6f4376e-aef5-505a-96c1-9c027394607a"
-
-[[MbedTLS_jll]]
-deps = ["Artifacts", "Libdl"]
-uuid = "c8ffd9c3-330d-5841-b78e-0817d7145fa1"
-
-[[Mmap]]
-uuid = "a63ad114-7e13-5084-954f-fe012c677804"
-
-[[MozillaCACerts_jll]]
-uuid = "14a3606d-f60d-562e-9121-12d972cd8159"
-
-[[NetworkOptions]]
-uuid = "ca575930-c2e3-43a9-ace4-1e988b2c1908"
-
-[[OrderedCollections]]
-git-tree-sha1 = "85f8e6578bf1f9ee0d11e7bb1b1456435479d47c"
-uuid = "bac558e1-5e72-5ebc-8fee-abe8a469f55d"
-version = "1.4.1"
-
-[[Pkg]]
-deps = ["Artifacts", "Dates", "Downloads", "LibGit2", "Libdl", "Logging", "Markdown", "Printf", "REPL", "Random", "SHA", "Serialization", "TOML", "Tar", "UUIDs", "p7zip_jll"]
-uuid = "44cfe95a-1eb2-52ea-b672-e2afdf69b78f"
-
-[[Printf]]
-deps = ["Unicode"]
-uuid = "de0858da-6303-5e67-8744-51eddeeeb8d7"
-
-[[REPL]]
-deps = ["InteractiveUtils", "Markdown", "Sockets", "Unicode"]
-uuid = "3fa0cd96-eef1-5676-8a61-b3b8758bbffb"
-
-[[Random]]
-deps = ["Serialization"]
-uuid = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
-
-[[ResumableFunctions]]
-deps = ["MacroTools"]
-git-tree-sha1 = "b198ee5bb6762423d3c61caacbdd43e640be265a"
-uuid = "c5292f4c-5179-55e1-98c5-05642aab7184"
-version = "0.6.1"
-
-[[SHA]]
-uuid = "ea8e919c-243c-51af-8825-aaa63cd721ce"
-
-[[Serialization]]
-uuid = "9e88b42a-f829-5b0c-bbe9-9e923198166b"
-
-[[SharedArrays]]
-deps = ["Distributed", "Mmap", "Random", "Serialization"]
-uuid = "1a1011a3-84de-559e-8e89-a11a2f7dc383"
-
-[[SimJulia]]
-deps = ["DataStructures", "Dates", "ResumableFunctions"]
-git-tree-sha1 = "ee1b863b5c9913ba40df8cd3bd7bb58837fb24c2"
-uuid = "428bdadb-6287-5aa5-874b-9969638295fd"
-version = "0.8.2"
-
-[[Sockets]]
-uuid = "6462fe0b-24de-5631-8697-dd941f90decc"
-
-[[SparseArrays]]
-deps = ["LinearAlgebra", "Random"]
-uuid = "2f01184e-e22b-5df5-ae63-d93ebab69eaf"
-
-[[Statistics]]
-deps = ["LinearAlgebra", "SparseArrays"]
-uuid = "10745b16-79ce-11e8-11f9-7d13ad32a3b2"
-
-[[TOML]]
-deps = ["Dates"]
-uuid = "fa267f1f-6049-4f14-aa54-33bafae1ed76"
-
-[[Tar]]
-deps = ["ArgTools", "SHA"]
-uuid = "a4e569a6-e804-4fa4-b0f3-eef7a1d5b13e"
-
-[[Test]]
-deps = ["InteractiveUtils", "Logging", "Random", "Serialization"]
-uuid = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
-
-[[UUIDs]]
-deps = ["Random", "SHA"]
-uuid = "cf7118a7-6976-5b1a-9a39-7adc72f591a4"
-
-[[Unicode]]
-uuid = "4ec0a83e-493e-50e2-b9ac-8f72acf5a8f5"
-
-[[Zlib_jll]]
-deps = ["Libdl"]
-uuid = "83775a58-1f1d-513f-b197-d71354ab007a"
-
-[[nghttp2_jll]]
-deps = ["Artifacts", "Libdl"]
-uuid = "8e850ede-7688-5339-a07c-302acd2aaf8d"
-
-[[p7zip_jll]]
-deps = ["Artifacts", "Libdl"]
-uuid = "3f19e933-33d8-53b3-aaab-bd5110c3b7a0"
-"""
-
 # ╔═╡ Cell order:
+# ╟─ef11256b-c5ee-43d4-8757-918a05ad3d1d
 # ╟─1546ff80-0faf-11eb-2e03-a3ed4337a0df
-# ╠═3689b520-0faf-11eb-3743-95fd62f74574
-# ╠═7926ee20-0faf-11eb-0b72-990ad61c08ea
 # ╠═82b07d30-0faf-11eb-3b48-2dccf08d0545
 # ╠═57765b80-0faf-11eb-2e25-f9d8a95128be
 # ╠═996923b0-0faf-11eb-0b98-b9c64f28e5c0
@@ -610,8 +424,6 @@ uuid = "3f19e933-33d8-53b3-aaab-bd5110c3b7a0"
 # ╠═aebda650-0faf-11eb-0ee5-074a408638d7
 # ╟─e85462f0-0faf-11eb-0d54-e52e8c1e9b26
 # ╟─0153c520-0fb0-11eb-1253-0bd7e9dd04ee
-# ╠═0ba3d880-0fb0-11eb-3508-d55bfc20056c
-# ╠═3ca57832-0fb0-11eb-1853-a947bdd4ebc1
 # ╠═105133ee-0fb0-11eb-1eba-238a216c5182
 # ╟─18ba5ee0-0fb0-11eb-1c6d-e1ced026d640
 # ╠═2326d3e2-0fb0-11eb-1827-6d08b4032c34
@@ -653,5 +465,3 @@ uuid = "3f19e933-33d8-53b3-aaab-bd5110c3b7a0"
 # ╠═ab861340-0fb5-11eb-29ff-45bc893e6e6f
 # ╠═aff2bc30-0fb5-11eb-365f-7b96cdbce30e
 # ╠═b54c3620-0fb5-11eb-2348-b9f57946f679
-# ╟─00000000-0000-0000-0000-000000000001
-# ╟─00000000-0000-0000-0000-000000000002

@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.11
+# v0.19.27
 
 using Markdown
 using InteractiveUtils
@@ -14,6 +14,19 @@ begin
 	using Ipopt
 	using JuMP
 end
+
+# ╔═╡ 66fdac94-78ad-4f3d-a0b6-5075a321cd9a
+html"""
+ <! -- this adapts the width of the cells to display its being used on -->
+<style>
+	main {
+		margin: 0 auto;
+		max-width: 2000px;
+    	padding-left: max(160px, 10%);
+    	padding-right: max(160px, 10%);
+	}
+</style>
+"""
 
 # ╔═╡ 444a0740-0191-11eb-382f-dd522542f7c4
 md"# Interior Point Methods"
@@ -313,7 +326,8 @@ let
 end
 
 # ╔═╡ Cell order:
-# ╠═82ecf9c7-bc7c-4827-a025-920609acfb80
+# ╟─66fdac94-78ad-4f3d-a0b6-5075a321cd9a
+# ╟─82ecf9c7-bc7c-4827-a025-920609acfb80
 # ╟─444a0740-0191-11eb-382f-dd522542f7c4
 # ╟─db7adcc0-0191-11eb-07b4-5b3fbfc45f72
 # ╟─e2fe62a0-0191-11eb-0a1d-51d009d5ab5c

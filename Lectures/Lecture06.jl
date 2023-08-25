@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.11
+# v0.19.27
 
 using Markdown
 using InteractiveUtils
@@ -17,6 +17,19 @@ begin
 	using LaTeXStrings
 	using Tulip
 end
+
+# ╔═╡ 5739e14d-2782-4461-bd3f-61277c14ea6f
+html"""
+ <! -- this adapts the width of the cells to display its being used on -->
+<style>
+	main {
+		margin: 0 auto;
+		max-width: 2000px;
+    	padding-left: max(160px, 10%);
+    	padding-right: max(160px, 10%);
+	}
+</style>
+"""
 
 # ╔═╡ 5fd1dfc0-fc04-11ea-1747-69f05b302ab0
 md"# Linear Programming: Simplex Method"
@@ -424,6 +437,7 @@ let
 end
 
 # ╔═╡ Cell order:
+# ╟─5739e14d-2782-4461-bd3f-61277c14ea6f
 # ╟─7e441457-f128-4b48-9197-268ad85f8070
 # ╟─5fd1dfc0-fc04-11ea-1747-69f05b302ab0
 # ╟─dec71840-fc04-11ea-33f5-c353bc11b181

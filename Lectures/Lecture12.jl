@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.12
+# v0.19.27
 
 using Markdown
 using InteractiveUtils
@@ -9,7 +9,7 @@ begin
 	using Pkg
 	cd(joinpath(dirname(@__FILE__),".."))
 	Pkg.activate(pwd())
-	using SimJulia
+	using ConcurrentSim
 	using Distributions
 	using Plots
 	using StatsPlots
@@ -17,6 +17,19 @@ begin
 	using Logging
 	using DataFrames
 end
+
+# ╔═╡ eb71e79b-52e5-49f4-8c84-e36a6432d230
+html"""
+ <! -- this adapts the width of the cells to display its being used on -->
+<style>
+	main {
+		margin: 0 auto;
+		max-width: 2000px;
+    	padding-left: max(160px, 10%);
+    	padding-right: max(160px, 10%);
+	}
+</style>
+"""
 
 # ╔═╡ da36e622-0faa-11eb-11cd-45664830e371
 md"""# Simulating the Atomic Bomb"""
@@ -221,7 +234,7 @@ md"""## Monte Carlo"""
 
 # ╔═╡ 4154d6d0-0fad-11eb-0ec4-6354a4a55477
 begin
-	const RUNS = 100
+	const RUNS = 10 # Lowered for testing, was 100
 	const RADII = 5:12;
 	Logging.disable_logging(LogLevel(1000));
 end;
@@ -251,6 +264,7 @@ mean(ks, dims=1)
 plot(RADII, [mean(ks, dims=1) ...], seriestype=:scatter, xlabel="R [cm]", ylabel="k")
 
 # ╔═╡ Cell order:
+# ╟─eb71e79b-52e5-49f4-8c84-e36a6432d230
 # ╟─da36e622-0faa-11eb-11cd-45664830e371
 # ╟─7d836740-0fab-11eb-3dc2-49f84d2ab795
 # ╠═5ce221c0-0fab-11eb-106a-6bf5967d6cc2

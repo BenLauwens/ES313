@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.11
+# v0.19.27
 
 using Markdown
 using InteractiveUtils
@@ -14,6 +14,19 @@ begin
 	using Plots
 	using Optim
 end
+
+# ╔═╡ e0115026-3eb8-4127-b275-34c9013fed2c
+html"""
+ <! -- this adapts the width of the cells to display its being used on -->
+<style>
+	main {
+		margin: 0 auto;
+		max-width: 2000px;
+    	padding-left: max(160px, 10%);
+    	padding-right: max(160px, 10%);
+	}
+</style>
+"""
 
 # ╔═╡ 282c0f80-015b-11eb-19d8-d9235a2a77d4
 md"# Global Search Algorithms"
@@ -428,6 +441,7 @@ Special methods for bounded univariate optimization:
 - `GoldenSection()`"""
 
 # ╔═╡ Cell order:
+# ╟─e0115026-3eb8-4127-b275-34c9013fed2c
 # ╟─282c0f80-015b-11eb-19d8-d9235a2a77d4
 # ╟─05653593-4365-46a2-8e1b-79c3c8e11575
 # ╟─4d9273a0-015a-11eb-2caa-130d0245a946

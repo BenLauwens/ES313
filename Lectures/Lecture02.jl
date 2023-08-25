@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.11
+# v0.19.27
 
 using Markdown
 using InteractiveUtils
@@ -254,7 +254,7 @@ There are initial patterns that never stabilize, eg. a gun or a puffer train
 The Game of Life was proved Turing complete in 1982. Since then, several people have constructed GoL patterns that implement a Turing machine or another machine known to be Turing complete."""
 
 # ╔═╡ Cell order:
-# ╟─20c074f8-46ac-4fa2-8a9c-ec01f1031191
+# ╠═20c074f8-46ac-4fa2-8a9c-ec01f1031191
 # ╟─fb1cdbe0-ebb2-11ea-1034-a3632723963b
 # ╠═295178e0-ebb3-11ea-1213-b531a8ef5828
 # ╟─2cf79d80-ebb3-11ea-2ce7-85ca9f3edc7d
