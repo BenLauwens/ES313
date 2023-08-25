@@ -12,7 +12,7 @@ begin
 	using Logging
 	# for simulation
 	using Distributions
-	using SimJulia, ResumableFunctions
+	using ConcurrentSim, ResumableFunctions
 end
 
 # ╔═╡ 08866503-14a2-4b5b-83ef-ae4518f4f195
@@ -86,7 +86,7 @@ begin
 	    passengers::Dict{String,Int}
 	    function Train(sim,N::Int)
 	        train = new()
-	        train.usage = SimJulia.Container(sim,N)
+	        train.usage = ConcurrentSim.Container(sim,N)
 	        train.passengers = Dict(stops[i] => 0 for i in 1:length(stops))
 	        return train
 	    end

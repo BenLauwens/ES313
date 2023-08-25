@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.11
+# v0.19.27
 
 using Markdown
 using InteractiveUtils
@@ -67,6 +67,9 @@ We split the problem in a series of subproblems:
 
 """
 
+# ╔═╡ 6383ad7c-9f23-40a0-a505-d9f36d4b26eb
+
+
 # ╔═╡ 88477467-5ff0-40ff-bdfe-950838bc65ec
 md"""
 # From theory to simulation
@@ -82,4 +85,5 @@ Do you understand this model? Can you:
 # ╟─f6ac02a6-6fd5-4527-bd45-d77c96526517
 # ╠═cc106912-0b14-4981-a67b-580dda8a56ed
 # ╟─235e2200-fce9-11ea-0696-d36cddaa843e
+# ╠═6383ad7c-9f23-40a0-a505-d9f36d4b26eb
 # ╟─88477467-5ff0-40ff-bdfe-950838bc65ec

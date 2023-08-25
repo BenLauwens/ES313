@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.12
+# v0.19.27
 
 using Markdown
 using InteractiveUtils
@@ -415,7 +415,7 @@ With respect to the initial goals, we can conclude the following:
 """
 
 # ╔═╡ Cell order:
-# ╠═86a87f27-7b57-4420-8cef-836ac531a254
+# ╟─86a87f27-7b57-4420-8cef-836ac531a254
 # ╠═b77c944b-88e4-421d-a629-0d96bf95ea70
 # ╟─bcbed56c-0c94-11eb-0e8c-2de8d1a20f47
 # ╟─349b8586-0c96-11eb-2e7b-5b3230d1cf27

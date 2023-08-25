@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.12
+# v0.19.27
 
 using Markdown
 using InteractiveUtils
@@ -15,9 +15,9 @@ begin
 	using JuMP, Ipopt
 	using LaTeXStrings
 	using LinearAlgebra
+	using PlutoUI
+	PlutoUI.TableOfContents()
 end
-
-
 
 # ╔═╡ 543d9901-6bdc-4ca5-bfac-800f543c3490
 html"""
@@ -365,7 +365,7 @@ end
 
 # ╔═╡ 2a1e165c-b26a-4962-b243-184d83fa00da
 let
-	p = plot(range(0, 1, step=0.01), bₚ.(range(0, 1, step=0.01)), "real")
+	p = plot(range(0, 1, step=0.01), bₚ.(range(0, 1, step=0.01)), label="ground truth")
 	# conept solution
 	for h in [0.0125; 0.008]
 		for (β, noise) in [(1e-3, 0.01); (1e-3, 0.1); (1e-4, 0.01); (1e-4, 0.1)]

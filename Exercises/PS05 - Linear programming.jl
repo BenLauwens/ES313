@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.12
+# v0.19.27
 
 using Markdown
 using InteractiveUtils
@@ -13,6 +13,7 @@ begin
 	using Distributions, Plots, StatsPlots, LaTeXStrings, Measures
 	using PlutoUI
 	using Optim
+	PlutoUI.TableOfContents()
 end
 
 # ╔═╡ 10850c10-3b60-406a-8741-5ed5618af8e9

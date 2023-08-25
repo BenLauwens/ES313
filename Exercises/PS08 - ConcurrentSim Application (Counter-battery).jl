@@ -2,7 +2,7 @@ using Plots
 using Dates
 using Logging
 using ResumableFunctions
-using SimJulia
+using ConcurrentSim
 using Distributions, StatsBase
 using StatsPlots
 #plotlyjs()
@@ -325,7 +325,7 @@ Acoustic(;name::Symbol=:accoustic_1, location::NTuple{2,Float64}=(0.,0.)) = Acou
         available::Union{Nothing,Store{Shot}}=nothing, 
         av=Dict(), 
         scantime::TimePeriod=Second(60),
-        trackers::Union{Nothing,SimJulia.Resource}=nothing,
+        trackers::Union{Nothing,ConcurrentSim.Resource}=nothing,
         missions::Union{Nothing,Store{FiringMission}}=nothing)
 
 Point of origin detection radar. Used to generate firing missions
@@ -346,7 +346,7 @@ mutable struct Radar <: Equipment
     "duration of the scan (limited emission time for tactical purposes: ≤ 30 secondes) "
     scantime::TimePeriod
     "resource used for the number of simultaneous targets we can track"
-    trackers::Union{Nothing,SimJulia.Resource}
+    trackers::Union{Nothing,ConcurrentSim.Resource}
     "missions that can be generated go here"
     missions::Union{Nothing,Store{FiringMission}}
     "owner of the sensor (who gets the information)"
@@ -361,7 +361,7 @@ Radar(; name::Symbol=:radarpost_1, location::NTuple{2,Float64}=(0., 0.),
         available::Union{Nothing,Store{Shot}}=nothing, 
         av=Dict(), 
         scantime::TimePeriod=Second(60),
-        trackers::Union{Nothing,SimJulia.Resource}=nothing,
+        trackers::Union{Nothing,ConcurrentSim.Resource}=nothing,
         missions::Union{Nothing,Store{FiringMission}}=nothing,
         freq::TimePeriod=Second(1)) = Radar(name, location,available, av, scantime, trackers, missions, nothing, freq)
 
@@ -553,7 +553,7 @@ TO DO: make it more random
         @yield timeout(sim, Hour(2))
         if capacity(b) <= h_stop
             @error "$(Dates.format(nowDatetime(sim),"YYYY-mm-dd HH:MM:SS")) [$(rpad("Emission",namewidth))] - STOPPING (NO MORE FIRING CAPACITY FOR EBy)"
-            throw(SimJulia.StopSimulation("$(b) has no remaining firing capacity"))
+            throw(ConcurrentSim.StopSimulation("$(b) has no remaining firing capacity"))
             #return
         end
         mid += 1
@@ -601,11 +601,11 @@ If a mission is seen a lot later than its creation date, we discard it
         health statys:   $([c.health for pl in b.Pls for c in pl.canons ])
         Mobility status: $([ismobile(c) for pl in b.Pls for c in pl.canons ])
         """
-        @yield Operator(SimJulia.eval_and, FFE...)
+        @yield Operator(ConcurrentSim.eval_and, FFE...)
         @info "$(Dates.format(nowDatetime(sim),"YYYY-mm-dd HH:MM:SS")) [$(rpad("By $(b.By)",namewidth))] - FFE call finished"
         ## Mov new location
         movers = [@process move(sim, pl) for pl in b.Pls]
-        @yield Operator(SimJulia.eval_and, movers...)
+        @yield Operator(ConcurrentSim.eval_and, movers...)
     end
 end
 
@@ -620,7 +620,7 @@ end
         to_fire = missionscheduler(sim, p, mission)
         # POSSIBLE EXTENSION: spread out the fires of the canons instead of focussing on one location 
         FFEpl = [@process canoncycle(sim, BF, b, p.canons[i], to_fire[i], mission) for i in eachindex(to_fire) if !iszero(to_fire[i])]
-        @yield Operator(SimJulia.eval_and, FFEpl...)
+        @yield Operator(ConcurrentSim.eval_and, FFEpl...)
     end
     
     @info "$(Dates.format(nowDatetime(sim),"YYYY-mm-dd HH:MM:SS")) [$(rpad("Pl $(p.Pl) ($(p.By) By)",namewidth))] - Platoon completed mission"
@@ -930,8 +930,8 @@ a single pass, it will be split into multiple parts to fire from multiple locati
     # evaluate still able to fire
     if by_cap <= h_stop
         @warn "$(Dates.format(nowDatetime(sim),"YYYY-mm-dd HH:MM:SS")) [$(rpad("By $(b.By) SCHEDULER", namewidth))] - NO MORE FIRING CAPACITY!"
-        #@yield SimJulia.stop_simulation(sim)
-        throw(SimJulia.StopSimulation("$(b) has no remaining firing capacity"))
+        #@yield ConcurrentSim.stop_simulation(sim)
+        throw(ConcurrentSim.StopSimulation("$(b) has no remaining firing capacity"))
         return
     end
     # evaluate if split required
@@ -1043,7 +1043,7 @@ move an entire platoon to their new locations. Uses the predefined locations wit
 @resumable function move(sim::Environment, p::Platoon)
     movers = [@process move(sim,c) for c in filter(ismobile,p.canons)]# if ismobile(c)]
     if length(movers) > 0
-        @yield Operator(SimJulia.eval_and, movers...)
+        @yield Operator(ConcurrentSim.eval_and, movers...)
     end
 end
 
@@ -1080,7 +1080,7 @@ function oneVSone()
     rdr_obs = Radar(name=:radar158, location=(-100.,100.),  			  # our radar, not owned yet (!)
                     available=Store{Shot}(sim),
                     missions=Fmissions,
-                    trackers=SimJulia.Resource(sim, 1)
+                    trackers=ConcurrentSim.Resource(sim, 1)
                     )
     FBy = Battery(FPlatoons, By=158, missions=Fmissions) 
     acc_obs.owner = FBy
@@ -1161,7 +1161,7 @@ function oneVStwo()
     rdr_obs = Radar(name=:radar158, location=(-100.,100.),  			  # our radar, not owned yet (!)
                     available=Store{Shot}(sim),
                     missions=Fmissions,
-                    trackers=SimJulia.Resource(sim, 1)
+                    trackers=ConcurrentSim.Resource(sim, 1)
                     )
     FBy = Battery(FPlatoons, By=158, missions=Fmissions) 
     acc_obs.owner = FBy
@@ -1312,7 +1312,7 @@ function twoVStwoMove()
     rdr_obs = Radar(name=:radar158, location=(-100.,100.),  			  # our radar, not owned yet (!)
                     available=Store{Shot}(sim),
                     missions=Fmissions,
-                    trackers=SimJulia.Resource(sim, 1), scantime=Second(10)
+                    trackers=ConcurrentSim.Resource(sim, 1), scantime=Second(10)
                     )
     FBy = Battery(FPlatoons, By=158, missions=Fmissions) 
     acc_obs.owner = FBy
@@ -1440,7 +1440,7 @@ function fulldeployment(;   N_F_Main=3,     # number of friendly main battery lo
     rdr_obs = Radar(name=:radar158, location=(0.,2000.),  			        # our radar, not owned yet (!)
                     available=Store{Shot}(sim),
                     missions=Fmissions,
-                    trackers=SimJulia.Resource(sim, 1), scantime=Second(10) # 10 second scantime
+                    trackers=ConcurrentSim.Resource(sim, 1), scantime=Second(10) # 10 second scantime
                     )
     FBy = Battery(FPlatoons, By=158, missions=Fmissions) 
     acc_obs.owner = FBy
@@ -1754,7 +1754,7 @@ function scenario_1()
     rdr_obs = Radar(name=:radar158, location=(0.,2000.),  			        # our radar, not owned yet (!)
                     available=Store{Shot}(sim),
                     missions=Fmissions,
-                    trackers=SimJulia.Resource(sim, 1), scantime=Second(10) # 10 second scantime
+                    trackers=ConcurrentSim.Resource(sim, 1), scantime=Second(10) # 10 second scantime
                     )
     FBy = Battery(FPlatoons, By=158, missions=Fmissions) 
     acc_obs.owner = FBy
@@ -1844,7 +1844,7 @@ function scenario_2()
     rdr_obs = Radar(name=:radar158, location=(0.,2000.),  			        # our radar, not owned yet (!)
                     available=Store{Shot}(sim),
                     missions=Fmissions,
-                    trackers=SimJulia.Resource(sim, 1), scantime=Second(10) # 10 second scantime
+                    trackers=ConcurrentSim.Resource(sim, 1), scantime=Second(10) # 10 second scantime
                     )
     FBy = Battery(FPlatoons, By=158, missions=Fmissions) 
     acc_obs.owner = FBy
@@ -1934,7 +1934,7 @@ function scenario_3()
     rdr_obs = Radar(name=:radar158, location=(0.,2000.),  			        # our radar, not owned yet (!)
                     available=Store{Shot}(sim),
                     missions=Fmissions,
-                    trackers=SimJulia.Resource(sim, 1), scantime=Second(10) # 10 second scantime
+                    trackers=ConcurrentSim.Resource(sim, 1), scantime=Second(10) # 10 second scantime
                     )
     FBy = Battery(FPlatoons, By=158, missions=Fmissions) 
     acc_obs.owner = FBy
@@ -2087,7 +2087,7 @@ function sensor_scenario(d::Float64)
     rdr_obs = Radar(name=:radar158, location=(0.,2000.),  			        # our radar, not owned yet (!)
                     available=Store{Shot}(sim),
                     missions=Fmissions,
-                    trackers=SimJulia.Resource(sim, 1), scantime=Second(10) # 10 second scantime
+                    trackers=ConcurrentSim.Resource(sim, 1), scantime=Second(10) # 10 second scantime
                     )
     FBy = Battery(FPlatoons, By=158, missions=Fmissions) 
     acc_obs.owner = FBy

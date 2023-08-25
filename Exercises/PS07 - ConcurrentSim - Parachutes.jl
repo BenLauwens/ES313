@@ -17,7 +17,7 @@ required to be folded again and put back in the warehouse.
 This application illustrates how you can transfer objects between stores and act on them.
 =#
 
-using SimJulia
+using ConcurrentSim
 
 mutable struct Chute
     id::Int
@@ -54,7 +54,7 @@ end
         @yield timeout(sim, 1)
         # age each chute in the warehouse
         # note that internally, the store is a Dict{Chute, UInt}, so we can iterate over it
-        # cf. https://github.com/BenLauwens/SimJulia.jl/blob/master/src/resources/stores.jl
+        # cf. https://github.com/BenLauwens/ConcurrentSim.jl/blob/master/src/resources/stores.jl
         for chute in keys(mag.items)
             age!(chute)
         end
@@ -85,7 +85,7 @@ end
 end
 
 function airborne(nchutes=3)
-    @info "\nPS07 - SimJulia - Paratrooper demo\n\n"
+    @info "\nPS07 - ConcurrentSim - Paratrooper demo\n\n"
     sim = Simulation()
     mag = Store{Chute}(sim)
     folders = Store{Chute}(sim)

@@ -24,7 +24,7 @@ processed.
 =#
 
 using Logging
-using SimJulia
+using ConcurrentSim
 using ResumableFunctions
 import Base.show
 
@@ -73,14 +73,14 @@ end
         requests = map(x::Symbol -> get(prod_store, p::Product -> p.kind == x), products)
         @debug "$(env.time) - Combiner requests: $(requests)"
         # all requests must be matched
-        @yield Operator(SimJulia.eval_and, requests...)
+        @yield Operator(ConcurrentSim.eval_and, requests...)
         @debug "$(env.time) - Combiner got all required products!"
         newcomb = put(result_container, 1)
         @yield newcomb
         # stop the simulation after the final combination was made
         if result_container.level == result_container.capacity
             @info "Combiner made all products in $(env.time) time units"
-            SimJulia.stop_simulation(newcomb)
+            ConcurrentSim.stop_simulation(newcomb)
         end
         @debug "$(env.time) - Current container level $(result_container.level)"
     end
@@ -96,7 +96,7 @@ container and the machines. Finally, we start the simulation and wait for it to 
 """
 function mysim()
     # setup simulation
-    @info "\n$("-"^70)\nPS07 - SimJulia: Machine application\n$("-"^70)\n"
+    @info "\n$("-"^70)\nPS07 - ConcurrentSim: Machine application\n$("-"^70)\n"
     sim = Simulation()
     # products
     prod_store = Store{Product}(sim)

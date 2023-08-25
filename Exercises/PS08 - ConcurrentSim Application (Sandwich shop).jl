@@ -1,11 +1,12 @@
-@info "$("-"^70)\nPS08 - SimJulia Applications: Starting sandwich shop demo\n$("-"^70)"
+@info "$("-"^70)\nPS08 - ConcurrentSim Applications: Starting sandwich shop demo\n$("-"^70)"
 
 using Dates              # for actual time & date
 using Distributions      # for distributions and random behaviour
 using HypothesisTests    # for more statistical analysis
 using Logging            # for debugging
 using Plots              # for figures
-using SimJulia           # for DES
+using ConcurrentSim      # for DES
+using ResumableFunctions # for resumable functions
 using StatsPlots         # for nicer histograms
 using Statistics         # for statistics
 
@@ -144,7 +145,7 @@ end
     # log of current queuelength
     push!(s.queuelength, (nowDatetime(env), length(s.staff.put_queue) ) )
     
-    if res[req].state == SimJulia.processed
+    if res[req].state == ConcurrentSim.processed
         @debug "$(nowDatetime(env)) - Client N° $(c.id) is being served and orders a $(choice)"
         tserved = nowDatetime(env)
         twait = tserved - tin # in milliseconds
@@ -196,8 +197,10 @@ function plotqueue(s::Shop)
     yticks!(0:5:length(s.renegtimes)+1)
     # global figure
     p = plot(p1,p2, layout=(2,1), size=(1000,800))
-    savefig(p, "queuelength.png")
+    savefig(p, "./Exercises/img/queuelength.png")
 end
+
+
 
 """
     overviewplot(Nreneg::Array{Int64,1}, MWT::Array{Float64,1}, 

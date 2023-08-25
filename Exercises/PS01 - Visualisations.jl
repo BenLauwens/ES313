@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.11
+# v0.19.27
 
 using Markdown
 using InteractiveUtils
@@ -73,7 +73,7 @@ end
 
 # ╔═╡ a9547c5c-09e4-4336-b3d2-62e93efb15ac
 with_terminal() do
-	for (method, args) in zip(methods(foo), [(1,2,4); ("175","POL"); ("PO",2)])
+	for (method, args) in zip(methods(foo), [(1,2,4); ("176","POL"); ("PO",2)])
 		println(method)
 		println("foo($(join(args,", "))) = $(foo(args...))  (this is a ::$(typeof(foo(args...))))")
 	end
@@ -620,7 +620,7 @@ There is a lot of additional information available on the webpages of the differ
 
 
 # ╔═╡ Cell order:
-# ╠═9f0fff31-d180-499b-b8a4-27d09f9311c2
+# ╟─9f0fff31-d180-499b-b8a4-27d09f9311c2
 # ╠═8e3917d6-ec62-11ea-0c16-7d2749432dd1
 # ╠═02c1eefc-ec63-11ea-35cc-83d7cffdc592
 # ╠═5b3db6f3-38be-4be2-9b66-b4ddd6c049bb

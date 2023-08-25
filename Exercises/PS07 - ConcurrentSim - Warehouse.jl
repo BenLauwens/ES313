@@ -26,7 +26,7 @@ other ones or introducing unwanted artifacts.
 =#
 
 using Logging
-using SimJulia
+using ConcurrentSim
 using ResumableFunctions
 import Base.show
 
@@ -51,17 +51,17 @@ show(io::Core.IO, w::Warehouse) = print(io::Core.IO, "$(w.name) - capacity $(w.s
         # get an overview of available resources -> Array{Store, 1}
         resources = map(w::Warehouse -> w.stock, warehouses) 
         @debug "$(env.time) - resources: $(resources)"
-        # Signal a product needs storage -> Array{SimJulia.Put,1}
+        # Signal a product needs storage -> Array{ConcurrentSim.Put,1}
         signal = map(r -> put(r, quant), resources) 
         @debug "$(env.time) - signal: $(signal)"
-        # Yield the different events -> Dict{AbstractEvent,SimJulia.StateValue}
-        delivery_requests = @yield Operator(SimJulia.eval_or, signal...) # only one required
+        # Yield the different events -> Dict{AbstractEvent,ConcurrentSim.StateValue}
+        delivery_requests = @yield Operator(ConcurrentSim.eval_or, signal...) # only one required
         @debug "$(env.time) - delivery requests: $(delivery_requests)"
         # Get the delivery status
         delivery_status = [delivery_requests[s].state for s in signal]
         @debug "$(env.time) - delivery status: $(delivery_status)"
         # Select "winning" warehouse from the status
-        wh = findfirst(x -> x == SimJulia.processed, delivery_status)
+        wh = findfirst(x -> x == ConcurrentSim.processed, delivery_status)
         @debug "$(env.time) - winning warehouse : $(warehouses[wh])"
         @debug "$(env.time) - BAD warehouse status: $(status(warehouses))"
         # Cancel other requests or reduce value if they happened at the same time
@@ -80,7 +80,7 @@ end
 
 function mysim()
     # setup simulation
-    @info "\n$("-"^70)\nPS07 - SimJulia: warehouse application\n$("-"^70)\n"
+    @info "\n$("-"^70)\nPS07 - ConcurrentSim: warehouse application\n$("-"^70)\n"
     sim = Simulation()
     # warehouses
     names = ["Brussels", "Amsterdam", "Paris"]

@@ -11,7 +11,7 @@ and a modified remaining duration.
 This application illustrates how you can work with stores and priorities and work with time.
 =#
 
-using SimJulia
+using ConcurrentSim
 
 mutable struct Job
     number::Int             # job identification
@@ -80,7 +80,7 @@ Base.show(io::IO, j::Job) = print(io, "Job $(j.number) (prio: $(j.prio), duratio
 end
 
 function jobman()
-    @info "\nPS07 - SimJulia - Jobman\n\n"
+    @info "\nPS07 - ConcurrentSim - Jobman\n\n"
     sim = Simulation(8)
     jobs = Store{Job}(sim)
     completedjobs = Store{Job}(sim)

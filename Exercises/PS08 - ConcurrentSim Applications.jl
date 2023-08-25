@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.14
+# v0.19.27
 
 using Markdown
 using InteractiveUtils
@@ -10,6 +10,7 @@ begin
 	cd(joinpath(dirname(@__FILE__),".."))
     Pkg.activate(pwd())
 	using PlutoUI
+	PlutoUI.TableOfContents()
 end
 
 # ╔═╡ 647a69ae-5af7-4ab1-92f3-e0132f79fa1b
@@ -111,7 +112,7 @@ md"""
 ## Implementation
 Below you can find some excerpts from the code you can run yourself
 ```Julia
-include("/path/to/PS08 - SimJulia Application (Sandwich shop).jl")
+include("/path/to/PS08 - ConcurrentSim Application (Sandwich shop).jl")
 ```
 
 
@@ -122,7 +123,7 @@ using Distributions      # for distributions and random behaviour
 using HypothesisTests    # for more statistical analysis
 using Logging            # for debugging
 using Plots              # for figures
-using SimJulia           # for DES
+using ConcurrentSim           # for DES
 using StatsPlots         # for nicer histograms
 using Statistics         # for statistics
 
@@ -260,7 +261,7 @@ end
     # log of current queuelength
     push!(s.queuelength, (nowDatetime(env), length(s.staff.put_queue) ) )
     
-    if res[req].state == SimJulia.processed
+    if res[req].state == ConcurrentSim.processed
         @debug "$(nowDatetime(env)) - Client N° $(c.id) is being served and orders a $(choice)"
         tserved = nowDatetime(env)
         twait = tserved - tin # in milliseconds
@@ -376,7 +377,7 @@ multisim(staff=2,plt=true)
 """
 
 # ╔═╡ 1bbd3af4-1776-11eb-0226-91212c01c89b
-LocalResource("./Exercises/multisim - 100 iterations - 1 staff.png")
+LocalResource("./Exercises/img/multisim - 100 iterations - 1 staff.png")
 
 # ╔═╡ 9833c350-1776-11eb-108f-e197d9e465df
 md"""
@@ -385,7 +386,7 @@ md"""
 """
 
 # ╔═╡ 77b5ac42-1776-11eb-23b0-936d3918e053
-LocalResource("./Exercises/multisim - 100 iterations - 2 staff.png")
+LocalResource("./Exercises/img/multisim - 100 iterations - 2 staff.png")
 
 # ╔═╡ abb70132-1776-11eb-298c-bf23946166b2
 md"""
@@ -425,7 +426,7 @@ end
 """
 
 # ╔═╡ 4ef4c1c0-1777-11eb-2cc8-f1c40fa6154e
-LocalResource("./Exercises/determinesamplesize.png")
+LocalResource("./Exercises/img/determinesamplesize.png")
 
 # ╔═╡ 1a2ac91e-1778-11eb-0d8d-653f6a55f915
 md"""
@@ -458,7 +459,7 @@ end
 """
 
 # ╔═╡ 0323d94a-177a-11eb-2efe-7fe0cb9c922a
-LocalResource("samplesize.png")
+LocalResource("./Exercises/img/samplesize.png")
 
 # ╔═╡ 1b2e8bb0-177b-11eb-119b-4f1bef23fed2
 md"""
@@ -562,7 +563,7 @@ We want to:
 ###### Construct a computer program
 We will build a modular and layered composition of the program. The details can be found in
 ```Julia
-include("/path/to/PS08 - SimJulia Application (Counter-battery).jl")
+include("/path/to/PS08 - ConcurrentSim Application (Counter-battery).jl")
 ```
 
 
@@ -640,7 +641,7 @@ $(PlutoUI.LocalResource("./Exercises/img/sensorlocation.png",:width => 500))
 # ╔═╡ a92d9284-a02f-4e49-a683-9d14c69467e8
 md"""
 ## Possible extensions of our simulation:
-* Combine differential equations in the SimJulia framework (6DOF)
+* Combine differential equations in the ConcurrentSim framework (6DOF)
 * Additional damage models (feasible, thanks to modular composition)
 * more "players" (feasible: array of sensors instead of single sensor)
 * real world topography, line-of-sight limitations, signal dampening (both radar and sound)

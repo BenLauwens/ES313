@@ -14,7 +14,7 @@ is linked to a hospital, a traveltime and an associated Process.
 
 =#
 
-using SimJulia
+using ConcurrentSim
 
 const hospitals = ["St. Luc", "Erasme", "UZ Jette"]
 

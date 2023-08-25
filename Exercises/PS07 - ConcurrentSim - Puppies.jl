@@ -13,7 +13,7 @@ something with the cause of the interruption (in this case keeping track of who
 got liked by a puppy).
 =#
 
-using SimJulia
+using ConcurrentSim
 using ResumableFunctions
 using Logging
 
@@ -97,7 +97,7 @@ simulation for 100 time units.
 """
 function mysim(humannames=["Anaïs", "Pieter", "Bart"],
                dognames=["Django", "Zappa", "Squeez", "Fluffy"])
-    @info "\n$("-"^70)\nPS07 - SimJulia: Puppy life\n$("-"^70)\n"
+    @info "\n$("-"^70)\nPS07 - ConcurrentSim: Puppy life\n$("-"^70)\n"
     sim = Simulation()
     # add puppies
     litter = [Puppy(sim, name) for name in dognames]

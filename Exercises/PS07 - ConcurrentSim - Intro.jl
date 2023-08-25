@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.14
+# v0.19.27
 
 using Markdown
 using InteractiveUtils
@@ -12,7 +12,9 @@ begin
 	using Logging
 	# for simulation
 	using Random
-	using SimJulia, ResumableFunctions
+	using ConcurrentSim, ResumableFunctions
+	using PlutoUI
+	PlutoUI.TableOfContents()
 end
 
 # ╔═╡ 9cda8f1c-2394-42bf-883c-4dbe5df8ae56
@@ -206,10 +208,10 @@ end
 
 # ╔═╡ 0368ea70-145b-11eb-0b5c-fb3a33bf2027
 md"""
-# SimJulia
-Before starting a larger project, we will look into some SimJulia tricks.
+# ConcurrentSim
+Before starting a larger project, we will look into some ConcurrentSim tricks.
 
-There are some compatibility issues between Pluto and more complex SimJulia constructions, which is why you will find specific examples in a seperate file.
+There are some compatibility issues between Pluto and more complex ConcurrentSim constructions, which is why you will find specific examples in a seperate file.
 
 You can execute these file by running them from the REPL by using 
 ```julia
@@ -371,7 +373,7 @@ something with the cause of the interruption (in this case keeping track of who
 got liked by a puppy).
 
 ```julia
-include("path/to/PS07 - SimJulia - Puppies.jl")
+include("path/to/PS07 - ConcurrentSim - Puppies.jl")
 ```
 
 
@@ -404,7 +406,7 @@ continuing the simulation. Keep in mind that this requires ALL events to be
 processed.
 
 ```julia
-include("path/to/PS07 - SimJulia - Machines.jl")
+include("path/to/PS07 - ConcurrentSim - Machines.jl")
 ```
 """
 
@@ -414,9 +416,9 @@ md"""
 Suppose an agent requests a resource but only has a limited amount of patience before no longer wanting/needing the resource.
 
 For the example, a simulation is made with a `::Resource` with a capacity of $0$. So the agent can never obtain the requested resource. In the `agent` function the following happens:
-1. A request for `r::Resource` is made. The type of `req` is `SimJulia.Put`. This event will be triggered by an `@yield`
-2. the variable `res` is a dictionary with the events as key and the `::StateValue` as value. The first event to have been processed will have its `::StateValue` equal to `SimJulia.processed`
-3. the `if` conditions test whether the `::StateValue` of our request is equal to `SimJulia.processed`. 
+1. A request for `r::Resource` is made. The type of `req` is `ConcurrentSim.Put`. This event will be triggered by an `@yield`
+2. the variable `res` is a dictionary with the events as key and the `::StateValue` as value. The first event to have been processed will have its `::StateValue` equal to `ConcurrentSim.processed`
+3. the `if` conditions test whether the `::StateValue` of our request is equal to `ConcurrentSim.processed`. 
   1. If this is the case, the agent obtains the `::Resource`, uses it for 1 time unit and releases it back for further use.
   2. If this is NOT the case, the other event will have taken place (in this case the timeout) and we remove the request from the `::Resource` queue with `cancel`.
 4. the simulation terminates since no more processes are active on time 4.0.
@@ -428,7 +430,7 @@ let
 	@resumable function agent(env::Environment,r::Resource)
 		req = request(r)
 		res = @yield req | timeout(env, 4)
-		if res[req].state == SimJulia.processed
+		if res[req].state == ConcurrentSim.processed
 			@info "$(env.time) - Agent is using the resource..."
 			@yield timeout(env,1)
 			release(r)
@@ -479,7 +481,7 @@ i.e. taking whatever resource(s) come(s) available first without blocking the
 other ones or introducing unwanted artifacts.
 
 ```julia
-include("path/to/PS07 - SimJulia - Warehouse.jl")
+include("path/to/PS07 - ConcurrentSim - Warehouse.jl")
 ```
 
 """
@@ -490,7 +492,7 @@ md"""
 We build a small simulation in which victims are generated and evacuated to a nearby hospital.
 
 ```Julia
-include("path/to/PS07 - SimJulia - Ambulances.jl")
+include("path/to/PS07 - ConcurrentSim - Ambulances.jl")
 ```
 
 """
@@ -501,7 +503,7 @@ md"""
 We build a small simulation to model the life cycle of a parachute. his application illustrates how you can transfer objects between stores and act on them.
 
 ```Julia
-include("path/to/PS07 - SimJulia - Parachutes.jl")
+include("path/to/PS07 - ConcurrentSim - Parachutes.jl")
 ```
 
 """
@@ -515,7 +517,7 @@ This application illustrates how you can work with stores and priorities.
 
 
 ```Julia
-include("path/to/PS07 - SimJulia - Jobman.jl")
+include("path/to/PS07 - ConcurrentSim - Jobman.jl")
 ```
 """
 
@@ -527,7 +529,7 @@ md"""
 
 # ╔═╡ 4bf1fce0-1470-11eb-1290-63d06c8246a2
 md"""
-#### Application 1
+### Application 1
 Consider a candy machines that is continuously being monitored by a supervisor.  If the level is below a given treshold, the supervisor fills the machine up. 
 * Client arrival follows an exponential distribution with parameter $\theta = 1$ and each client takes two candies at a time.
 * Look at the mean time between refills. Is this what you would expect?
@@ -554,7 +556,7 @@ Consider the following:
 
 # ╔═╡ Cell order:
 # ╟─9cda8f1c-2394-42bf-883c-4dbe5df8ae56
-# ╟─4de0ee11-f8af-4865-8737-ba0dc5c3404e
+# ╠═4de0ee11-f8af-4865-8737-ba0dc5c3404e
 # ╟─c395df98-145a-11eb-1716-2de187df1a1a
 # ╠═dafa45ae-1462-11eb-3338-037167917f4d
 # ╠═f23a3616-6b07-4853-8a77-564cce1bacc7

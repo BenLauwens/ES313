@@ -1,8 +1,17 @@
 ### A Pluto.jl notebook ###
-# v0.19.14
+# v0.19.27
 
 using Markdown
 using InteractiveUtils
+
+# ╔═╡ a795cad3-33a6-4664-a4b4-52b083ed4308
+begin
+	using Pkg
+	cd(joinpath(dirname(@__FILE__),".."))
+    Pkg.activate(pwd())
+	using PlutoUI
+	PlutoUI.TableOfContents(depth=2)
+end
 
 # ╔═╡ fc0426fc-d2b6-4751-9c48-ecf31a7b5a3b
 html"""
@@ -15,6 +24,13 @@ html"""
     	padding-right: max(160px, 10%);
 	}
 </style>
+"""
+
+# ╔═╡ 94c57b2d-24c1-45d6-aba4-77aefd4da9bf
+md"""
+# 2023 project ideas
+
+Stay tuned...
 """
 
 # ╔═╡ 5126163e-0f60-4712-97fd-5a085af91744
@@ -259,24 +275,10 @@ Managing the electricity grid is a major challenge.
 - [Introduction to electricity markets](https://www.e-education.psu.edu/ebf483/node/816)
 """
 
-# ╔═╡ 00000000-0000-0000-0000-000000000001
-PLUTO_PROJECT_TOML_CONTENTS = """
-[deps]
-"""
-
-# ╔═╡ 00000000-0000-0000-0000-000000000002
-PLUTO_MANIFEST_TOML_CONTENTS = """
-# This file is machine-generated - editing it directly is not advised
-
-julia_version = "1.8.2"
-manifest_format = "2.0"
-project_hash = "da39a3ee5e6b4b0d3255bfef95601890afd80709"
-
-[deps]
-"""
-
 # ╔═╡ Cell order:
 # ╟─fc0426fc-d2b6-4751-9c48-ecf31a7b5a3b
+# ╟─a795cad3-33a6-4664-a4b4-52b083ed4308
+# ╟─94c57b2d-24c1-45d6-aba4-77aefd4da9bf
 # ╟─5126163e-0f60-4712-97fd-5a085af91744
 # ╟─023da279-7a42-4cb1-addb-613d1363a282
 # ╟─42968b6f-a86f-48dd-b354-d06dfd53624c
@@ -290,5 +292,3 @@ project_hash = "da39a3ee5e6b4b0d3255bfef95601890afd80709"
 # ╟─4357e4be-1005-470f-978b-90844dd31b1a
 # ╟─88b57987-b284-41a7-8c35-3b29a0436d0f
 # ╟─72df832c-442f-4693-9953-df873951a1db
-# ╟─00000000-0000-0000-0000-000000000001
-# ╟─00000000-0000-0000-0000-000000000002
