@@ -62,6 +62,8 @@ from the software center when connected to CDN and then connect to an open netwo
 
 You are now ready to start working on the course. Tested on:
 * :white_check_mark: Ubuntu 22.04 LTS
+* :white_check_mark: MacOS 13.4.1
+* :white_check_mark: Windows 10 (CDN build 19044.3208)
 
 ### Getting updates (run when needed)
 Some lectures may get updates during the semester. If you have followed the installation process, you can get the most recent version of the lecture by running the update script.
