@@ -60,7 +60,8 @@ from the software center when connected to CDN and then connect to an open netwo
     include("path/to/configES313.jl") # on Mac/Linux
     ```
 
-You are now ready to start working on the course.
+You are now ready to start working on the course. Tested on:
+* :white_check_mark: Ubuntu 22.04 LTS
 
 ### Getting updates (run when needed)
 Some lectures may get updates during the semester. If you have followed the installation process, you can get the most recent version of the lecture by running the update script.
