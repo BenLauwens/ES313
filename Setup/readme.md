@@ -74,8 +74,7 @@ You are now ready to start working on the course. Tested on:
 * :white_check_mark: MacOS 13.4.1I
 * :white_check_mark: Windows 10 (CDN build 19044.3208)
 
-[!NOTE]  
-You might want to associate ``*.jl` files with Julia. By doing so, you can simply double click on a file to start working or fetch updats instead of having to pass by the terminal or REPL.
+:bulb: You might want to associate ``*.jl` files with Julia. By doing so, you can simply double click on a file to start working or fetch updats instead of having to pass by the terminal or REPL.
 
 
 ### Getting updates (run when needed)
