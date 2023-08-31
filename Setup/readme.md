@@ -15,26 +15,35 @@ The process detailed below will guide you through the installation of Julia and 
 When connected to the CDN network, you are behind the CDN proxy. This can impact the installation process. For the most fluid user experience, we recommend that you install Julia
 from the software center when connected to CDN and then connect to an open network (such as pubnet or eduroam) for the rest of the installation process.
 ### Getting started (do this once)
+0. Make sure you have [Git](https://git-scm.com) on your system (you can find this in the software center for a CDN computer).
 1. Install Julia
     * CDN computer: install Julia from the software center. **Note:** this requires you to be connected to CDN. 
     * Personal computer: download and install the appropriate Julia v1.8.x release from [JuliaLang](https://julialang.org/downloads/oldreleases/). You are free to choose a more recent version of Julia, but for optimal compatibility with the course, we recommend v1.8.x.
-2. Copy the configuration script from [here](https://raw.githubusercontent.com/BenLauwens/ES313/master/Setup/configES313.jl) and store it as a .jl file (e.g. with Notepad++). Things to modify by yourself (if required):
-    * If you are not behind a proxy, disable the line for the proxy settings by changing it into a comment, i.e.
+2. Copy the configuration script from [here](https://raw.githubusercontent.com/BenLauwens/ES313/master/Setup/configES313.jl) and store it as a .jl file (e.g. with Notepad++ or VSCode). Things to modify by yourself (if required):
+    * For Windows: the path to your `Git` install. The default path is the one that should work for CDN, i.e.
+        ```julia
+        const git_path_windows = "C:\\Program Files\\Git\\bin\\git.exe"
+        ```
+        can be modified to (for example)
+        ```julia
+        const git_path_windows = "Path\\to\\my\\Git\\installation\\git.exe"
+        ```
+    * If you are behind a proxy, enable the line for the proxy settings by changing it into a comment, i.e.
         ```julia
         # set the proxy server setting if required (on CDN)
-        ENV["HTTP_PROXY"] = "http://CDNUSER:CDNPSW@dmzproxy005.idcn.mil.intra:8080"
+        #ENV["HTTP_PROXY"] = "http://CDNUSER:CDNPSW@dmzproxy005.idcn.mil.intra:8080"
         ```
         should become
         ```julia
         # set the proxy server setting if required (on CDN)
-        #ENV["HTTP_PROXY"] = "http://CDNUSER:CDNPSW@dmzproxy005.idcn.mil.intra:8080"
+        ENV["HTTP_PROXY"] = "http://CDNUSER:CDNPSW@dmzproxy005.idcn.mil.intra:8080"
         ```
 
         **Notes:** 
 
             - during previous tests, no explicit CDN account info was passed along and it worked, so only include your own credentials if there appears to be a problem.
-
             - currently, GitHub is NOT accessible when connected to the CDN network, so the installation should be done while connected to another network.
+    
     * The location where you want the course documentation to be downloaded. By default, the `ES313` folder will be installed in
         * `C:\\Users\\YourAccount\\Documents\\` on Windows 
         * `/Users/YourAccount/Documents/` on Mac
@@ -62,12 +71,17 @@ from the software center when connected to CDN and then connect to an open netwo
 
 You are now ready to start working on the course. Tested on:
 * :white_check_mark: Ubuntu 22.04 LTS
-* :white_check_mark: MacOS 13.4.1
+* :white_check_mark: MacOS 13.4.1I
 * :white_check_mark: Windows 10 (CDN build 19044.3208)
+
+[!NOTE]  
+You might want to associate ``*.jl` files with Julia. By doing so, you can simply double click on a file to start working or fetch updats instead of having to pass by the terminal or REPL.
+
 
 ### Getting updates (run when needed)
 Some lectures may get updates during the semester. If you have followed the installation process, you can get the most recent version of the lecture by running the update script.
 
+0. On Windows, if required, modify the path to your `Git` installation (cf. configuration script).
 1. Run the update script from the Setup folder. This will fetch updates from GitHub and sync them with your local files. Local changes in a file are stashed before the update is pulled. Please note that you will no longer see any local changes after the update, they are however not gone, but [stashed](https://git-scm.com/docs/git-stash).
     ```Julia
     include("C:\\path\\to\\folder name with a space\\ES313\\setup\\update.jl") # on Windows
