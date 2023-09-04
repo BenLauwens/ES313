@@ -29,8 +29,12 @@ html"""
 # ╔═╡ 94c57b2d-24c1-45d6-aba4-77aefd4da9bf
 md"""
 # 2023 project ideas
+## Optimizing RMA services
+Different services within the RMA are managed by Sodexo (restaurant, kitchen, bar, cleaning, gardening etc.). When modeled properly, you can use simulation to optimize the use of resources (personnel, equipment, etc.) or identify bottlenecks for these services. 
+The local Sodexo manager is willing to cooperate and provide data and insights in the current situation. Different projects are possible, depending on your interest. 
 
-Stay tuned...
+## More
+to follow
 """
 
 # ╔═╡ 5126163e-0f60-4712-97fd-5a085af91744
