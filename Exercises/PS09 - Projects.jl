@@ -29,12 +29,176 @@ html"""
 # ╔═╡ 94c57b2d-24c1-45d6-aba4-77aefd4da9bf
 md"""
 # 2023 project ideas
+## Generic references for inspiration
+* [Mathematical Modeling and Simulation of Systems](https://link.springer.com/book/10.1007/978-3-031-30251-0)
+* [Modeling and Simulation - An Application-Oriented Introduction](https://link.springer.com/book/10.1007/978-3-642-39524-6)
+* [Modeling and Simulation in Engineering](https://www.mdpi.com/books/book/6451-modeling-and-simulation-in-engineering)
+* [Engineering Principles of Combat Modeling and Distributed Simulation](https://www.wiley.com/en-us/Engineering+Principles+of+Combat+Modeling+and+Distributed+Simulation-p-9781118180310)
+* [Introduction to Transportation Analysis, Modeling and Simulation - Computational Foundations and Multimodal Applications](https://link.springer.com/book/10.1007/978-1-4471-5637-6)
+
 ## Optimizing RMA services
 Different services within the RMA are managed by Sodexo (restaurant, kitchen, bar, cleaning, gardening etc.). When modeled properly, you can use simulation to optimize the use of resources (personnel, equipment, etc.) or identify bottlenecks for these services. 
 The local Sodexo manager is willing to cooperate and provide data and insights in the current situation. Different projects are possible, depending on your interest. 
 
-## More
-to follow
+
+## Traffic Flow Optimization
+Traffic congestion is a common problem in urban areas. Mathematical modeling and simulation can be used to optimize traffic flow, reduce congestion, and improve overall transportation efficiency. 
+This project could involve modeling traffic patterns, simulating different traffic management strategies, and identifying the most effective solutions. Additionaly, you might also consider
+the impact of connected and autonomous vehicles on traffic flow.
+
+### References:
+* [An Introduction to Traffic Flow Theory](https://link.springer.com/book/10.1007/978-1-4614-8435-6)
+* [Predictive Intelligent Transportation: Alleviating Traffic Congestion in the Internet of Vehicles](https://www.mdpi.com/1424-8220/21/21/7330)
+* [Automated vehicle-involved traffic flow studies: A survey of assumptions, models, speculations, and perspectives](https://www.sciencedirect.com/science/article/pii/S0968090X21001224)
+
+
+## Epidemic Modeling
+Mathematical modeling and simulation can be used to understand the spread of diseases and evaluate the effectiveness of different control strategies. 
+This project could involve modeling the spread of a specific disease, simulating different intervention strategies, and identifying the most effective approaches.
+
+### References:
+* [Mathematical Models in Infectious Disease Epidemiology](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7178885/)
+* [Mathematical Models in Epidemiology](https://link.springer.com/book/10.1007/978-1-4939-9828-9)
+* [Mathematical modeling of infectious disease dynamics](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3710332/)
+
+
+
+## Supply Chain Optimization
+Supply chains are complex systems that can be optimized using mathematical modeling and simulation. 
+This project could involve modeling a specific supply chain, simulating different management strategies, and identifying the most effective solutions.
+
+### References:
+* [Supply Chain Simulation: A System Dynamics Approach for Improving Performance](https://link.springer.com/book/10.1007/978-0-85729-719-8)
+
+
+
+## Climate Change Modeling
+Mathematical modeling and simulation can be used to understand the impacts of climate change and evaluate the effectiveness of different mitigation strategies. 
+You could consider modeling climate change scenarios, simulating different mitigation strategies, and identifying the most effective approaches.
+
+### References:
+* [Climate Change Modeling Methodology](https://link.springer.com/book/10.1007/978-1-4614-5767-1)
+
+
+
+## Financial Market Simulation
+Mathematical modeling and simulation can be used to understand financial markets and evaluate different investment strategies. 
+For this project you could involve modeling financial market dynamics, simulating different investment strategies, and identifying the most effective approaches.
+
+### References:
+* [Financial Market Complexity](https://academic.oup.com/book/9066)
+* [Modeling the Financial Market](https://link.springer.com/chapter/10.1007/978-3-319-00327-6_5)
+
+
+
+## Network Security
+Mathematical modeling and simulation can be used to understand network security threats and evaluate different defense strategies.
+ This project could involve modeling network security threats, simulating different defense strategies, and identifying the most effective approaches.
+
+### References:
+* [Modeling and Simulation of Computer Networks and Systems](https://www.sciencedirect.com/book/9780128008874/modeling-and-simulation-of-computer-networks-and-systems)
+* [Network Security: A Decision and Game-Theoretic Approach](https://www.cambridge.org/core/books/network-security/15A3FBFC81FE78648C8DB2FC1C74159B)
+
+
+## Quantum Computing Simulation
+Quantum computing is a rapidly growing field that promises to revolutionize computing. 
+Mathematical modeling and simulation can be used to understand quantum computing systems and evaluate different quantum algorithms. 
+This project could involve modeling a quantum computing system, simulating different quantum algorithms, and identifying the most effective approaches.
+
+### References:
+* [Quantum Computing: A Gentle Introduction](https://s3.amazonaws.com/arena-attachments/1000401/c8d3f8742d163b7ffd6ae3e4e4e07bf3.pdf)
+* [Quantum Computing for Computer Scientists](https://www.cambridge.org/core/books/quantum-computing-for-computer-scientists/8AEA723BEE5CC9F5C03FDD4BA850C711)
+
+
+
+## Predictive Maintenance in Manufacturing
+Predictive maintenance techniques are designed to help determine the condition of in-service equipment in order to predict when maintenance should be performed. 
+This approach promises cost savings over routine or time-based preventive maintenance. 
+This project could involve modeling a specific manufacturing process, simulating different maintenance strategies, and identifying the most effective solutions.
+
+### References:
+* [Predictive Maintenance in Dynamic Systems: Advanced Methods, Decision Support Tools and Real-world Applications](https://link.springer.com/book/10.1007/978-3-030-05645-2)
+
+
+
+## Ecosystem and Population Dynamics
+Mathematical modeling and simulation can be used to understand ecosystem and population dynamics. 
+This project could involve modeling a specific ecosystem or population, simulating different management strategies, and identifying the most effective approaches.
+
+### References:
+* [Mathematical Models in Population Biology and Epidemiology](https://link.springer.com/book/10.1007/978-1-4614-1686-9)
+* [Population Dynamics and Projection Methods](https://link.springer.com/book/10.1007/978-90-481-8930-4)
+* [Dynamic Population Models](https://link.springer.com/book/10.1007/1-4020-5230-8)
+
+
+
+## Water Resource Management
+Water resource management is the activity of planning, developing, distributing and managing the optimum use of water resources. 
+In the (near) future, it will become an increasingly scarse resource.
+This project could involve modeling a specific water resource system, simulating different management strategies, and identifying the most effective solutions.
+
+### References:
+* [Water Resource Systems Planning and Management - An Introduction to Methods, Models, and Applications](https://link.springer.com/book/10.1007/978-3-319-44234-1)
+
+
+
+## Telecommunication Networks
+Telecommunication networks are complex systems that can be optimized using mathematical modeling and simulation. 
+This project could involve modeling a specific telecommunication network, simulating different management strategies, and identifying the most effective solutions.
+
+### References:
+* [Modeling and Simulation of Computer Networks and Systems](https://www.sciencedirect.com/book/9780128008874/modeling-and-simulation-of-computer-networks-and-systems)
+
+
+## Agricultural Systems
+Mathematical modeling and simulation can be used to optimize agricultural systems. 
+This project could involve modeling a specific agricultural system, simulating different management strategies, and identifying the most effective solutions.
+
+### References:
+* [Brief history of agricultural systems modeling](https://www.sciencedirect.com/science/article/pii/S0308521X16301585)
+* [Agricultural Systems Modeling and Simulation](https://www.taylorfrancis.com/books/edit/10.1201/9781482269765/agricultural-systems-modeling-simulation-robert-peart-david-shoup)
+
+
+
+## Air Traffic Management
+Air traffic management is a complex system that can be optimized using mathematical modeling and simulation. 
+This project could involve modeling a specific air traffic management system, simulating different management strategies, and identifying the most effective solutions.
+
+### References:
+* [Applied Game Theory to Enhance Air Traffic Control Training](https://coetthp.org/wp-content/uploads/HF002-Applied-Game-Theory-to-Enhance-ATC-Training-Final-Report.pdf)
+* [Research on Game Theory of Air Traffic Management Cyber Physical System Security](https://www.mdpi.com/2226-4310/9/8/397)
+
+
+
+## Waste Management
+Waste management involves the activities and actions required to manage waste from its inception to its final disposal. 
+This project could involve modeling a specific waste management system, simulating different management strategies, and identifying the most effective solutions.
+
+### References:
+* [Modeling the problem of locating collection areas for urban waste management. An application to the metropolitan area of Barcelona](https://www.sciencedirect.com/science/article/pii/S0305048305000289)
+
+
+
+## Cybersecurity
+Cybersecurity involves protecting systems, networks, and programs from digital attacks. 
+This is a very large domain with room for multiple projects. A project could involve modeling a specific cybersecurity system, simulating different defense strategies, 
+and identifying the most effective solutions.
+
+### References:
+* [Cybersecurity - Attack and Defense Strategies](https://www.packtpub.com/product/cybersecurity-attack-and-defense-strategies-third-edition/9781803248776)
+* [The mathematical model of cyber attacks on the critical information system](https://iopscience.iop.org/article/10.1088/1742-6596/1202/1/012013/meta)
+* [Mathematical Model of Cyber Intrusion in Smart Grid](https://ieeexplore.ieee.org/document/8715946)
+
+
+
+## Disaster Management
+Disaster management involves preparing, supporting, and rebuilding society when natural or human-made disasters occur. 
+This project could involve modeling a specific disaster scenario, simulating different management strategies, and identifying the most effective solutions.
+
+### References:
+* [Optimising crowd evacuations: Mathematical, architectural and behavioural approaches](https://www.sciencedirect.com/science/article/pii/S0925753520301429)
+* [Modeling and Simulation Agent-based of Natural Disaster Complex Systems](https://www.sciencedirect.com/science/article/pii/S1877050913008144)
+
 """
 
 # ╔═╡ 5126163e-0f60-4712-97fd-5a085af91744
