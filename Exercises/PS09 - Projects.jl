@@ -29,7 +29,18 @@ html"""
 # ╔═╡ 94c57b2d-24c1-45d6-aba4-77aefd4da9bf
 md"""
 # 2023 project ideas
-## Generic references for inspiration
+Below you can find a list of possible projects. 
+Almost all of these are described in a very generic way and will require some research on your behalf. 
+Some background and/or similar studies are provided for each project, most of these being more complex than what is expected of you.
+
+**Expectation:**:
+1. Describe the setting or the problem you study
+2. Describe the desired outcome of the study
+3. Describe the model you built, including its limitations and accepted hypotheses. 
+4. Describe your analysis
+5. Describe the outcome or suggestions
+
+### Generic references for inspiration
 * [Mathematical Modeling and Simulation of Systems](https://link.springer.com/book/10.1007/978-3-031-30251-0)
 * [Modeling and Simulation - An Application-Oriented Introduction](https://link.springer.com/book/10.1007/978-3-642-39524-6)
 * [Modeling and Simulation in Engineering](https://www.mdpi.com/books/book/6451-modeling-and-simulation-in-engineering)
