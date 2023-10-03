@@ -140,7 +140,7 @@ This project could involve modeling a specific ecosystem or population, simulati
 * [Mathematical Models in Population Biology and Epidemiology](https://link.springer.com/book/10.1007/978-1-4614-1686-9)
 * [Population Dynamics and Projection Methods](https://link.springer.com/book/10.1007/978-90-481-8930-4)
 * [Dynamic Population Models](https://link.springer.com/book/10.1007/1-4020-5230-8)
-
+* [Data-Driven Mathematical Modeling Approaches for COVID-19: a survey](https://arxiv.org/abs/2309.17087)
 
 
 ## Water Resource Management
