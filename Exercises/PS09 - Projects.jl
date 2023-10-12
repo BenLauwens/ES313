@@ -50,6 +50,22 @@ Some background and/or similar studies are provided for each project, most of th
 ## Optimizing RMA services
 Different services within the RMA are managed by Sodexo (restaurant, kitchen, bar, cleaning, gardening etc.). When modeled properly, you can use simulation to optimize the use of resources (personnel, equipment, etc.) or identify bottlenecks for these services. 
 The local Sodexo manager is willing to cooperate and provide data and insights in the current situation. Different projects are possible, depending on your interest. 
+1. The flux and waiting times in the mess hall: ss the number of people on the site of the RMA is steadily increasing, this poses additional challenges in terms of the organization of the flow of the people coming in for breakfast/lunch/dinner. For this setting, you could combine:
+    * historical data (provided)
+    * a comprehensive analysis of the flows and the processes of the mess hall (provided + own insights)
+    * an accurate estimate of client arrival (provided/own insights)
+    to determine the bottlenecks in the current layout and propose innovative solutions (e.g. layout modifications, extensions, staffing…) to reduce the time spent “in the system”.
+2. The cafeteria of the RMA (bar) is used for different activities: coffee breaks in the morning, sandwiches at lunch, receptions related to activities and serving drinks in the evening to the people on site. Like the mess hall, this system is increasingly being stressed due to increased demand. For this setting, you could combine:
+    * historical data (provided)
+    * a comprehensive analysis of the flows and the processes of cafeteria (provided + own insights)
+    * an accurate estimate of client arrival (provided/own insights)
+    to determine the bottlenecks in the current layout and propose innovative solutions (e.g. layout modifications, extensions, staffing, planning…) to reduce the time spent “in the system”.
+3. The entire RMA needs regular housekeeping. The specific requirements vary in function of the size of the room, its flooring (carpet/tiles/other), the cleaning technique etc. There are some guidelines and data available regarding the time required for cleaning. The location where the equipment is stored, as well as the schedule can have a significant impact on the total time spent cleaning. For this setting you could consider:
+    * the actual composition of the rooms (size, flooring etc.)
+    * the current approach to scheduling the housekeeping
+    * expert knowledge regarding time spent on cleaning
+    * historical data to simulate occasional occupation
+    to determine where potential gains can be made to reduce the total time spent on housekeeping.
 
 
 ## Traffic Flow Optimization
