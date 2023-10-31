@@ -29,7 +29,18 @@ html"""
 # ╔═╡ 94c57b2d-24c1-45d6-aba4-77aefd4da9bf
 md"""
 # 2023 project ideas
-## Generic references for inspiration
+Below you can find a list of possible projects. 
+Almost all of these are described in a very generic way and will require some research on your behalf. 
+Some background and/or similar studies are provided for each project, most of these being more complex than what is expected of you.
+
+**Expectation:**:
+1. Describe the setting or the problem you study
+2. Describe the desired outcome of the study
+3. Describe the model you built, including its limitations and accepted hypotheses. 
+4. Describe your analysis
+5. Describe the outcome or suggestions
+
+### Generic references for inspiration
 * [Mathematical Modeling and Simulation of Systems](https://link.springer.com/book/10.1007/978-3-031-30251-0)
 * [Modeling and Simulation - An Application-Oriented Introduction](https://link.springer.com/book/10.1007/978-3-642-39524-6)
 * [Modeling and Simulation in Engineering](https://www.mdpi.com/books/book/6451-modeling-and-simulation-in-engineering)
@@ -39,6 +50,22 @@ md"""
 ## Optimizing RMA services
 Different services within the RMA are managed by Sodexo (restaurant, kitchen, bar, cleaning, gardening etc.). When modeled properly, you can use simulation to optimize the use of resources (personnel, equipment, etc.) or identify bottlenecks for these services. 
 The local Sodexo manager is willing to cooperate and provide data and insights in the current situation. Different projects are possible, depending on your interest. 
+1. The flux and waiting times in the mess hall: ss the number of people on the site of the RMA is steadily increasing, this poses additional challenges in terms of the organization of the flow of the people coming in for breakfast/lunch/dinner. For this setting, you could combine:
+    * historical data (provided)
+    * a comprehensive analysis of the flows and the processes of the mess hall (provided + own insights)
+    * an accurate estimate of client arrival (provided/own insights)
+    to determine the bottlenecks in the current layout and propose innovative solutions (e.g. layout modifications, extensions, staffing…) to reduce the time spent “in the system”.
+2. The cafeteria of the RMA (bar) is used for different activities: coffee breaks in the morning, sandwiches at lunch, receptions related to activities and serving drinks in the evening to the people on site. Like the mess hall, this system is increasingly being stressed due to increased demand. For this setting, you could combine:
+    * historical data (provided)
+    * a comprehensive analysis of the flows and the processes of cafeteria (provided + own insights)
+    * an accurate estimate of client arrival (provided/own insights)
+    to determine the bottlenecks in the current layout and propose innovative solutions (e.g. layout modifications, extensions, staffing, planning…) to reduce the time spent “in the system”.
+3. The entire RMA needs regular housekeeping. The specific requirements vary in function of the size of the room, its flooring (carpet/tiles/other), the cleaning technique etc. There are some guidelines and data available regarding the time required for cleaning. The location where the equipment is stored, as well as the schedule can have a significant impact on the total time spent cleaning. For this setting you could consider:
+    * the actual composition of the rooms (size, flooring etc.)
+    * the current approach to scheduling the housekeeping
+    * expert knowledge regarding time spent on cleaning
+    * historical data to simulate occasional occupation
+    to determine where potential gains can be made to reduce the total time spent on housekeeping.
 
 
 ## Traffic Flow Optimization
@@ -129,7 +156,7 @@ This project could involve modeling a specific ecosystem or population, simulati
 * [Mathematical Models in Population Biology and Epidemiology](https://link.springer.com/book/10.1007/978-1-4614-1686-9)
 * [Population Dynamics and Projection Methods](https://link.springer.com/book/10.1007/978-90-481-8930-4)
 * [Dynamic Population Models](https://link.springer.com/book/10.1007/1-4020-5230-8)
-
+* [Data-Driven Mathematical Modeling Approaches for COVID-19: a survey](https://arxiv.org/abs/2309.17087)
 
 
 ## Water Resource Management
